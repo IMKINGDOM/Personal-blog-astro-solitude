@@ -1,19 +1,18 @@
 ---
-title: Make reading more accessible
+title: 让阅读更无障碍
 date: '2026-08-16T10:00:00+08:00'
 slug: accessibility
-description: Make reading more accessible — a working example for the Astro Solitude theme.
+description: 让阅读更无障碍 —— Astro 跬步博客的使用示例。
 categories:
-- Theme guides
+- 主题指南
 tags:
-- Solitude
+- 跬步
 series:
-- Theme essentials
+- 主题入门
 cover: /img/demo/cover-pagination-v2.webp
 ---
 
-# Make reading more accessible
-
+# 让阅读更无障碍
 Welcome to **Astro Solitude**. This sample post is ready to replace with your own story.
 
 ## Content and expression

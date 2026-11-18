@@ -1,20 +1,19 @@
 ---
-title: Search and feeds
+title: 站内搜索与 RSS 订阅
 date: '2026-08-22T10:00:00+08:00'
 slug: search-and-rss
-description: Search and feeds — a working example for the Astro Solitude theme.
+description: 站内搜索与 RSS 订阅 —— Astro 跬步博客的使用示例。
 categories:
-- Theme guides
+- 主题指南
 tags:
 - Astro
-- Solitude
+- 跬步
 series:
-- Theme essentials
+- 主题入门
 cover: /img/demo/cover-pagination-v2.webp
 ---
 
-# Search and feeds
-
+# 站内搜索与 RSS 订阅
 Welcome to **Astro Solitude**. This sample post is ready to replace with your own story.
 
 ## Content and expression

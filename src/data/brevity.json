@@ -2,30 +2,30 @@
   "items": [
     {
       "date": "2026-08-25 10:00:00+08:00",
-      "content": "The Astro Solitude demo now uses native Astro content. Explore the guides and make it your own.",
-      "location": "Project repository",
+      "content": "跬步演示站现已改用 Astro 原生内容集合。欢迎探索指南，并改造成你自己的样子。",
+      "location": "项目仓库",
       "image": [
         "/img/demo/cover-getting-started-v2.webp"
       ]
     },
     {
       "date": "2026-08-23 10:00:00+08:00",
-      "content": "About, friends, equipment, and short updates are all managed with local data files.",
-      "location": "exampleSite",
+      "content": "关于、友链、装备和短动态，全部通过本地数据文件管理。",
+      "location": "示例站点",
       "link": "/p/components/"
     },
     {
       "date": "2026-08-21 10:00:00+08:00",
-      "content": "The homepage, posts, taxonomies, search index, and assets now run on Astro.",
-      "location": "hugo",
+      "content": "首页、文章、分类、搜索索引与静态资源，现在都跑在 Astro 上。",
+      "location": "Hugo 旧版",
       "image": [
         "/img/demo/cover-legacy-url-v2.webp"
       ]
     },
     {
       "date": "2023-04-20 00:00:00+08:00",
-      "content": "The Solitude demo started collecting features, configuration examples, and practical notes.",
-      "location": "Solitude"
+      "content": "Solitude 演示站开始积累功能、配置示例与实用笔记。",
+      "location": "跬步"
     }
   ]
 }

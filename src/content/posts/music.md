@@ -1,19 +1,18 @@
 ---
-title: Music and page navigation
+title: 音乐与页面导航
 date: '2026-08-20T10:00:00+08:00'
 slug: music
-description: Music and page navigation — a working example for the Astro Solitude theme.
+description: 音乐与页面导航 —— Astro 跬步博客的使用示例。
 categories:
-- Theme guides
+- 主题指南
 tags:
-- Solitude
+- 跬步
 series:
-- Theme essentials
+- 主题入门
 cover: /img/demo/cover-getting-started-v2.webp
 ---
 
-# Music and page navigation
-
+# 音乐与页面导航
 Welcome to **Astro Solitude**. This sample post is ready to replace with your own story.
 
 ## Content and expression

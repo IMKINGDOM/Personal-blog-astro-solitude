@@ -1,19 +1,18 @@
 ---
-title: Light, dark, and custom styles
+title: 浅色、深色与自定义样式
 date: '2026-08-15T10:00:00+08:00'
 slug: themes
-description: Light, dark, and custom styles — a working example for the Astro Solitude theme.
+description: 浅色、深色与自定义样式 —— Astro 跬步博客的使用示例。
 categories:
-- Creative notes
+- 创作随笔
 tags:
-- Solitude
+- 跬步
 series:
-- Theme essentials
+- 主题入门
 cover: /img/demo/cover-shortcodes-v2.webp
 ---
 
-# Light, dark, and custom styles
-
+# 浅色、深色与自定义样式
 Welcome to **Astro Solitude**. This sample post is ready to replace with your own story.
 
 ## Content and expression

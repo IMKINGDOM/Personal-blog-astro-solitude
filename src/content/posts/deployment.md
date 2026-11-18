@@ -1,20 +1,19 @@
 ---
-title: Deploy your static blog
+title: 部署你的静态博客
 date: '2026-08-18T10:00:00+08:00'
 slug: deployment
-description: Deploy your static blog — a working example for the Astro Solitude theme.
+description: 部署你的静态博客 —— Astro 跬步博客的使用示例。
 categories:
-- Theme guides
+- 主题指南
 tags:
 - Astro
-- Solitude
+- 跬步
 series:
-- Theme essentials
+- 主题入门
 cover: /img/demo/cover-shortcodes-v2.webp
 ---
 
-# Deploy your static blog
-
+# 部署你的静态博客
 Welcome to **Astro Solitude**. This sample post is ready to replace with your own story.
 
 ## Content and expression

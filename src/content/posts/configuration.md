@@ -1,19 +1,18 @@
 ---
-title: Configure your theme
+title: 配置你的主题
 date: '2026-08-25T10:00:00+08:00'
 slug: configuration
-description: Configure your theme — a working example for the Astro Solitude theme.
+description: 配置你的主题 —— Astro 跬步博客的使用示例。
 categories:
-- Creative notes
+- 创作随笔
 tags:
-- Solitude
+- 跬步
 series:
-- Theme essentials
+- 主题入门
 cover: /img/demo/cover-pagination-v2.webp
 ---
 
-# Configure your theme
-
+# 配置你的主题
 Welcome to **Astro Solitude**. This sample post is ready to replace with your own story.
 
 ## Content and expression

@@ -1,1 +1,68 @@
 /* Site overrides load after the theme. Keep personal customizations here. */
+
+/* STEP 跬步字标：横向宽幅 Logo，方形位置改用 contain 完整显示，避免裁切变形。 */
+img[src*="logo.svg"] {
+  object-fit: contain !important;
+  background-color: #ffffff;
+  padding: 4px;
+}
+
+/* 圆形头像框保持圆角，避免白底溢出 */
+.card-info .avatar > img,
+#footer-bar .footer-bar-link .author-avatar img,
+#bber .avatar img,
+#footer #footer_deal .footer_mini_logo img {
+  border-radius: 50% !important;
+}
+
+/* 兴趣卡片：金色标记从卡片右上角移到标题右侧 */
+#about-page .interest-card .author-content-item-title {
+  justify-content: flex-start !important;
+  gap: 0.75rem;
+}
+
+/* 照片板块：真人照露出完整头部并居中；圆形头像让面部居于圆心 */
+#about-page .myphoto > .author-content-img {
+  object-position: center 22% !important;
+}
+#about-page .myphoto > .myphoto-badge {
+  object-fit: cover !important;
+  object-position: center 28% !important;
+}
+
+/* 自定义菜单图标：用 CSS mask 让 SVG 继承当前文字色，尺寸与 FontAwesome 图标协调 */
+#nav .menus_items .menus_item .menus_item_child li a i.icon-doc-custom,
+#nav .menus_items .menus_item .menus_item_child li a i.icon-news-custom {
+  display: inline-block;
+  width: 27.5px;
+  height: 22px;
+  vertical-align: middle;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+#nav .menus_items .menus_item .menus_item_child li a i.icon-doc-custom {
+  -webkit-mask-image: url('/img/icons/menu-doc.svg');
+  mask-image: url('/img/icons/menu-doc.svg');
+}
+#nav .menus_items .menus_item .menus_item_child li a i.icon-news-custom {
+  width: 20px;
+  height: 20px;
+  -webkit-mask-image: url('/img/icons/menu-news.svg');
+  mask-image: url('/img/icons/menu-news.svg');
+}
+
+/* 兴趣卡片标题旁图标：三张去底 PNG 完整显示，与金色标记尺寸一致 */
+#about-page .interest-mode-image {
+  object-fit: contain;
+}
+
+/* 底部文字贴齐卡片底线：英雄图标/按钮撑高 footer 时，文字仍与同行卡对齐 */
+#about-page .interest-subtitle,
+#about-page .interest-right-text {
+  align-self: flex-end;
+}

@@ -1,19 +1,18 @@
 ---
-title: Build your About page
+title: 搭建你的「关于」页面
 date: '2026-08-19T10:00:00+08:00'
 slug: about
-description: Build your About page — a working example for the Astro Solitude theme.
+description: 搭建你的「关于」页面 —— Astro 跬步博客的使用示例。
 categories:
-- Creative notes
+- 创作随笔
 tags:
-- Solitude
+- 跬步
 series:
-- Theme essentials
+- 主题入门
 cover: /img/demo/cover-pagination-v2.webp
 ---
 
-# Build your About page
-
+# 搭建你的「关于」页面
 Welcome to **Astro Solitude**. This sample post is ready to replace with your own story.
 
 ## Content and expression

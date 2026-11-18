@@ -1,19 +1,18 @@
 ---
-title: Connect a comment service
+title: 接入评论服务
 date: '2026-08-21T10:00:00+08:00'
 slug: comments
-description: Connect a comment service — a working example for the Astro Solitude theme.
+description: 接入评论服务 —— Astro 跬步博客的使用示例。
 categories:
-- Creative notes
+- 创作随笔
 tags:
-- Solitude
+- 跬步
 series:
-- Theme essentials
+- 主题入门
 cover: /img/demo/cover-shortcodes-v2.webp
 ---
 
-# Connect a comment service
-
+# 接入评论服务
 Welcome to **Astro Solitude**. This sample post is ready to replace with your own story.
 
 ## Content and expression

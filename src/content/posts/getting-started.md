@@ -1,20 +1,19 @@
 ---
-title: Getting started with Astro Solitude
+title: Astro 跬步博客快速上手
 date: '2026-08-26T10:00:00+08:00'
 slug: getting-started
-description: Getting started with Astro Solitude — a working example for the Astro Solitude theme.
+description: Astro 跬步博客快速上手 —— Astro 跬步博客的使用示例。
 categories:
-- Theme guides
+- 主题指南
 tags:
 - Astro
-- Solitude
+- 跬步
 series:
-- Theme essentials
+- 主题入门
 cover: /img/demo/cover-getting-started-v2.webp
 ---
 
-# Getting started with Astro Solitude
-
+# Astro 跬步博客快速上手
 Welcome to **Astro Solitude**. This sample post is ready to replace with your own story.
 
 ## Content and expression

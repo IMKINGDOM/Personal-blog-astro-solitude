@@ -4,7 +4,7 @@
       "class": "text",
       "custom": "Solitude"
     },
-    "icon": "/img/logo.png"
+    "icon": "/img/logo.svg"
   },
   "nav": {
     "group": {},
@@ -39,7 +39,7 @@
     },
     "my_card": {
       "author": {
-        "img": "/img/logo.png",
+        "img": "/img/logo.svg",
         "emoji": null,
         "sticker": null
       },
@@ -95,7 +95,7 @@
       "locate": "China",
       "copyright": {
         "enable": true,
-        "author": "/img/logo.png",
+        "author": "/img/logo.svg",
         "author_background": "",
         "license": "CC BY-NC-SA 4.0",
         "licenurl": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
@@ -223,7 +223,7 @@
   "footer": {
     "randomlink": false,
     "information": {
-      "author": "/img/logo.png",
+      "author": "/img/logo.svg",
       "left": [],
       "right": []
     },

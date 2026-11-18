@@ -1,31 +1,32 @@
 {
-  "title": "About Solitude",
+  "title": "关于 STEP 跬步",
   "sections": [
     {
       "type": "intro",
-      "greeting": "Hello, welcome to Solitude",
-      "name_prefix": "This is",
-      "name": "Solitude",
-      "description": "An Astro theme for stories and ideas.",
+      "greeting": "您好，欢迎来到",
+      "name_prefix": "",
+      "name": "STEP 跬步的 博客空间",
+      "description": "一个用于记录故事与想法的个人博客",
       "pursuit": {
-        "label": "Our focus",
+        "label": "理念",
         "lines": [
-          "Make room",
-          "for your story"
+          "不积跬步",
+          "无以至千里"
         ],
         "rotating_words": [
-          "Fast",
-          "Reliable",
-          "Native",
-          "Extensible"
+          "阅读",
+          "创新",
+          "营销",
+          "源于热爱",
+          "信念驱动"
         ]
       }
     },
     {
       "type": "skills_career",
       "skills": {
-        "label": "The toolkit",
-        "title": "From words to pages",
+        "label": "技术栈",
+        "title": "从文字到页面",
         "items": [
           {
             "name": "Astro",
@@ -33,7 +34,7 @@
             "color": "#ff4088"
           },
           {
-            "name": "Astro Components",
+            "name": "Astro 组件",
             "icon": "fas fa-code",
             "color": "#00add8"
           },
@@ -58,12 +59,12 @@
             "color": "#7c3aed"
           },
           {
-            "name": "Taxonomies",
+            "name": "分类法",
             "icon": "fas fa-tags",
             "color": "#16a34a"
           },
           {
-            "name": "Search",
+            "name": "站内搜索",
             "icon": "fas fa-magnifying-glass",
             "color": "#f59e0b"
           },
@@ -73,12 +74,12 @@
             "color": "#f26522"
           },
           {
-            "name": "Accessibility",
+            "name": "无障碍访问",
             "icon": "fas fa-universal-access",
             "color": "#8b5cf6"
           },
           {
-            "name": "Performance",
+            "name": "性能优化",
             "icon": "fas fa-gauge-high",
             "color": "#059669"
           },
@@ -90,19 +91,19 @@
         ]
       },
       "career": {
-        "label": "The journey",
-        "title": "Always evolving",
+        "label": "发展历程",
+        "title": "持续进化",
         "summary": [
           {
-            "name": "2023, Solitude demo",
+            "name": "2023，Solitude 初版",
             "color": "#425aef"
           },
           {
-            "name": "2026, Native Astro",
+            "name": "2026，原生 Astro",
             "color": "#ff4088"
           },
           {
-            "name": "Today, growing together",
+            "name": "如今，共同成长",
             "color": "#16a34a"
           }
         ],
@@ -110,24 +111,24 @@
           "start": 2023,
           "end": 2027,
           "start_label": 2023,
-          "end_label": "Next",
-          "track_label": "SOLITUDE",
-          "aria_label": "Solitude timeline from the original demo to a native Astro theme",
+          "end_label": "未来",
+          "track_label": "跬步",
+          "aria_label": "从最初版本到原生 Astro 主题的发展历程",
           "events": [
             {
-              "label": "First demo",
+              "label": "首个版本",
               "from": 2023,
               "to": 2025,
               "color": "#425aef"
             },
             {
-              "label": "Move to Astro",
+              "label": "迁移至 Astro",
               "from": 2025,
               "to": 2026,
               "color": "#ff4088"
             },
             {
-              "label": "Keep improving",
+              "label": "持续完善",
               "from": 2026,
               "to": 2027,
               "color": "#16a34a"
@@ -139,37 +140,37 @@
     {
       "type": "personality_photo",
       "personality": {
-        "label": "Personality",
-        "title": "Protagonist",
-        "type": "ENFJ-A",
+        "label": "性格类型",
+        "title": "建筑师",
+        "type": "ISTJ",
         "color": "#56ad83",
-        "image": "/img/demo/about/personality-enfj-v2.png",
-        "image_alt": "Low-poly illustration of a protagonist holding a sword",
+        "image": "/img/demo/about/personality-istj.png",
+        "image_alt": "戴眼镜、白发、穿蓝色毛衣的 ISTJ 人物插画",
         "link": {
-          "text": "Explore the Protagonist profile",
-          "url": "https://www.16personalities.com/enfj-personality",
+          "text": "了解 ISTJ 性格档案",
+          "url": "https://www.16personalities.com/istj-personality",
           "external": true
         }
       },
       "photo": {
-        "image": "/img/brand/creative-space.webp",
-        "alt": "Paper-cut creative workspace with a notebook and paper airplane",
-        "badge": "/img/brand/paper-plane-badge.webp"
+        "image": "/img/demo/about/photo-portrait.jpg",
+        "alt": "戴眼镜的卡通风格人物肖像",
+        "badge": "/img/demo/about/avatar-badge.jpg"
       }
     },
     {
       "type": "values",
       "motto": {
-        "label": "A little motto",
-        "prefix": "Stay curious.",
-        "content": "Keep creating."
+        "label": "一点箴言",
+        "prefix": "思维无界",
+        "content": "无限进步"
       },
       "expertise": {
-        "label": "What we do",
-        "prefix": "Built for",
-        "specialist": "great reading",
-        "content": "Thoughtful",
-        "level": "details"
+        "label": "初心和愿景",
+        "prefix": "于",
+        "specialist": "繁华喧嚣下",
+        "content": "为自己而建的",
+        "level": "一片静谧自留地"
       }
     },
     {
@@ -177,13 +178,13 @@
       "items": [
         {
           "variant": "game",
-          "label": "Off the clock",
-          "title": "League of Legends",
-          "background": "/img/demo/about/game-aram-v2.webp",
+          "label": "游戏",
+          "title": "英雄联盟",
+          "background": "/img/demo/about/game-jiakesi-wallpaper.jpg",
           "mode": {
             "name": "ARAM",
-            "tooltip": "All Random All Mid",
-            "image": "/img/demo/about/mode-aram-v2.webp"
+            "tooltip": "极地大乱斗",
+            "image": "/img/demo/about/mode-golden-marker.png"
           },
           "heroes": [
             {
@@ -211,20 +212,36 @@
               "image": "/img/demo/about/hero-aurelion-sol-v2.webp"
             }
           ],
-          "right_text": "One more game",
-          "right_tip": "A few favorite champions for a quick match"
+          "right_text": "影流",
+          "right_tip": "几款喜欢的英雄，来一局快节奏对局"
         },
         {
           "variant": "media",
-          "label": "On repeat",
+          "label": "音乐",
           "title_lines": [
-            "Rap, folk,",
-            "and pop"
+            "旅行团乐队"
           ],
-          "subtitle": "A soundtrack for an afternoon of writing",
-          "background": "/img/demo/about/music-listening-v2.webp",
+          "subtitle": "生命是场马拉松",
+          "background": "/img/demo/about/band-concert.jpg"
+        },
+        {
+          "variant": "game",
+          "label": "文学爱好",
+          "title": "哈利·波特",
+          "background": "/img/demo/about/hogwarts.jpg",
+          "right_text": "赫奇帕奇",
+          "right_tip": "几款喜欢的英雄，来一局快节奏对局"
+        },
+        {
+          "variant": "media",
+          "label": "影视",
+          "title_lines": [
+            "指环王"
+          ],
+          "subtitle": "我们所要决定的，就是如何利用赋予我们的时间",
+          "background": "/img/demo/about/lotr.jpg",
           "button": {
-            "text": "Explore more",
+            "text": "查看更多",
             "url": "/archives/",
             "icon": "fas fa-circle-chevron-right",
             "external": false
@@ -234,9 +251,9 @@
     },
     {
       "type": "story",
-      "label": "Our story",
-      "title": "Why Solitude?",
-      "content": "Solitude is a place to collect ideas and tell stories at your own pace. Each post deserves a clear structure, comfortable reading, and a home where it can be found again.\n\nThe Astro edition keeps the familiar visual style while using content collections, Astro components, and a static build pipeline. Node.js powers development and builds; the generated website can be served by a static host.\n\nThis demo is a working starting point. Replace its stories and sample profile with your own, then explore the homepage, posts, friends, equipment, and short updates. Comments and online music are available when you choose to configure them.\n\nSolitude keeps improving around **reading, accessibility, performance, and long-term maintenance**. The features are here to support what you want to share.\n"
+      "label": "这个博客的故事",
+      "title": "为什么建立 STEP 跬步 这个博客站？",
+      "content": "从小我就很喜欢看书和写作，因此我写了很多的文章，其中不乏许许多多的阅读后感，这些文章中每一个文字都是一种吸收养分后的输出，而这个习惯，至今依旧深藏并保留着，已成为我自己成长历程的时光缩影。\n\n2016年大学毕业，而我也是在那一年创建了自己的个人微信订阅号，一来是为了让自己的输出可以有一个对外展示的平台，二来也是想通过分享进行变现，后来觉着变现一途遥遥无期，加之日常工作也已越来越繁忙，所以微信订阅号就停止了更新。\n\n直至今年（2026），Agent的快速发展让代码及程序创建并非遥不可及，即便没有计算机编程基础的普通人也可以利用Vibe Coding去创建一个属于自己的个人网站，于是，我通过向Agent刨根问底式的询问，创建了自己的个人网站，既然如此，那个人博客自然应运而生。\n\n此后，个人网站将作为静态主站展示，而个人博客将作为一个常常更新的动态性质的网站，是为“动态自留地”。在这里，我将尽可能勤劳的耕耘这片独属于自己的“烂泥地小菜园”，主打一个“菜要干净”，他可能没啥卖相，也可能内容有极大局限，但为了守护我自己内心的那个“孩子”，纯粹、简单、真实就是建站的初心所在。\n\n从小时候用纸和笔手写的文字记录，到2016年用个人微信订阅号承载，再到十年后的今时创建博客站，**文字承载着情感，情感又灌注在时光的年轮里**，自始至终，我都感到非常幸运。\n\n若某个瞬间，你我得以在这里相遇，我深感荣幸，即便我们昨天没有见过，今天没有见过，可能未来也没有机会相见，但昙花一现，也终有他的意义所在。"
     }
   ]
 }

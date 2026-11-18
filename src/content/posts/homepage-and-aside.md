@@ -1,19 +1,18 @@
 ---
-title: Homepage recommendations and sidebar
+title: 首页推荐与侧边栏
 date: '2026-08-23T10:00:00+08:00'
 slug: homepage-and-aside
-description: Homepage recommendations and sidebar — a working example for the Astro Solitude theme.
+description: 首页推荐与侧边栏 —— Astro 跬步博客的使用示例。
 categories:
-- Creative notes
+- 创作随笔
 tags:
-- Solitude
+- 跬步
 series:
-- Theme essentials
+- 主题入门
 cover: /img/demo/cover-getting-started-v2.webp
 ---
 
-# Homepage recommendations and sidebar
-
+# 首页推荐与侧边栏
 Welcome to **Astro Solitude**. This sample post is ready to replace with your own story.
 
 ## Content and expression

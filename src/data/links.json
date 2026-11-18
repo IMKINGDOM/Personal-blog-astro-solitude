@@ -1,44 +1,44 @@
 {
   "links": [
     {
-      "class_name": "Official resources",
-      "class_desc": "Documentation, source code, and updates",
+      "class_name": "官方资源",
+      "class_desc": "文档、源码与更新",
       "type": "card",
       "link_list": [
         {
           "name": "Astro Docs",
           "link": "https://docs.astro.build/",
-          "avatar": "/img/logo.png",
+          "avatar": "/img/logo.svg",
           "topimg": "/img/demo/cover-getting-started-v2.webp",
-          "descr": "Official Astro documentation",
-          "tag": "Docs"
+          "descr": "Astro 官方文档",
+          "tag": "文档"
         },
         {
-          "name": "Solitude GitHub",
-          "link": "https://github.com/everfu/astro-solitude",
-          "avatar": "/img/logo.png",
+          "name": "跬步博客源码",
+          "link": "https://github.com/IMKINGDOM/Personal-blog-astro-solitude",
+          "avatar": "/img/logo.svg",
           "topimg": "/img/demo/cover-shortcodes-v2.webp",
-          "descr": "Theme source, changes, and issue tracking",
-          "tag": "Source"
+          "descr": "主题源码、更新记录与问题反馈",
+          "tag": "源码"
         }
       ]
     },
     {
-      "class_name": "Built with",
-      "class_desc": "Open tools behind Astro Solitude",
+      "class_name": "技术构成",
+      "class_desc": "构建跬步博客的开源工具",
       "type": "item",
       "link_list": [
         {
           "name": "Astro",
           "link": "https://astro.build/",
-          "avatar": "/img/logo.png",
-          "descr": "A fast, flexible site builder"
+          "avatar": "/img/logo.svg",
+          "descr": "快速而灵活的静态站点构建工具"
         },
         {
           "name": "TypeScript",
           "link": "https://www.typescriptlang.org/",
           "avatar": "https://www.typescriptlang.org/favicon-32x32.png",
-          "descr": "Typed browser interactions"
+          "descr": "为浏览器交互提供类型支持"
         }
       ]
     }

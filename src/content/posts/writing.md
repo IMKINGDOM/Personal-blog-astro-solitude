@@ -1,20 +1,19 @@
 ---
-title: Write with Markdown and MDX
+title: 用 Markdown 与 MDX 写作
 date: '2026-08-24T10:00:00+08:00'
 slug: writing
-description: Write with Markdown and MDX — a working example for the Astro Solitude theme.
+description: 用 Markdown 与 MDX 写作 —— Astro 跬步博客的使用示例。
 categories:
-- Theme guides
+- 主题指南
 tags:
 - MDX
-- Solitude
+- 跬步
 series:
-- Theme essentials
+- 主题入门
 cover: /img/demo/cover-shortcodes-v2.webp
 ---
 
-# Write with Markdown and MDX
-
+# 用 Markdown 与 MDX 写作
 Welcome to **Astro Solitude**. This sample post is ready to replace with your own story.
 
 ## Content and expression

@@ -9,7 +9,7 @@ test('static output includes articles, feeds, all components and a real legacy H
   const search = await fs.readFile('dist/search.xml', 'utf8');
   assert.ok(search.includes('/p/hidden-example/'));
   assert.ok(!search.includes('/p/draft/'));
-  assert.ok(home.includes('lang="en"'));
+  assert.match(home, /<html lang="(en|zh-CN|zh-TW|es)"/);
   assert.ok((await fs.stat('dist/p/legacy.html')).isFile());
   const html = await fs.readFile('dist/p/components/index.html', 'utf8');
   for (const marker of [

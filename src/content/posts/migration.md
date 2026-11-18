@@ -1,20 +1,19 @@
 ---
-title: Import content from Hugo
+title: 从 Hugo 导入内容
 date: '2026-08-17T10:00:00+08:00'
 slug: migration
-description: Import content from Hugo — a working example for the Astro Solitude theme.
+description: 从 Hugo 导入内容 —— Astro 跬步博客的使用示例。
 categories:
-- Creative notes
+- 创作随笔
 tags:
 - Astro
-- Solitude
+- 跬步
 series:
-- Theme essentials
+- 主题入门
 cover: /img/demo/cover-getting-started-v2.webp
 ---
 
-# Import content from Hugo
-
+# 从 Hugo 导入内容
 Welcome to **Astro Solitude**. This sample post is ready to replace with your own story.
 
 ## Content and expression

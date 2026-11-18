@@ -2,48 +2,50 @@ import { defineSolitudeConfig } from './lib/config';
 
 export default defineSolitudeConfig({
   site: 'https://example.org',
-  title: 'Solitude',
-  description:
-    'Write and create with Astro. A thoughtful home for your stories.',
-  locale: 'en',
-  timeZone: 'UTC',
-  author: { name: 'Solitude' },
+  title: 'STEP 跬步',
+  description: '用 Astro 书写与创作，为你的故事安一个家。',
+  locale: 'zh-CN',
+  timeZone: 'Asia/Shanghai',
+  author: { name: 'STEP 跬步' },
   menus: [
     {
-      name: 'Library',
+      name: '文章',
       children: [
-        { name: 'All posts', url: '/archives/', icon: 'fas fa-folder-closed' },
-        { name: 'Categories', url: '/categories/', icon: 'fas fa-clone' },
-        { name: 'Tags', url: '/tags/', icon: 'fas fa-tags' },
+        { name: '全部文章', url: '/archives/', icon: 'icon-doc-custom' },
+        { name: '所有分类', url: '/categories/', icon: 'fas fa-clone' },
+        { name: '标签列表', url: '/tags/', icon: 'fas fa-tags' },
       ],
     },
-    { name: 'Friends', url: '/links/' },
     {
-      name: 'Explore',
+      name: '探索',
       children: [
-        { name: 'About the theme', url: '/about/' },
-        { name: 'My equipment', url: '/equipment/' },
-        { name: 'Short updates', url: '/brevity/' },
+        { name: 'STEP 跬步', url: '/about/', icon: 'icon-news-custom' },
+        { name: '我的装备', url: '/equipment/' },
+        { name: '微动态', url: '/brevity/' },
       ],
     },
+    { name: '友链', url: '/links/' },
   ],
   theme: {
+    site: {
+      name: { class: 'text', custom: 'STEP 跬步' },
+    },
     lightbox: 'fancybox',
     nav: {
       group: {
-        Project: [
+        项目: [
           {
-            name: 'Astro Solitude',
-            url: 'https://github.com/everfu/astro-solitude',
-            icon: '/img/logo.png',
+            name: '跬步博客',
+            url: 'https://github.com/IMKINGDOM/Personal-blog-astro-solitude',
+            icon: '/img/logo.svg',
           },
         ],
       },
     },
     hometop: {
       banner: {
-        title: 'Write and create with Solitude',
-        desc: 'An Astro theme with guides, examples, and content components.',
+        title: '以文字记录，以跬步前行',
+        desc: '一个基于 Astro 的博客，收录指南、示例与内容组件。',
       },
     },
     aside: {
@@ -51,13 +53,20 @@ export default defineSolitudeConfig({
       post: { noSticky: 'about', Sticky: 'newestPost,allInfo' },
       page: { noSticky: 'about', Sticky: 'newestPost,allInfo' },
       my_card: {
-        description: 'An expressive Astro theme for your personal blog.',
-        content: 'Let your content take center stage.',
-        witty_words: ['Capture life in words', 'Create something with code'],
+        description: '一个为个人博客打造的 Astro 主题。',
+        content: '让内容成为主角。',
+        state: {
+          morning: '一抹斜杠，直指星辰',
+          noon: '一抹斜杠，直指星辰',
+          afternoon: '一抹斜杠，直指星辰',
+          night: '一抹斜杠，直指星辰',
+          goodnight: '一抹斜杠，直指星辰',
+        },
+        witty_words: ['一抹斜杠，直指星辰'],
         information: [
           {
             name: 'GitHub',
-            url: 'https://github.com/everfu/astro-solitude',
+            url: 'https://github.com/IMKINGDOM/Personal-blog-astro-solitude',
             icon: 'fab fa-github',
           },
         ],
@@ -68,20 +77,20 @@ export default defineSolitudeConfig({
         left: [
           {
             name: 'GitHub',
-            url: 'https://github.com/everfu/astro-solitude',
+            url: 'https://github.com/IMKINGDOM/Personal-blog-astro-solitude',
             icon: 'fab fa-github',
           },
         ],
         right: [{ name: 'RSS', url: '/index.xml', icon: 'fas fa-rss' }],
       },
       group: {
-        Explore: [
-          { name: 'Posts', url: '/archives/' },
-          { name: 'Categories', url: '/categories/' },
+        探索: [
+          { name: '文章', url: '/archives/' },
+          { name: '分类', url: '/categories/' },
         ],
-        About: [
-          { name: 'Theme', url: '/about/' },
-          { name: 'Friends', url: '/links/' },
+        关于: [
+          { name: 'STEP 跬步', url: '/about/' },
+          { name: '友链', url: '/links/' },
         ],
       },
     },
@@ -100,7 +109,7 @@ export default defineSolitudeConfig({
         { modifier: 'shift', key: 'K', action: 'toggleKeyboard' },
       ],
     },
-    search: { tags: ['Astro', 'Solitude', 'MDX'], local: { preload: true } },
+    search: { tags: ['Astro', '跬步', 'MDX'], local: { preload: true } },
     pwa: { enable: true },
   },
 });

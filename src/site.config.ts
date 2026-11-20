@@ -3,9 +3,10 @@ import { defineSolitudeConfig } from './lib/config';
 export default defineSolitudeConfig({
   site: 'https://example.org',
   title: 'STEP 跬步',
-  description: '用 Astro 书写与创作，为你的故事安一个家。',
+  description: '立志于远方的一抹斜杠\n无论是工作 还是生活\n热情都来自于汲取新的养分\n最终又归于一些小小的创作',
   locale: 'zh-CN',
   timeZone: 'Asia/Shanghai',
+  hasCJKLanguage: true,
   author: { name: 'STEP 跬步' },
   menus: [
     {
@@ -60,16 +61,22 @@ export default defineSolitudeConfig({
       post: { noSticky: 'about', Sticky: 'newestPost,allInfo' },
       page: { noSticky: 'about', Sticky: 'newestPost,allInfo' },
       my_card: {
-        description: '一个为个人博客打造的 Astro 主题。',
-        content: '让内容成为主角。',
+        description: '一抹斜杠 直指星辰',
+        content: '立志于远方的一抹斜杠\n无论是工作 还是生活\n热情都来自于汲取新的养分\n最终又归于一些小小的创作\n立于此方小天地\n执笔万里饮长风\n若问有何可取处\n尽在文字山海中',
         state: {
-          morning: '一抹斜杠，直指星辰',
-          noon: '一抹斜杠，直指星辰',
-          afternoon: '一抹斜杠，直指星辰',
-          night: '一抹斜杠，直指星辰',
-          goodnight: '一抹斜杠，直指星辰',
+          morning: '早上好，愿你今日顺遂',
+          noon: '中午好，记得稍作休息',
+          afternoon: '下午好，继续保持热爱',
+          night: '晚上好，静享文字时光',
+          goodnight: '夜深了，早点休息',
         },
-        witty_words: ['一抹斜杠，直指星辰'],
+        witty_words: [
+          '一抹斜杠，直指星辰',
+          '笔墨为刃，此地为驿',
+          '山不来见我，我自去见山',
+          '读万卷书，行万里路',
+          '执笔万里饮长风',
+        ],
         information: [
           {
             name: 'GitHub',

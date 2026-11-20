@@ -163,6 +163,8 @@ export const postActions = {
   },
   changeTimeFormat(selector: NodeListOf<HTMLElement>) {
     selector.forEach((item) => {
+      // 标记 data-absolute 的时间显示服务端格式化的绝对日期（YYYY/MM/DD），不转相对时间
+      if (item.hasAttribute('data-absolute')) return;
       const timeVal = item.getAttribute('datetime');
       item.textContent = String(Solitude.diffDate(timeVal || '', true));
       item.style.display = 'inline';

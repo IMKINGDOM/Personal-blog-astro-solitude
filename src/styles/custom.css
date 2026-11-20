@@ -96,6 +96,51 @@ img[src*="logo.svg"] {
   mask-image: url('/img/icons/menu-news.svg');
 }
 
+/* 侧边个人信息卡片：仅鼠标悬停光晕（不改背景、不加浮动）
+   注意：::before 由主题用于渐变背景（--current-banner-theme），绝不能覆盖；
+       光晕改用 ::after，并 mask 成只留边缘，避免遮挡渐变背景与内容。 */
+#aside-content .card-info {
+  --card-glow-x: 50%;
+  --card-glow-y: 50%;
+  --card-glow-opacity: 0;
+}
+#aside-content .card-info::after {
+  position: absolute; inset: 0; z-index: 5; content: '';
+  border-radius: inherit; pointer-events: none;
+  padding: 2px;
+  opacity: var(--card-glow-opacity);
+  background: radial-gradient(circle at var(--card-glow-x) var(--card-glow-y),
+    #fff, rgba(255,255,255,.7) 20%, rgba(255,255,255,.1) 46%, rgba(255,255,255,0) 62%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  transition: opacity .18s ease-out;
+}
+#aside-content .card-info:hover { --card-glow-opacity: 1; }
+
+/* 文章头部 meta 自定义图标：位置(常州) 与 奖章(本文仅限博客)，与 FA 图标协调 */
+.post-meta-custom { display: inline-flex; align-items: center; gap: 5px; }
+.post-meta-custom .post-meta-icon {
+  display: inline-block; width: 14px; height: 14px; flex: 0 0 14px;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-size: contain; mask-size: contain;
+}
+.post-meta-custom .meta-icon-location {
+  -webkit-mask-image: url('/img/icons/menu-map-pin.svg');
+  mask-image: url('/img/icons/menu-map-pin.svg');
+}
+.post-meta-custom .meta-icon-award {
+  -webkit-mask-image: url('/img/icons/meta-award.svg');
+  mask-image: url('/img/icons/meta-award.svg');
+}
+
+/* 侧边卡片与文章版权卡片诗句按行显示（文案含 \n 换行符） */
+#aside-content .card-info .description,
+.post-copyright__author_desc { white-space: pre-line; }
+
 /* 理念板块滚动文字：5 个词各用一种主题色（取自主题变量） */
 #about-page .about-word-mask [data-about-word]:nth-child(1) { color: var(--efu-blue); }
 #about-page .about-word-mask [data-about-word]:nth-child(2) { color: var(--efu-green); }

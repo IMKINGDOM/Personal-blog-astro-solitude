@@ -254,3 +254,19 @@ for (const heading of headings) {
     ))}
   </div>
 )}
+
+<script is:inline>
+/* 侧边个人信息卡片：仅鼠标悬停光晕跟随（不加浮动/倾斜，不改背景） */
+(function () {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  document.addEventListener('pointermove', function (e) {
+    var card = e.target && e.target.closest && e.target.closest('#aside-content .card-info');
+    if (!card) return;
+    var rect = card.getBoundingClientRect();
+    var x = (e.clientX - rect.left) / rect.width;
+    var y = (e.clientY - rect.top) / rect.height;
+    card.style.setProperty('--card-glow-x', (x * 100).toFixed(2) + '%');
+    card.style.setProperty('--card-glow-y', (y * 100).toFixed(2) + '%');
+  }, true);
+})();
+</script>

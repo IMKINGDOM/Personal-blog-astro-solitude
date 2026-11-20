@@ -11,17 +11,24 @@ export default defineSolitudeConfig({
     {
       name: '文章',
       children: [
-        { name: '全部文章', url: '/archives/', icon: 'icon-doc-custom' },
-        { name: '所有分类', url: '/categories/', icon: 'fas fa-clone' },
-        { name: '标签列表', url: '/tags/', icon: 'fas fa-tags' },
+        { name: '素笺拾墨', url: '/archives/', icon: 'icon-file-description' },
+        { name: '墨痕分卷', url: '/categories/', icon: 'icon-list-details' },
+        { name: '卷列寻章', url: '/tags/', icon: 'icon-tag' },
       ],
     },
     {
       name: '探索',
       children: [
-        { name: 'STEP 跬步', url: '/about/', icon: 'icon-news-custom' },
-        { name: '我的装备', url: '/equipment/' },
-        { name: '微动态', url: '/brevity/' },
+        { name: '浮光拾瞬', url: '/gallery/', icon: 'icon-filters' },
+        { name: '步履鸿迹', url: '/footprints/', icon: 'icon-map-pin' },
+      ],
+    },
+    {
+      name: '我的',
+      children: [
+        { name: '一隅片言', url: '/about/', icon: 'icon-user' },
+        { name: '器以载光', url: '/equipment/', icon: 'icon-apps' },
+        { name: '微言琐记', url: '/brevity/', icon: 'icon-messages' },
       ],
     },
     { name: '友链', url: '/links/' },

@@ -1,0 +1,260 @@
+---
+import { url } from '../../lib/site';
+---
+
+<!--
+  腾讯地图 SDK（合规：使用腾讯位置服务，前端零 key）。
+  本地/WorkBuddy 预览走 key 代理；正式部署时请在腾讯位置服务开放平台申请自己的 key：
+  https://lbs.qq.com/dev/console/application/mine （创建应用 → 勾选 WebServiceAPI → 配置域名白名单），
+  然后把下面 key 代理配置替换为自己的 key 直连方式，并配置 Referer 白名单防盗用。
+-->
+<script is:inline>
+  window._TMapSecurityConfig = {
+    serviceHost: 'http://127.0.0.1:__WB_HTTP_PORT__/_TMapService/_wbt/__WB_TMAP_SECRET__',
+  };
+</script>
+<script is:inline charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&libraries=service"></script>
+
+<div class="footprints-page">
+  <header class="fp-hero">
+    <p class="fp-kicker">行迹记录</p>
+    <h1 class="fp-title">步履鸿迹</h1>
+    <p class="fp-desc">到过的城市与走过的地方，已点亮 <strong id="fp-count">0</strong> 个坐标。</p>
+  </header>
+
+  <div class="fp-toolbar">
+    <div class="fp-search-wrap">
+      <input id="fp-input" class="fp-input" type="text" placeholder="搜索地点，如「杭州西湖」「朝阳区」…" autocomplete="off" />
+      <button id="fp-search" class="fp-btn" type="button">搜索</button>
+    </div>
+    <p class="fp-hint">搜索并点选结果，即可在地图点亮；数据仅保存在你的浏览器本地。</p>
+  </div>
+
+  <div id="fp-results" class="fp-results" hidden></div>
+
+  <div class="fp-map-wrap">
+    <div id="fp-map" class="fp-map"></div>
+    <div id="fp-map-tip" class="fp-map-tip">地图加载中…</div>
+  </div>
+
+  <div class="fp-list-panel">
+    <div class="fp-list-head">
+      <h2>已点亮的足迹</h2>
+      <button id="fp-clear" class="fp-clear" type="button">清空</button>
+    </div>
+    <ul id="fp-list" class="fp-list"></ul>
+    <p id="fp-empty" class="fp-empty">还没有足迹。在上方搜索一个地点开始吧。</p>
+  </div>
+</div>
+
+<style>
+  .footprints-page { max-width: 1200px; margin: 0 auto; padding: 10px 16px 50px; color: #e8e2d6; }
+  .fp-hero { text-align: center; margin: 10px 0 26px; }
+  .fp-kicker { color: #e8b84a; font-size: 13px; letter-spacing: .35em; margin: 0 0 10px; }
+  .fp-title { color: #f2ece0; font-size: 42px; margin: 0 0 12px; letter-spacing: .08em; }
+  .fp-desc { color: #a9a396; font-size: 15px; margin: 0; }
+  .fp-desc strong { color: #e8b84a; font-size: 18px; }
+  .fp-toolbar { margin: 0 auto 14px; max-width: 720px; }
+  .fp-search-wrap { display: flex; gap: 8px; }
+  .fp-input {
+    flex: 1; min-width: 0; padding: 12px 16px; border-radius: 999px;
+    border: 1px solid rgba(232,184,74,.35); background: #1c1a17; color: #f2ece0;
+    font-size: 15px; outline: none;
+  }
+  .fp-input::placeholder { color: #7d776b; }
+  .fp-input:focus { border-color: #e8b84a; box-shadow: 0 0 0 3px rgba(232,184,74,.12); }
+  .fp-btn {
+    padding: 12px 26px; border-radius: 999px; border: none; cursor: pointer;
+    background: #e8b84a; color: #2b2110; font-weight: 800; font-size: 15px;
+    transition: filter .2s ease;
+  }
+  .fp-btn:hover { filter: brightness(1.08); }
+  .fp-hint { color: #857f73; font-size: 12px; text-align: center; margin: 10px 0 0; }
+  .fp-results {
+    max-width: 720px; margin: 0 auto 14px; background: #1c1a17;
+    border: 1px solid rgba(232,184,74,.25); border-radius: 12px; overflow: hidden;
+  }
+  .fp-result-item {
+    display: block; width: 100%; text-align: left; padding: 11px 16px;
+    background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,.05);
+    color: #e8e2d6; cursor: pointer; font-size: 14px;
+  }
+  .fp-result-item:last-child { border-bottom: none; }
+  .fp-result-item:hover { background: rgba(232,184,74,.1); }
+  .fp-result-item b { color: #f0d9a8; }
+  .fp-result-item span { color: #9a9488; font-size: 12px; margin-left: 8px; }
+  .fp-map-wrap {
+    position: relative; height: 460px; border-radius: 14px; overflow: hidden;
+    border: 1px solid rgba(232,184,74,.2); background: #14120f;
+  }
+  /* 把腾讯默认浅色底图压暗成暖棕色调，契合站点风格（仅视觉滤镜，不改地图数据） */
+  .fp-map {
+    width: 100%; height: 100%;
+    filter: brightness(.52) sepia(.42) saturate(.85) contrast(1.08);
+  }
+  .fp-map-tip {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    color: #8f8a7e; font-size: 14px; pointer-events: none;
+  }
+  .fp-list-panel { margin-top: 26px; }
+  .fp-list-head { display: flex; align-items: center; justify-content: space-between; }
+  .fp-list-head h2 { color: #f0d9a8; font-size: 18px; margin: 0 0 12px; }
+  .fp-clear {
+    background: transparent; border: 1px solid rgba(232,184,74,.35); color: #c9b27e;
+    border-radius: 999px; padding: 4px 14px; font-size: 12px; cursor: pointer;
+  }
+  .fp-clear:hover { background: rgba(232,184,74,.12); }
+  .fp-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 10px; }
+  .fp-list li {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    background: #1c1a17; border: 1px solid rgba(232,184,74,.16); border-radius: 10px;
+    padding: 11px 14px;
+  }
+  .fp-list .fp-place { color: #e8e2d6; font-size: 14px; }
+  .fp-list .fp-region { color: #8f8a7e; font-size: 12px; display: block; margin-top: 2px; }
+  .fp-list .fp-del { background: none; border: none; color: #a8735a; cursor: pointer; font-size: 16px; }
+  .fp-list .fp-del:hover { color: #e07a5a; }
+  .fp-empty { color: #7d776b; font-size: 13px; text-align: center; padding: 18px 0; }
+  @media (max-width: 600px) {
+    .fp-title { font-size: 32px; }
+    .fp-map-wrap { height: 380px; }
+    .fp-btn { padding: 12px 18px; }
+  }
+</style>
+
+<script is:inline>
+/* global TMap */
+(function () {
+  const STORE_KEY = 'step-footprints-v1';
+  var map = null, markers = null, searchSvc = null;
+  var places = [];
+  try { places = JSON.parse(localStorage.getItem(STORE_KEY) || '[]') || []; } catch (e) { places = []; }
+
+  // 金色圆点标记（内联 SVG，不引用官方 demo 图片）
+  function markerSVG() {
+    var s = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">'
+      + '<circle cx="14" cy="14" r="11" fill="#e8b84a" stroke="#2b2110" stroke-width="2"/>'
+      + '<circle cx="14" cy="14" r="4" fill="#2b2110"/></svg>';
+    return 'data:image/svg+xml,' + encodeURIComponent(s);
+  }
+
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(places)); } catch (e) {}
+  }
+
+  function renderList() {
+    var list = document.getElementById('fp-list');
+    var empty = document.getElementById('fp-empty');
+    document.getElementById('fp-count').textContent = places.length;
+    list.innerHTML = '';
+    if (!places.length) { empty.hidden = false; return; }
+    empty.hidden = true;
+    places.forEach(function (p, i) {
+      var li = document.createElement('li');
+      var info = document.createElement('div');
+      var name = document.createElement('span'); name.className = 'fp-place'; name.textContent = p.name;
+      var region = document.createElement('span'); region.className = 'fp-region'; region.textContent = p.region || '';
+      info.appendChild(name); info.appendChild(region);
+      var del = document.createElement('button'); del.className = 'fp-del'; del.type = 'button'; del.textContent = '×';
+      del.title = '移除';
+      del.addEventListener('click', function () { places.splice(i, 1); save(); renderAll(); });
+      li.appendChild(info); li.appendChild(del);
+      list.appendChild(li);
+    });
+  }
+
+  function renderMarkers() {
+    if (!map || !window.TMap) return;
+    if (markers) { markers.setMap(null); markers = null; }
+    if (!places.length) return;
+    var geoms = places.map(function (p, i) {
+      return { id: 'fp-' + i, styleId: 'gold', position: new TMap.LatLng(p.lat, p.lng) };
+    });
+    markers = new TMap.MultiMarker({
+      map: map,
+      styles: { gold: new TMap.MarkerStyle({ width: 28, height: 28, src: markerSVG(), anchor: { x: 14, y: 14 } }) },
+      geometries: geoms,
+    });
+  }
+
+  function renderAll() { renderList(); renderMarkers(); }
+
+  function initMap() {
+    if (!window.TMap) { document.getElementById('fp-map-tip').textContent = '地图脚本加载失败，请稍后刷新。'; return; }
+    document.getElementById('fp-map-tip').hidden = true;
+    var center = places.length
+      ? new TMap.LatLng(places[0].lat, places[0].lng)
+      : new TMap.LatLng(35.86166, 104.195397); // 中国中心
+    map = new TMap.Map('fp-map', { center: center, zoom: places.length ? 11 : 4 });
+    if (window.TMap.service && TMap.service.Search) {
+      searchSvc = new TMap.service.Search({ pageSize: 8 });
+    }
+    renderMarkers();
+  }
+
+  function addPlace(poi) {
+    var loc = poi.location || {};
+    if (typeof loc.lat !== 'number' || typeof loc.lng !== 'number') return;
+    var name = poi.title || poi.name || '未命名地点';
+    var region = [poi.province, poi.city, poi.district].filter(Boolean).join(' ');
+    // 精确到区：若 POI 未给 district，保留地址兜底
+    if (!region && poi.address) region = poi.address;
+    var dup = places.some(function (p) { return p.name === name && p.lat === loc.lat && p.lng === loc.lng; });
+    if (dup) return;
+    places.push({ name: name, region: region, lat: loc.lat, lng: loc.lng });
+    save();
+    if (map) { map.easeTo({ center: new TMap.LatLng(loc.lat, loc.lng), zoom: 13, duration: 600 }); }
+    renderAll();
+  }
+
+  function doSearch() {
+    var kw = document.getElementById('fp-input').value.trim();
+    var box = document.getElementById('fp-results');
+    if (!kw) { box.hidden = true; return; }
+    if (!searchSvc) { box.hidden = false; box.innerHTML = '<div class="fp-result-item">搜索服务未加载，请稍后重试。</div>'; return; }
+    searchSvc.searchRegion({ keyword: kw, region: '中国', autoExtend: true })
+      .then(function (res) {
+        var data = (res && (res.data || (res.result && res.result.data))) || [];
+        if (!Array.isArray(data)) data = data.pois || [];
+        box.hidden = false;
+        box.innerHTML = '';
+        if (!data.length) { box.innerHTML = '<div class="fp-result-item">未找到相关地点，换个关键词试试。</div>'; return; }
+        data.slice(0, 8).forEach(function (poi) {
+          var btn = document.createElement('button');
+          btn.type = 'button'; btn.className = 'fp-result-item';
+          var region = [poi.province, poi.city, poi.district].filter(Boolean).join(' ');
+          btn.innerHTML = '<b></b><span></span>';
+          btn.querySelector('b').textContent = poi.title || poi.name || '地点';
+          btn.querySelector('span').textContent = region || poi.address || '';
+          btn.addEventListener('click', function () {
+            addPlace(poi);
+            box.hidden = true;
+          });
+          box.appendChild(btn);
+        });
+      })
+      .catch(function () {
+        box.hidden = false;
+        box.innerHTML = '<div class="fp-result-item">搜索服务需要地图 key。部署时请在腾讯位置服务开放平台申请 key 并配置 WebServiceAPI 后即可使用；本地预览可让我为你开启代理。</div>';
+      });
+  }
+
+  function boot() {
+    renderList();
+    if (window.TMap) { initMap(); }
+    else { window.addEventListener('load', initMap); }
+    document.getElementById('fp-search').addEventListener('click', doSearch);
+    document.getElementById('fp-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') doSearch(); });
+    document.getElementById('fp-clear').addEventListener('click', function () {
+      if (!places.length) return;
+      if (confirm('确定清空全部足迹吗？此操作只影响你本地浏览器。')) {
+        places = []; save(); renderAll();
+        if (map) map.easeTo({ center: new TMap.LatLng(35.86166, 104.195397), zoom: 4, duration: 600 });
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>

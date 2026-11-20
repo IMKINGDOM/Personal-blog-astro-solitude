@@ -26,6 +26,8 @@ import About from '../components/pages/About.astro';
 import Links from '../components/pages/Links.astro';
 import Equipment from '../components/pages/Equipment.astro';
 import Brevity from '../components/pages/Brevity.astro';
+import Gallery from '../components/pages/Gallery.astro';
+import Footprints from '../components/pages/Footprints.astro';
 import Archive from '../components/pages/Archive.astro';
 import RecentComments from '../components/pages/RecentComments.astro';
 import MessageBarrage from '../components/pages/MessageBarrage.astro';
@@ -53,6 +55,8 @@ const hideAside =
     'links',
     'kit',
     'brevity',
+    'gallery',
+    'footprints',
     'recentcomment',
     'message',
   ].includes(type) ||
@@ -82,6 +86,8 @@ const commentsEnabled =
     'tags',
     'categories',
     'brevity',
+    'gallery',
+    'footprints',
     'recentcomment',
     'archives',
   ].includes(type) &&
@@ -339,6 +345,10 @@ const commentsEnabled =
             <Equipment data={pageData(p.data, 'kit')} comment={p.comment} />
           ) : type === 'brevity' ? (
             <Brevity data={pageData(p.data, 'brevity')} />
+          ) : type === 'gallery' ? (
+            <Gallery />
+          ) : type === 'footprints' ? (
+            <Footprints />
           ) : type === 'music' && cfg.music.enable ? (
             <>
               <div id="Music-bg" />

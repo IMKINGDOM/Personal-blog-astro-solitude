@@ -1,0 +1,151 @@
+---
+import { url } from '../../lib/site';
+interface Props {
+  residence?: {
+    city?: string;
+    caption?: string;
+    image?: string;
+  };
+  stats?: {
+    title?: string;
+    items?: { label?: string; value?: string }[];
+    background?: string;
+  };
+}
+const { residence = {}, stats = {} } = Astro.props;
+const caption = residence.caption ?? '现居地：中国·江苏·常州';
+const mapImage = residence.image ?? '/img/demo/about/changzhou-map.png';
+const items = stats.items ?? [];
+const bg = stats.background ?? '';
+---
+
+<div class="author-content about-row about-row--residence-stats">
+  <!-- 左侧：静态地图 -->
+  <article class="author-content-item residence-map" tabindex="0">
+    <img class="residence-map-img" src={url(mapImage)} alt="常州市地图" />
+    <span class="residence-star" aria-label="常州市位置标记"></span>
+    <p class="residence-caption">{caption}</p>
+  </article>
+
+  <!-- 右侧：访问统计 -->
+  <article
+    class="author-content-item visiting-stats"
+    tabindex="0"
+    style={bg ? `--visiting-bg:url('${url(bg)}')` : undefined}
+  >
+    <div class="about-card-flow tw:[#about-page_&]:flex tw:[#about-page_&]:flex-col">
+      <h2 class="author-content-item-title">{stats.title ?? '访问统计'}</h2>
+      <div class="visiting-grid">
+        {items.map((it) => (
+          <div class="visiting-cell">
+            <span class="visiting-label">{it.label ?? ''}</span>
+            <strong class="visiting-value" data-stat={it.label ?? ''}>{it.value ?? ''}</strong>
+          </div>
+        ))}
+      </div>
+      {!bg && <p class="visiting-placeholder">背景图片待提供</p>}
+    </div>
+  </article>
+</div>
+
+<style>
+  .about-row--residence-stats > * { width: calc(50% - 5px); height: 300px; }
+  .residence-map, .visiting-stats { position: relative; overflow: hidden; }
+  /* 覆盖主题 author-content-item 的 20px 40px 内边距，让地图铺满无灰边 */
+  .residence-map { background: #2a2d31; padding: 0 !important; }
+  /* 静态地图铺满整卡 */
+  .residence-map-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* 星形图标：主题黄色，定位在"常州市"标注上方 */
+  .residence-star {
+    position: absolute; left: 58%; top: 43%; z-index: 2;
+    width: 26px; height: 26px; transform: translate(-50%, -50%);
+    background-color: #e8b84a;
+    -webkit-mask: url('/img/icons/star-tabler.svg') center/contain no-repeat;
+    mask: url('/img/icons/star-tabler.svg') center/contain no-repeat;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,.9));
+    pointer-events: none;
+  }
+  /* 现居地文字：主题文字色、靠左、无渐变 */
+  .residence-caption {
+    position: absolute !important; left: 16px !important; top: 14px !important; bottom: auto !important; right: auto !important; z-index: 2;
+    color: #e8e2d6 !important; font-size: 15px !important; font-weight: 700; margin: 0 !important;
+    text-align: left !important; padding: 0 !important; background: none !important;
+    text-shadow: 0 0 3px rgba(0,0,0,1), 0 1px 6px rgba(0,0,0,.95), 0 0 10px rgba(0,0,0,.7);
+  }
+  .visiting-stats::before {
+    position: absolute; inset: 0; content: '';
+    background: var(--visiting-bg, radial-gradient(circle at 70% 30%, #2b2b2b, #14120f)) center/cover no-repeat;
+    opacity: .9;
+  }
+  /* 文字区整体居中；访问统计与数字用主题文字色 */
+  .visiting-stats > .about-card-flow {
+    position: relative; z-index: 1; height: 100%; padding: 18px 20px;
+    justify-content: center; align-items: center;
+  }
+  .visiting-stats .author-content-item-title {
+    color: #e8e2d6 !important; font-size: 30px; margin: 0 0 18px; text-align: center;
+  }
+  .visiting-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, auto);
+    grid-auto-flow: column; gap: 18px 26px; width: 100%; max-width: 460px;
+  }
+  .visiting-cell { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .visiting-label { color: #e8e2d6 !important; font-size: 12px; }
+  .visiting-value { color: #e8e2d6 !important; font-size: 24px; line-height: 1.2; font-weight: 700; }
+  .visiting-placeholder { position: absolute; right: 12px; bottom: 10px; color: rgba(255,255,255,.35); font-size: 11px; }
+  @media (max-width: 768px) {
+    .about-row--residence-stats > * { width: 100%; height: 300px; }
+    .visiting-grid { gap: 12px 14px; }
+    .visiting-value { font-size: 20px; }
+  }
+</style>
+
+<script is:inline>
+/**
+ * 访问统计数据源（预留）
+ * ------------------------------------------------------------------
+ * 当前：显示两位数随机数（10~99）作为占位。
+ * 上线后：接入真实统计接口即可，无需改页面结构。
+ *
+ * 接入方式（三选一）：
+ *  1) 自建 API：把下面的 fetchVisitStats 改成 fetch('/api/stats') 返回 JSON，
+ *     格式 { "今日人数": 123, "今日访问": 456, ... }
+ *  2) 统计平台：如 Umami / 百度统计 / Cloudflare Analytics，按其文档取数后填入。
+ *  3) 构建期生成：在 astro 构建脚本里读取统计数据写入 about.json 的 stats.items。
+ *
+ * 页面已给每个数字加 data-stat="指标名"，拿到数据后按名字回填即可。
+ */
+(function () {
+  function randomTwoDigits() {
+    return String(Math.floor(Math.random() * 90) + 10); // 10~99
+  }
+
+  // 预留：真实数据拉取。默认返回 null 表示"暂无真实数据"，页面保持随机占位。
+  async function fetchVisitStats() {
+    // 上线后在此接入真实接口，例如：
+    // const res = await fetch('/api/stats');
+    // if (res.ok) return await res.json();
+    return null;
+  }
+
+  function applyValues(data) {
+    document.querySelectorAll('.visiting-value[data-stat]').forEach(function (el) {
+      var key = el.getAttribute('data-stat');
+      if (data && typeof data[key] !== 'undefined') {
+        el.textContent = data[key];
+      } else {
+        el.textContent = randomTwoDigits();
+      }
+    });
+  }
+
+  function boot() {
+    fetchVisitStats()
+      .then(function (data) { applyValues(data); })
+      .catch(function () { applyValues(null); });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>

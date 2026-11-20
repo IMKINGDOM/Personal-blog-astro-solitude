@@ -42,11 +42,15 @@ export async function getRoutes(): Promise<Route[]> {
       entry,
       type: 'post',
     });
+  const taxonomyTitles: Record<string, string> = {
+    tags: '卷列寻章',
+    categories: '墨痕分卷',
+  };
   for (const kind of ['tags', 'categories', 'series'] as const) {
     routes.push({
       path: `/${kind}/`,
       kind: 'taxonomy',
-      title: t(kind),
+      title: taxonomyTitles[kind] ?? t(kind),
       taxonomy: kind,
     });
     for (const group of taxonomy(posts, kind))
@@ -59,13 +63,15 @@ export async function getRoutes(): Promise<Route[]> {
       });
   }
   const defaults: [string, string, string][] = [
-    ['/archives/', 'archives', t('allPosts')],
-    ['/about/', 'about', t('about')],
+    ['/archives/', 'archives', '素笺拾墨'],
+    ['/about/', 'about', '一隅片言'],
     ['/links/', 'links', t('links')],
-    ['/equipment/', 'kit', t('equipment')],
+    ['/equipment/', 'kit', '器以载光'],
     ['/music/', 'music', t('music')],
     ['/message/', 'message', t('message')],
-    ['/brevity/', 'brevity', t('brevity')],
+    ['/brevity/', 'brevity', '微言琐记'],
+    ['/gallery/', 'gallery', '浮光拾瞬'],
+    ['/footprints/', 'footprints', '步履鸿迹'],
     ['/recentcomments/', 'recentcomment', t('recentComments')],
   ];
   for (const [path, type, title] of defaults)

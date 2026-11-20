@@ -30,12 +30,22 @@ img[src*="logo.svg"] {
   object-position: center 28% !important;
 }
 
-/* 自定义菜单图标：用 CSS mask 让 SVG 继承当前文字色，尺寸与 FontAwesome 图标协调 */
-#nav .menus_items .menus_item .menus_item_child li a i.icon-doc-custom,
+/* 自定义菜单图标：用 CSS mask 让 SVG 继承当前文字色；三个图标统一 20×20，与文字水平居中对齐 */
+#nav .menus_items .menus_item .menus_item_child li a i.icon-file-description,
+#nav .menus_items .menus_item .menus_item_child li a i.icon-list-details,
+#nav .menus_items .menus_item .menus_item_child li a i.icon-tag,
+#nav .menus_items .menus_item .menus_item_child li a i.icon-capture,
+#nav .menus_items .menus_item .menus_item_child li a i.icon-filters,
+#nav .menus_items .menus_item .menus_item_child li a i.icon-map-pin,
+#nav .menus_items .menus_item .menus_item_child li a i.icon-user,
+#nav .menus_items .menus_item .menus_item_child li a i.icon-apps,
+#nav .menus_items .menus_item .menus_item_child li a i.icon-messages,
 #nav .menus_items .menus_item .menus_item_child li a i.icon-news-custom {
   display: inline-block;
-  width: 27.5px;
-  height: 22px;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
   vertical-align: middle;
   background-color: currentColor;
   -webkit-mask-repeat: no-repeat;
@@ -45,16 +55,53 @@ img[src*="logo.svg"] {
   -webkit-mask-size: contain;
   mask-size: contain;
 }
-#nav .menus_items .menus_item .menus_item_child li a i.icon-doc-custom {
-  -webkit-mask-image: url('/img/icons/menu-doc.svg');
-  mask-image: url('/img/icons/menu-doc.svg');
+#nav .menus_items .menus_item .menus_item_child li a i.icon-file-description {
+  -webkit-mask-image: url('/img/icons/menu-file-description.svg');
+  mask-image: url('/img/icons/menu-file-description.svg');
+}
+#nav .menus_items .menus_item .menus_item_child li a i.icon-list-details {
+  -webkit-mask-image: url('/img/icons/menu-list-details.svg');
+  mask-image: url('/img/icons/menu-list-details.svg');
+}
+#nav .menus_items .menus_item .menus_item_child li a i.icon-tag {
+  -webkit-mask-image: url('/img/icons/menu-tag.svg');
+  mask-image: url('/img/icons/menu-tag.svg');
+}
+#nav .menus_items .menus_item .menus_item_child li a i.icon-capture {
+  -webkit-mask-image: url('/img/icons/menu-capture.svg');
+  mask-image: url('/img/icons/menu-capture.svg');
+}
+#nav .menus_items .menus_item .menus_item_child li a i.icon-filters {
+  -webkit-mask-image: url('/img/icons/menu-filters.svg');
+  mask-image: url('/img/icons/menu-filters.svg');
+}
+#nav .menus_items .menus_item .menus_item_child li a i.icon-map-pin {
+  -webkit-mask-image: url('/img/icons/menu-map-pin.svg');
+  mask-image: url('/img/icons/menu-map-pin.svg');
+}
+#nav .menus_items .menus_item .menus_item_child li a i.icon-user {
+  -webkit-mask-image: url('/img/icons/menu-user.svg');
+  mask-image: url('/img/icons/menu-user.svg');
+}
+#nav .menus_items .menus_item .menus_item_child li a i.icon-apps {
+  -webkit-mask-image: url('/img/icons/menu-apps.svg');
+  mask-image: url('/img/icons/menu-apps.svg');
+}
+#nav .menus_items .menus_item .menus_item_child li a i.icon-messages {
+  -webkit-mask-image: url('/img/icons/menu-messages.svg');
+  mask-image: url('/img/icons/menu-messages.svg');
 }
 #nav .menus_items .menus_item .menus_item_child li a i.icon-news-custom {
-  width: 20px;
-  height: 20px;
   -webkit-mask-image: url('/img/icons/menu-news.svg');
   mask-image: url('/img/icons/menu-news.svg');
 }
+
+/* 理念板块滚动文字：5 个词各用一种主题色（取自主题变量） */
+#about-page .about-word-mask [data-about-word]:nth-child(1) { color: var(--efu-blue); }
+#about-page .about-word-mask [data-about-word]:nth-child(2) { color: var(--efu-green); }
+#about-page .about-word-mask [data-about-word]:nth-child(3) { color: var(--efu-orange); }
+#about-page .about-word-mask [data-about-word]:nth-child(4) { color: var(--efu-purple); }
+#about-page .about-word-mask [data-about-word]:nth-child(5) { color: var(--efu-red); }
 
 /* 兴趣卡片标题旁图标：三张去底 PNG 完整显示，与金色标记尺寸一致 */
 #about-page .interest-mode-image {

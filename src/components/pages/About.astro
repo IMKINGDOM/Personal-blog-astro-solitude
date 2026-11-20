@@ -2,6 +2,7 @@
 import about from '../../data/about.json';
 import { url, json, t } from '../../lib/site';
 import { marked } from 'marked';
+import ResidenceStats from './ResidenceStats.astro';
 interface Props {
   data?: import('../../lib/about-types').AboutData;
 }
@@ -22,6 +23,7 @@ const allowed = [
   'values',
   'interests',
   'stats_profile',
+  'residence_stats',
   'story',
 ];
 if (!Array.isArray(data.sections))
@@ -450,6 +452,9 @@ for (const section of data.sections)
                 set:html={marked.parse(s.content ?? '')}
               />
             </article>
+          )}
+          {s.type === 'residence_stats' && (
+            <ResidenceStats residence={s.residence} stats={s.stats} />
           )}
         </>
       ))}

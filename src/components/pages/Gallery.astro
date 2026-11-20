@@ -1,0 +1,111 @@
+---
+import { url } from '../../lib/site';
+
+// 示例照片：替换这里即可换成自己的照片（把图片放进 public/img/gallery/，路径写 /img/gallery/xxx.jpg）
+const photos = [
+  { src: '/img/demo/about/hogwarts.jpg', title: '霍格沃茨的黄昏', caption: '日落时分，城堡亮起灯火' },
+  { src: '/img/demo/about/lotr.jpg', title: '山海之间', caption: '翻过雪山，走向远方' },
+  { src: '/img/demo/about/band-concert.jpg', title: '现场的星光', caption: '灯光亮起，人群沸腾' },
+  { src: '/img/demo/about/photo-portrait.jpg', title: '片刻', caption: '留给自己的一瞬' },
+  { src: '/img/brand/creative-space.webp', title: '创作角落', caption: '纸笔与灵感的地方' },
+  { src: '/img/demo/about/game-jiakesi-wallpaper.jpg', title: '水墨江湖', caption: '山高水长' },
+  { src: '/img/demo/cover-getting-started-v2.webp', title: '新的起点', caption: '一切从记录开始' },
+  { src: '/img/demo/cover-shortcodes-v2.webp', title: '万千可能', caption: '用文字搭建世界' },
+  { src: '/img/demo/about/music-listening-v2.webp', title: '午后时光', caption: '音乐与独处' },
+];
+---
+
+<div class="gallery-page">
+  <header class="gallery-hero">
+    <p class="gallery-kicker">光影记录</p>
+    <h1 class="gallery-title">浮光拾瞬</h1>
+    <p class="gallery-desc">收集生活里的每一个闪光瞬间。点击图片可放大查看。</p>
+  </header>
+
+  <div class="gallery-grid">
+    {photos.map((photo, i) => (
+      <figure class="gallery-item" style={`--delay:${i * 40}ms`}>
+        <a
+          href={url(photo.src)}
+          data-fancybox="gallery"
+          data-caption={`${photo.title} — ${photo.caption}`}
+          class="gallery-link"
+        >
+          <img src={url(photo.src)} alt={photo.title} loading="lazy" />
+          <figcaption class="gallery-caption">
+            <span class="gallery-name">{photo.title}</span>
+            <span class="gallery-note">{photo.caption}</span>
+          </figcaption>
+        </a>
+      </figure>
+    ))}
+  </div>
+
+  <p class="gallery-tip">想换成自己的照片？把图片放进 <code>public/img/gallery/</code>，告诉我，我帮你替换这份示例清单。</p>
+</div>
+
+<style>
+  .gallery-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 16px 40px;
+    color: #e8e2d6;
+  }
+  .gallery-hero { text-align: center; margin: 10px 0 36px; }
+  .gallery-kicker { color: #e8b84a; font-size: 13px; letter-spacing: .35em; margin: 0 0 10px; }
+  .gallery-title { color: #f2ece0; font-size: 42px; margin: 0 0 12px; letter-spacing: .08em; }
+  .gallery-desc { color: #a9a396; font-size: 15px; margin: 0; }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .gallery-item {
+    margin: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #1c1a17;
+    border: 1px solid rgba(232, 184, 74, .16);
+    animation: gallery-in .5s ease backwards;
+    animation-delay: var(--delay);
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+  }
+  .gallery-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
+    border-color: rgba(232, 184, 74, .5);
+  }
+  .gallery-link { display: block; text-decoration: none; position: relative; }
+  .gallery-link img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    transition: transform .5s ease;
+  }
+  .gallery-item:hover img { transform: scale(1.05); }
+  .gallery-caption {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 12px 15px 14px;
+  }
+  .gallery-name { color: #f0d9a8; font-size: 15px; font-weight: 700; }
+  .gallery-note { color: #9a9488; font-size: 12px; }
+  .gallery-tip {
+    text-align: center;
+    color: #8f8a7e;
+    font-size: 13px;
+    margin: 34px 0 0;
+  }
+  .gallery-tip code { color: #e8b84a; background: rgba(232, 184, 74, .1); padding: 2px 6px; border-radius: 4px; }
+  @keyframes gallery-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (max-width: 600px) {
+    .gallery-title { font-size: 32px; }
+    .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+    .gallery-link img { height: 140px; }
+  }
+</style>

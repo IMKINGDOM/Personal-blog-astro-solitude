@@ -3,28 +3,41 @@ import { url } from '../../lib/site';
 
 // 示例照片：替换这里即可换成自己的照片（把图片放进 public/img/gallery/，路径写 /img/gallery/xxx.jpg）
 const photos = [
-  { src: '/img/demo/about/hogwarts.jpg', title: '霍格沃茨的黄昏', caption: '日落时分，城堡亮起灯火' },
-  { src: '/img/demo/about/lotr.jpg', title: '山海之间', caption: '翻过雪山，走向远方' },
-  { src: '/img/demo/about/band-concert.jpg', title: '现场的星光', caption: '灯光亮起，人群沸腾' },
-  { src: '/img/demo/about/photo-portrait.jpg', title: '片刻', caption: '留给自己的一瞬' },
-  { src: '/img/brand/creative-space.webp', title: '创作角落', caption: '纸笔与灵感的地方' },
-  { src: '/img/demo/about/game-jiakesi-wallpaper.jpg', title: '水墨江湖', caption: '山高水长' },
-  { src: '/img/demo/cover-getting-started-v2.webp', title: '新的起点', caption: '一切从记录开始' },
-  { src: '/img/demo/cover-shortcodes-v2.webp', title: '万千可能', caption: '用文字搭建世界' },
-  { src: '/img/demo/about/music-listening-v2.webp', title: '午后时光', caption: '音乐与独处' },
+  { src: '/img/demo/about/hogwarts.jpg', title: '霍格沃茨的黄昏', caption: '日落时分，城堡亮起灯火', category: '旅行' },
+  { src: '/img/demo/about/lotr.jpg', title: '山海之间', caption: '翻过雪山，走向远方', category: '旅行' },
+  { src: '/img/demo/about/band-concert.jpg', title: '现场的星光', caption: '灯光亮起，人群沸腾', category: '影音' },
+  { src: '/img/demo/about/photo-portrait.jpg', title: '片刻', caption: '留给自己的一瞬', category: '生活' },
+  { src: '/img/brand/creative-space.webp', title: '创作角落', caption: '纸笔与灵感的地方', category: '生活' },
+  { src: '/img/demo/about/game-jiakesi-wallpaper.jpg', title: '水墨江湖', caption: '山高水长', category: '旅行' },
+  { src: '/img/demo/cover-getting-started-v2.webp', title: '新的起点', caption: '一切从记录开始', category: '创作' },
+  { src: '/img/demo/cover-shortcodes-v2.webp', title: '万千可能', caption: '用文字搭建世界', category: '创作' },
+  { src: '/img/demo/about/music-listening-v2.webp', title: '午后时光', caption: '音乐与独处', category: '影音' },
 ];
+const categories = ['全部', '生活', '旅行', '创作', '影音'];
 ---
 
 <div class="gallery-page">
   <header class="gallery-hero">
-    <p class="gallery-kicker">光影记录</p>
     <h1 class="gallery-title">浮光拾瞬</h1>
-    <p class="gallery-desc">收集生活里的每一个闪光瞬间。点击图片可放大查看。</p>
+    <div class="jelly-radio" role="radiogroup" aria-label="图片类别筛选">
+      {categories.map((c, i) => (
+        <button
+          type="button"
+          role="radio"
+          aria-checked={i === 0 ? 'true' : 'false'}
+          class="jelly-radio__chip"
+          data-on={i === 0 ? 'true' : 'false'}
+          data-filter={c}
+        >
+          <span class="jelly-radio__skin">{c}</span>
+        </button>
+      ))}
+    </div>
   </header>
 
   <div class="gallery-grid">
     {photos.map((photo, i) => (
-      <figure class="gallery-item" style={`--delay:${i * 40}ms`}>
+      <figure class="gallery-item" style={`--delay:${i * 40}ms`} data-category={photo.category}>
         <a
           href={url(photo.src)}
           data-fancybox="gallery"
@@ -41,7 +54,6 @@ const photos = [
     ))}
   </div>
 
-  <p class="gallery-tip">想换成自己的照片？把图片放进 <code>public/img/gallery/</code>，告诉我，我帮你替换这份示例清单。</p>
 </div>
 
 <style>
@@ -49,12 +61,46 @@ const photos = [
     max-width: 1200px;
     margin: 0 auto;
     padding: 10px 16px 40px;
-    color: #e8e2d6;
+    color: var(--efu-fontcolor);
   }
   .gallery-hero { text-align: center; margin: 10px 0 36px; }
-  .gallery-kicker { color: #e8b84a; font-size: 13px; letter-spacing: .35em; margin: 0 0 10px; }
-  .gallery-title { color: #f2ece0; font-size: 42px; margin: 0 0 12px; letter-spacing: .08em; }
-  .gallery-desc { color: #a9a396; font-size: 15px; margin: 0; }
+  .gallery-kicker { color: var(--efu-theme); font-size: 13px; letter-spacing: .35em; margin: 0 0 10px; }
+  .gallery-title { color: var(--efu-fontcolor); font-size: 42px; margin: 0 0 20px; letter-spacing: .08em; }
+  /* 筛选器胶囊随主题：深色底/深色字（深色主题）↔ 浅色底/深色字（浅色主题） */
+
+  /* 果冻弹性单选：选中项高亮，邻近项被挤压位移（原生复刻 JellyRadio） */
+  .jelly-radio {
+    /* 未选中：卡片底 + 主题字色（日间白底黑字/夜间深底浅字）；选中：主题色高亮 */
+    --jr-chip: var(--efu-card-bg); --jr-active: var(--efu-theme);
+    --jr-text: var(--efu-fontcolor); --jr-active-text: var(--efu-background);
+    --jr-border: var(--efu-fontcolor);
+    --jr-gap: 8px; --jr-radius: 18px; --jr-h: 36px; --jr-font: 13px; --jr-px: 16px;
+    display: inline-flex; align-items: center; gap: var(--jr-gap);
+    padding: 6px 14px; user-select: none; -webkit-user-select: none;
+  }
+  .jelly-radio__chip {
+    position: relative; margin: 0; padding: 0; border: 0; background: none;
+    color: inherit; font: inherit; cursor: pointer; outline: none;
+    transform-origin: 50% 50%; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+    transition: transform .32s cubic-bezier(.34,1.56,.64,1);
+  }
+  .jelly-radio__chip[data-on='true'] { cursor: default; }
+  .jelly-radio__skin {
+    position: relative; display: inline-flex; align-items: center; justify-content: center;
+    height: var(--jr-h); padding: 0 var(--jr-px); border-radius: var(--jr-radius);
+    background: var(--jr-chip); color: var(--jr-text); font-size: var(--jr-font); font-weight: 500;
+    border: 1px solid var(--jr-border);
+    line-height: 1; white-space: nowrap; overflow: hidden;
+    transition: transform .28s cubic-bezier(.34,1.56,.64,1), background-color .2s ease, color .2s ease;
+  }
+  .jelly-radio__chip[data-on='true'] .jelly-radio__skin {
+    background: var(--jr-active); color: var(--jr-active-text); border-color: var(--jr-active); transform: scale(1.2);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .jelly-radio__chip[data-on='false']:hover .jelly-radio__skin { filter: brightness(.9); }
+  }
+  .jelly-radio__chip:active .jelly-radio__skin { transform: scale(.95); }
+
   .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -64,16 +110,17 @@ const photos = [
     margin: 0;
     border-radius: 12px;
     overflow: hidden;
-    background: #1c1a17;
-    border: 1px solid rgba(232, 184, 74, .16);
+    background: var(--efu-card-bg);
+    border: 1px solid var(--efu-theme);
     animation: gallery-in .5s ease backwards;
     animation-delay: var(--delay);
-    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease, opacity .3s ease;
   }
+  .gallery-item[hidden] { display: none; }
   .gallery-item:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
-    border-color: rgba(232, 184, 74, .5);
+    border-color: var(--efu-theme);
   }
   .gallery-link { display: block; text-decoration: none; position: relative; }
   .gallery-link img {
@@ -90,15 +137,15 @@ const photos = [
     gap: 3px;
     padding: 12px 15px 14px;
   }
-  .gallery-name { color: #f0d9a8; font-size: 15px; font-weight: 700; }
-  .gallery-note { color: #9a9488; font-size: 12px; }
+  .gallery-name { color: var(--efu-fontcolor); font-size: 15px; font-weight: 700; }
+  .gallery-note { color: var(--efu-secondtext); font-size: 12px; }
   .gallery-tip {
     text-align: center;
-    color: #8f8a7e;
+    color: var(--efu-secondtext);
     font-size: 13px;
     margin: 34px 0 0;
   }
-  .gallery-tip code { color: #e8b84a; background: rgba(232, 184, 74, .1); padding: 2px 6px; border-radius: 4px; }
+  .gallery-tip code { color: var(--efu-theme); background: rgba(232, 184, 74, .1); padding: 2px 6px; border-radius: 4px; }
   @keyframes gallery-in {
     from { opacity: 0; transform: translateY(14px); }
     to { opacity: 1; transform: translateY(0); }
@@ -109,3 +156,44 @@ const photos = [
     .gallery-link img { height: 140px; }
   }
 </style>
+
+<script is:inline>
+/* 图片类别筛选：果冻弹性切换 + 网格过滤
+   兼容 Astro ClientRouter(PJAX)：脚本只在首次加载执行，
+   故用 document 级事件委托（一次绑定，页面切换后仍有效），并在每次 page-load 重置为“全部”。 */
+(function () {
+  function applyFilter(chip) {
+    var filter = chip.getAttribute('data-filter');
+    document.querySelectorAll('.jelly-radio__chip').forEach(function (c) {
+      var on = c === chip;
+      c.setAttribute('data-on', on ? 'true' : 'false');
+      c.setAttribute('aria-checked', on ? 'true' : 'false');
+    });
+    document.querySelectorAll('.gallery-item').forEach(function (item) {
+      var show = filter === '全部' || item.getAttribute('data-category') === filter;
+      item.hidden = !show;
+      if (show) {
+        item.style.animation = 'none';
+        void item.offsetWidth;
+        item.style.animation = '';
+      }
+    });
+  }
+
+  if (!window.__galleryFilterBound) {
+    window.__galleryFilterBound = true;
+    document.addEventListener('click', function (e) {
+      var chip = e.target.closest && e.target.closest('.jelly-radio__chip');
+      if (chip && document.querySelector('.jelly-radio')) applyFilter(chip);
+    });
+    document.addEventListener('astro:page-load', function () {
+      var all = document.querySelector('.jelly-radio__chip[data-filter="全部"]');
+      if (all) applyFilter(all);
+    });
+  }
+
+  // 首次直开时脚本在 DOM 之后执行，立即初始化
+  var firstAll = document.querySelector('.jelly-radio__chip[data-filter="全部"]');
+  if (firstAll) applyFilter(firstAll);
+})();
+</script>

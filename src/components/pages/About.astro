@@ -460,3 +460,38 @@ for (const section of data.sections)
       ))}
   </div>
 </section>
+
+<script is:inline>
+/* about 卡片光晕：跟随鼠标的边缘流光（独立于动态 import，确保生效） */
+(function () {
+  var page = document.getElementById('about-page');
+  if (!page) return;
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  page.querySelectorAll('.author-content-item').forEach(function (card) {
+    if (card.querySelector(':scope > .about-pointer-glow')) return;
+    var glow = document.createElement('div');
+    glow.className = 'about-pointer-glow';
+    glow.setAttribute('aria-hidden', 'true');
+    card.prepend(glow);
+    card.classList.add('about-glow-host');
+    function pos(e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--about-glow-x', (((e.clientX-r.left)/r.width)*100).toFixed(2)+'%');
+      card.style.setProperty('--about-glow-y', (((e.clientY-r.top)/r.height)*100).toFixed(2)+'%');
+    }
+    card.addEventListener('pointerenter', function(e){pos(e);card.classList.add('is-about-glow-active');});
+    card.addEventListener('pointermove', pos);
+    card.addEventListener('pointerleave', function(){card.classList.remove('is-about-glow-active');});
+    card.addEventListener('pointercancel', function(){card.classList.remove('is-about-glow-active');});
+  });
+})();
+
+/* 照片卡片双击跳转「吾之吾」（所有设备生效，不受 hover 条件限制） */
+(function () {
+  var photo = document.querySelector('#about-page .myphoto');
+  if (photo) photo.addEventListener('dblclick', function () {
+    window.location.href = '/self/';
+  });
+})();
+</script>

@@ -23,7 +23,7 @@ const bg = stats.background ?? '';
   <!-- 左侧：静态地图 -->
   <article class="author-content-item residence-map" tabindex="0">
     <img class="residence-map-img" src={url(mapImage)} alt="常州市地图" />
-    <span class="residence-star" aria-label="常州市位置标记"></span>
+    <img class="residence-star" src={url('/img/icons/map-star-3d.png')} alt="常州市位置标记" />
     <p class="residence-caption">{caption}</p>
   </article>
 
@@ -57,17 +57,15 @@ const bg = stats.background ?? '';
   .residence-map-img { width: 100%; height: 100%; object-fit: cover; display: block; }
   /* 星形图标：主题黄色，定位在"常州市"标注上方 */
   .residence-star {
-    position: absolute; left: 58%; top: 43%; z-index: 2;
-    width: 26px; height: 26px; transform: translate(-50%, -50%);
-    background-color: #e8b84a;
-    -webkit-mask: url('/img/icons/star-tabler.svg') center/contain no-repeat;
-    mask: url('/img/icons/star-tabler.svg') center/contain no-repeat;
-    filter: drop-shadow(0 1px 3px rgba(0,0,0,.9));
+    position: absolute; left: 58%; top: 40.8%; z-index: 3;
+    width: 18px; height: 18px; transform: translate(-50%, -50%);
+    object-fit: contain;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.85));
     pointer-events: none;
   }
   /* 现居地文字：主题文字色、靠左、无渐变 */
   .residence-caption {
-    position: absolute !important; left: 16px !important; top: 14px !important; bottom: auto !important; right: auto !important; z-index: 2;
+    position: absolute !important; left: 16px !important; top: auto !important; bottom: 14px !important; right: auto !important; z-index: 4;
     color: #e8e2d6 !important; font-size: 15px !important; font-weight: 700; margin: 0 !important;
     text-align: left !important; padding: 0 !important; background: none !important;
     text-shadow: 0 0 3px rgba(0,0,0,1), 0 1px 6px rgba(0,0,0,.95), 0 0 10px rgba(0,0,0,.7);

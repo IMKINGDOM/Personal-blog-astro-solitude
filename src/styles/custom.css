@@ -21,13 +21,17 @@ img[src*="logo.svg"] {
   gap: 0.75rem;
 }
 
-/* 照片板块：真人照露出完整头部并居中；圆形头像让面部居于圆心 */
+/* 照片卡/地图卡光晕层级：默认光晕(z1)被铺满的图片(z2)盖住，提到图片之上才可见 */
+#about-page .myphoto > .about-pointer-glow,
+#about-page .residence-map > .about-pointer-glow { z-index: 4 !important; }
+
+/* 照片板块：图片已按目标比例裁切，居中呈现即可 */
 #about-page .myphoto > .author-content-img {
-  object-position: center 22% !important;
+  object-position: center !important;
 }
 #about-page .myphoto > .myphoto-badge {
   object-fit: cover !important;
-  object-position: center 28% !important;
+  object-position: center !important;
 }
 
 /* 自定义菜单图标：用 CSS mask 让 SVG 继承当前文字色；三个图标统一 20×20，与文字水平居中对齐 */
@@ -155,12 +159,6 @@ img[src*="logo.svg"] {
   -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-}
-
-/* 侧边卡片头像可点击跳转「吾之吾」：覆盖层定位到头像位置 */
-.card-info .avatar-link {
-  position: absolute; top: 90px; left: 50%; transform: translateX(-50%);
-  width: 118px; height: 118px; z-index: 3; border-radius: 50%;
 }
 
 /* 页脚 Powered by 行：字体放大 1.2 倍，文字与 logo 水平对齐 */

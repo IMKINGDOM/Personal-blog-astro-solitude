@@ -2,35 +2,11 @@
 import { url } from '../../lib/site';
 ---
 
-<!--
-  腾讯地图 SDK（合规：使用腾讯位置服务，前端零 key）。
-  本地/WorkBuddy 预览走 key 代理；正式部署时请在腾讯位置服务开放平台申请自己的 key：
-  https://lbs.qq.com/dev/console/application/mine （创建应用 → 勾选 WebServiceAPI → 配置域名白名单），
-  然后把下面 key 代理配置替换为自己的 key 直连方式，并配置 Referer 白名单防盗用。
--->
-<script is:inline>
-  window._TMapSecurityConfig = {
-    serviceHost: 'http://127.0.0.1:__WB_HTTP_PORT__/_TMapService/_wbt/__WB_TMAP_SECRET__',
-  };
-</script>
-<script is:inline charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&libraries=service"></script>
-
 <div class="footprints-page">
   <header class="fp-hero">
-    <p class="fp-kicker">行迹记录</p>
     <h1 class="fp-title">步履鸿迹</h1>
-    <p class="fp-desc">到过的城市与走过的地方，已点亮 <strong id="fp-count">0</strong> 个坐标。</p>
+    <p class="fp-desc">一路山河远阔 四海星光偕行</p>
   </header>
-
-  <div class="fp-toolbar">
-    <div class="fp-search-wrap">
-      <input id="fp-input" class="fp-input" type="text" placeholder="搜索地点，如「杭州西湖」「朝阳区」…" autocomplete="off" />
-      <button id="fp-search" class="fp-btn" type="button">搜索</button>
-    </div>
-    <p class="fp-hint">搜索并点选结果，即可在地图点亮；数据仅保存在你的浏览器本地。</p>
-  </div>
-
-  <div id="fp-results" class="fp-results" hidden></div>
 
   <div class="fp-map-wrap">
     <div id="fp-map" class="fp-map"></div>
@@ -39,222 +15,389 @@ import { url } from '../../lib/site';
 
   <div class="fp-list-panel">
     <div class="fp-list-head">
-      <h2>已点亮的足迹</h2>
-      <button id="fp-clear" class="fp-clear" type="button">清空</button>
+      <h2>已点亮的城市</h2>
+      <div id="fp-stats" class="fp-stats"></div>
     </div>
     <ul id="fp-list" class="fp-list"></ul>
-    <p id="fp-empty" class="fp-empty">还没有足迹。在上方搜索一个地点开始吧。</p>
+    <p id="fp-empty" class="fp-empty">还没有足迹。</p>
   </div>
 </div>
 
 <style>
-  .footprints-page { max-width: 1200px; margin: 0 auto; padding: 10px 16px 50px; color: #e8e2d6; }
+  .footprints-page { max-width: 1200px; margin: 0 auto; padding: 10px 16px 50px; color: var(--efu-fontcolor); }
   .fp-hero { text-align: center; margin: 10px 0 26px; }
-  .fp-kicker { color: #e8b84a; font-size: 13px; letter-spacing: .35em; margin: 0 0 10px; }
-  .fp-title { color: #f2ece0; font-size: 42px; margin: 0 0 12px; letter-spacing: .08em; }
-  .fp-desc { color: #a9a396; font-size: 15px; margin: 0; }
-  .fp-desc strong { color: #e8b84a; font-size: 18px; }
-  .fp-toolbar { margin: 0 auto 14px; max-width: 720px; }
-  .fp-search-wrap { display: flex; gap: 8px; }
-  .fp-input {
-    flex: 1; min-width: 0; padding: 12px 16px; border-radius: 999px;
-    border: 1px solid rgba(232,184,74,.35); background: #1c1a17; color: #f2ece0;
-    font-size: 15px; outline: none;
-  }
-  .fp-input::placeholder { color: #7d776b; }
-  .fp-input:focus { border-color: #e8b84a; box-shadow: 0 0 0 3px rgba(232,184,74,.12); }
-  .fp-btn {
-    padding: 12px 26px; border-radius: 999px; border: none; cursor: pointer;
-    background: #e8b84a; color: #2b2110; font-weight: 800; font-size: 15px;
-    transition: filter .2s ease;
-  }
-  .fp-btn:hover { filter: brightness(1.08); }
-  .fp-hint { color: #857f73; font-size: 12px; text-align: center; margin: 10px 0 0; }
-  .fp-results {
-    max-width: 720px; margin: 0 auto 14px; background: #1c1a17;
-    border: 1px solid rgba(232,184,74,.25); border-radius: 12px; overflow: hidden;
-  }
-  .fp-result-item {
-    display: block; width: 100%; text-align: left; padding: 11px 16px;
-    background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,.05);
-    color: #e8e2d6; cursor: pointer; font-size: 14px;
-  }
-  .fp-result-item:last-child { border-bottom: none; }
-  .fp-result-item:hover { background: rgba(232,184,74,.1); }
-  .fp-result-item b { color: #f0d9a8; }
-  .fp-result-item span { color: #9a9488; font-size: 12px; margin-left: 8px; }
+  .fp-title { color: var(--efu-fontcolor); font-size: 42px; margin: 0 0 12px; letter-spacing: .08em; }
+  .fp-desc { color: var(--efu-secondtext); font-size: 15px; margin: 0; }
+  .fp-desc strong { color: var(--efu-theme); font-size: 18px; }
   .fp-map-wrap {
-    position: relative; height: 460px; border-radius: 14px; overflow: hidden;
-    border: 1px solid rgba(232,184,74,.2); background: #14120f;
+    position: relative; height: 520px; border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--efu-theme); background: var(--efu-card-bg);
   }
-  /* 把腾讯默认浅色底图压暗成暖棕色调，契合站点风格（仅视觉滤镜，不改地图数据） */
-  .fp-map {
-    width: 100%; height: 100%;
-    filter: brightness(.52) sepia(.42) saturate(.85) contrast(1.08);
-  }
+  .fp-map { width: 100%; height: 100%; }
   .fp-map-tip {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    color: #8f8a7e; font-size: 14px; pointer-events: none;
+    color: var(--efu-secondtext); font-size: 14px; pointer-events: none;
   }
   .fp-list-panel { margin-top: 26px; }
-  .fp-list-head { display: flex; align-items: center; justify-content: space-between; }
-  .fp-list-head h2 { color: #f0d9a8; font-size: 18px; margin: 0 0 12px; }
-  .fp-clear {
-    background: transparent; border: 1px solid rgba(232,184,74,.35); color: #c9b27e;
-    border-radius: 999px; padding: 4px 14px; font-size: 12px; cursor: pointer;
+  .fp-list-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .fp-list-head h2 { color: var(--efu-theme); font-size: 18px; margin: 0 0 12px; }
+  .fp-stats { display: flex; gap: 14px; margin-bottom: 12px; font-size: 13px; color: var(--efu-secondtext); }
+  .fp-stats b { color: var(--efu-theme); font-size: 16px; font-weight: 800; margin-right: 2px; }
+  .fp-list {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px;
   }
-  .fp-clear:hover { background: rgba(232,184,74,.12); }
-  .fp-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 10px; }
-  .fp-list li {
-    display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    background: #1c1a17; border: 1px solid rgba(232,184,74,.16); border-radius: 10px;
-    padding: 11px 14px;
+  :global(.fp-chip) {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; min-width: 0; padding: 6px 8px; border-radius: 999px;
+    background: var(--efu-theme); color: var(--efu-background);
+    font-size: 9px; font-weight: 700; letter-spacing: 0;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--efu-theme) 26%, transparent);
+    transition: transform .16s ease, filter .16s ease;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
-  .fp-list .fp-place { color: #e8e2d6; font-size: 14px; }
-  .fp-list .fp-region { color: #8f8a7e; font-size: 12px; display: block; margin-top: 2px; }
-  .fp-list .fp-del { background: none; border: none; color: #a8735a; cursor: pointer; font-size: 16px; }
-  .fp-list .fp-del:hover { color: #e07a5a; }
-  .fp-empty { color: #7d776b; font-size: 13px; text-align: center; padding: 18px 0; }
+  :global(.fp-chip):hover { transform: translateY(-2px); filter: brightness(1.06); }
+  .fp-empty { color: var(--efu-secondtext); font-size: 13px; text-align: center; padding: 18px 0; }
+  @media (max-width: 900px) {
+    .fp-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
   @media (max-width: 600px) {
     .fp-title { font-size: 32px; }
-    .fp-map-wrap { height: 380px; }
-    .fp-btn { padding: 12px 18px; }
+    .fp-map-wrap { height: 400px; }
+    .fp-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    :global(.fp-chip) { font-size: 8px; padding: 6px; }
   }
 </style>
 
+<script is:inline src={url('/js/footprint/echarts.min.js')}></script>
+<script is:inline src={url('/js/footprint/world.js')}></script>
 <script is:inline>
-/* global TMap */
 (function () {
-  const STORE_KEY = 'step-footprints-v1';
-  var map = null, markers = null, searchSvc = null;
-  var places = [];
-  try { places = JSON.parse(localStorage.getItem(STORE_KEY) || '[]') || []; } catch (e) { places = []; }
+  'use strict';
+  // v5：强制重建种子 + 每次加载补齐，确保新增城市（如包头）必定点亮
+  var STORE_KEY = 'step-footprints-v5';
+  var HOME = { p: [119.97, 31.81] };
 
-  // 金色圆点标记（内联 SVG，不引用官方 demo 图片）
-  function markerSVG() {
-    var s = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">'
-      + '<circle cx="14" cy="14" r="11" fill="#e8b84a" stroke="#2b2110" stroke-width="2"/>'
-      + '<circle cx="14" cy="14" r="4" fill="#2b2110"/></svg>';
-    return 'data:image/svg+xml,' + encodeURIComponent(s);
+  var COUNTRY_EN = {
+    '中国':'China', '日本':'Japan', '韩国':'Korea', '泰国':'Thailand',
+    '新加坡':'Singapore', '马来西亚':'Malaysia', '印度尼西亚':'Indonesia',
+    '越南':'Vietnam', '菲律宾':'Philippines', '澳大利亚':'Australia',
+    '新西兰':'New Zealand', '英国':'United Kingdom', '法国':'France',
+    '意大利':'Italy', '西班牙':'Spain', '荷兰':'Netherlands', '德国':'Germany',
+    '捷克':'Czechia', '瑞士':'Switzerland', '俄罗斯':'Russia', '土耳其':'Turkey',
+    '阿联酋':'UAE', '埃及':'Egypt', '南非':'South Africa', '美国':'United States',
+    '加拿大':'Canada', '巴西':'Brazil', '冰岛':'Iceland', '希腊':'Greece'
+  };
+
+  var CITIES = [
+    {n:'北京',e:'Beijing',c:'中国',p:[116.40,39.90]},
+    {n:'上海',e:'Shanghai',c:'中国',p:[121.47,31.23]},
+    {n:'广州',e:'Guangzhou',c:'中国',p:[113.26,23.13]},
+    {n:'深圳',e:'Shenzhen',c:'中国',p:[114.06,22.54]},
+    {n:'杭州',e:'Hangzhou',c:'中国',p:[120.15,30.28]},
+    {n:'南京',e:'Nanjing',c:'中国',p:[118.80,32.06]},
+    {n:'苏州',e:'Suzhou',c:'中国',p:[120.62,31.30]},
+    {n:'常州',e:'Changzhou',c:'中国',p:[119.97,31.81]},
+    {n:'无锡',e:'Wuxi',c:'中国',p:[120.31,31.49]},
+    {n:'台州',e:'Taizhou',c:'中国',p:[121.42,28.66]},
+    {n:'金华',e:'Jinhua',c:'中国',p:[119.65,29.08]},
+    {n:'绍兴',e:'Shaoxing',c:'中国',p:[120.58,30.00]},
+    {n:'嘉兴',e:'Jiaxing',c:'中国',p:[120.76,30.75]},
+    {n:'湖州',e:'Huzhou',c:'中国',p:[120.09,30.89]},
+    {n:'宁波',e:'Ningbo',c:'中国',p:[121.55,29.87]},
+    {n:'温州',e:'Wenzhou',c:'中国',p:[120.70,28.00]},
+    {n:'镇江',e:'Zhenjiang',c:'中国',p:[119.43,32.19]},
+    {n:'徐州',e:'Xuzhou',c:'中国',p:[117.18,34.26]},
+    {n:'扬州',e:'Yangzhou',c:'中国',p:[119.42,32.39]},
+    {n:'南通',e:'Nantong',c:'中国',p:[120.89,31.98]},
+    {n:'成都',e:'Chengdu',c:'中国',p:[104.07,30.67]},
+    {n:'重庆',e:'Chongqing',c:'中国',p:[106.55,29.56]},
+    {n:'武汉',e:'Wuhan',c:'中国',p:[114.30,30.59]},
+    {n:'襄阳',e:'Xiangyang',c:'中国',p:[112.14,32.04]},
+    {n:'孝感',e:'Xiaogan',c:'中国',p:[113.93,30.93]},
+    {n:'西安',e:'Xian',c:'中国',p:[108.94,34.34]},
+    {n:'天津',e:'Tianjin',c:'中国',p:[117.20,39.13]},
+    {n:'长沙',e:'Changsha',c:'中国',p:[112.94,28.23]},
+    {n:'郑州',e:'Zhengzhou',c:'中国',p:[113.62,34.75]},
+    {n:'青岛',e:'Qingdao',c:'中国',p:[120.38,36.07]},
+    {n:'厦门',e:'Xiamen',c:'中国',p:[118.09,24.48]},
+    {n:'福州',e:'Fuzhou',c:'中国',p:[119.30,26.08]},
+    {n:'泉州',e:'Quanzhou',c:'中国',p:[118.68,24.87]},
+    {n:'漳州',e:'Zhangzhou',c:'中国',p:[117.65,24.51]},
+    {n:'莆田',e:'Putian',c:'中国',p:[119.01,25.43]},
+    {n:'宜春',e:'Yichun',c:'中国',p:[114.42,27.81]},
+    {n:'东莞',e:'Dongguan',c:'中国',p:[113.75,23.02]},
+    {n:'昆明',e:'Kunming',c:'中国',p:[102.71,25.04]},
+    {n:'大连',e:'Dalian',c:'中国',p:[121.62,38.92]},
+    {n:'济南',e:'Jinan',c:'中国',p:[117.12,36.65]},
+    {n:'合肥',e:'Hefei',c:'中国',p:[117.28,31.86]},
+    {n:'南昌',e:'Nanchang',c:'中国',p:[115.86,28.68]},
+    {n:'太原',e:'Taiyuan',c:'中国',p:[112.55,37.87]},
+    {n:'石家庄',e:'Shijiazhuang',c:'中国',p:[114.51,38.04]},
+    {n:'哈尔滨',e:'Harbin',c:'中国',p:[126.53,45.80]},
+    {n:'长春',e:'Changchun',c:'中国',p:[125.32,43.82]},
+    {n:'沈阳',e:'Shenyang',c:'中国',p:[123.43,41.80]},
+    {n:'呼和浩特',e:'Hohhot',c:'中国',p:[111.75,40.84]},
+    {n:'包头',e:'Baotou',c:'中国',p:[109.84,40.66]},
+    {n:'兰州',e:'Lanzhou',c:'中国',p:[103.83,36.06]},
+    {n:'西宁',e:'Xining',c:'中国',p:[101.78,36.62]},
+    {n:'银川',e:'Yinchuan',c:'中国',p:[106.27,38.47]},
+    {n:'乌鲁木齐',e:'Urumqi',c:'中国',p:[87.62,43.82]},
+    {n:'拉萨',e:'Lhasa',c:'中国',p:[91.14,29.65]},
+    {n:'南宁',e:'Nanning',c:'中国',p:[108.37,22.82]},
+    {n:'海口',e:'Haikou',c:'中国',p:[110.20,20.04]},
+    {n:'三亚',e:'Sanya',c:'中国',p:[109.51,18.25]},
+    {n:'贵阳',e:'Guiyang',c:'中国',p:[106.63,26.65]},
+    {n:'桂林',e:'Guilin',c:'中国',p:[110.29,25.27]},
+    {n:'丽江',e:'Lijiang',c:'中国',p:[100.23,26.87]},
+    {n:'大理',e:'Dali',c:'中国',p:[100.27,25.60]},
+    {n:'张家界',e:'Zhangjiajie',c:'中国',p:[110.48,29.13]},
+    {n:'洛阳',e:'Luoyang',c:'中国',p:[112.45,34.62]},
+    {n:'黄山',e:'Huangshan',c:'中国',p:[118.34,29.72]},
+    {n:'敦煌',e:'Dunhuang',c:'中国',p:[94.66,40.14]},
+    {n:'香港',e:'Hong Kong',c:'中国',p:[114.17,22.32]},
+    {n:'澳门',e:'Macao',c:'中国',p:[113.54,22.19]},
+    {n:'台北',e:'Taipei',c:'中国',p:[121.56,25.03]},
+    {n:'高雄',e:'Kaohsiung',c:'中国',p:[120.30,22.63]},
+    {n:'东京',e:'Tokyo',c:'日本',p:[139.69,35.69]},
+    {n:'大阪',e:'Osaka',c:'日本',p:[135.50,34.69]},
+    {n:'京都',e:'Kyoto',c:'日本',p:[135.77,35.01]},
+    {n:'首尔',e:'Seoul',c:'韩国',p:[126.98,37.57]},
+    {n:'釜山',e:'Busan',c:'韩国',p:[129.08,35.18]},
+    {n:'曼谷',e:'Bangkok',c:'泰国',p:[100.50,13.76]},
+    {n:'清迈',e:'Chiang Mai',c:'泰国',p:[98.99,18.79]},
+    {n:'新加坡',e:'Singapore',c:'新加坡',p:[103.82,1.35]},
+    {n:'吉隆坡',e:'Kuala Lumpur',c:'马来西亚',p:[101.69,3.14]},
+    {n:'巴厘岛',e:'Bali',c:'印度尼西亚',p:[115.19,-8.41]},
+    {n:'雅加达',e:'Jakarta',c:'印度尼西亚',p:[106.85,-6.21]},
+    {n:'河内',e:'Hanoi',c:'越南',p:[105.83,21.03]},
+    {n:'胡志明市',e:'Ho Chi Minh City',c:'越南',p:[106.63,10.82]},
+    {n:'马尼拉',e:'Manila',c:'菲律宾',p:[120.98,14.60]},
+    {n:'悉尼',e:'Sydney',c:'澳大利亚',p:[151.21,-33.87]},
+    {n:'墨尔本',e:'Melbourne',c:'澳大利亚',p:[144.96,-37.81]},
+    {n:'奥克兰',e:'Auckland',c:'新西兰',p:[174.76,-36.85]},
+    {n:'伦敦',e:'London',c:'英国',p:[-0.13,51.51]},
+    {n:'巴黎',e:'Paris',c:'法国',p:[2.35,48.86]},
+    {n:'罗马',e:'Rome',c:'意大利',p:[12.50,41.90]},
+    {n:'威尼斯',e:'Venice',c:'意大利',p:[12.32,45.44]},
+    {n:'巴塞罗那',e:'Barcelona',c:'西班牙',p:[2.17,41.39]},
+    {n:'阿姆斯特丹',e:'Amsterdam',c:'荷兰',p:[4.90,52.37]},
+    {n:'柏林',e:'Berlin',c:'德国',p:[13.40,52.52]},
+    {n:'布拉格',e:'Prague',c:'捷克',p:[14.44,50.08]},
+    {n:'苏黎世',e:'Zurich',c:'瑞士',p:[8.54,47.38]},
+    {n:'莫斯科',e:'Moscow',c:'俄罗斯',p:[37.62,55.75]},
+    {n:'伊斯坦布尔',e:'Istanbul',c:'土耳其',p:[28.98,41.01]},
+    {n:'迪拜',e:'Dubai',c:'阿联酋',p:[55.27,25.20]},
+    {n:'开罗',e:'Cairo',c:'埃及',p:[31.24,30.04]},
+    {n:'开普敦',e:'Cape Town',c:'南非',p:[18.42,-33.92]},
+    {n:'纽约',e:'New York',c:'美国',p:[-74.01,40.71]},
+    {n:'洛杉矶',e:'Los Angeles',c:'美国',p:[-118.24,34.05]},
+    {n:'旧金山',e:'San Francisco',c:'美国',p:[-122.42,37.77]},
+    {n:'西雅图',e:'Seattle',c:'美国',p:[-122.33,47.61]},
+    {n:'芝加哥',e:'Chicago',c:'美国',p:[-87.63,41.88]},
+    {n:'多伦多',e:'Toronto',c:'加拿大',p:[-79.38,43.65]},
+    {n:'温哥华',e:'Vancouver',c:'加拿大',p:[-123.12,49.28]},
+    {n:'里约热内卢',e:'Rio de Janeiro',c:'巴西',p:[-43.17,-22.91]},
+    {n:'雷克雅未克',e:'Reykjavik',c:'冰岛',p:[-21.94,64.15]},
+    {n:'雅典',e:'Athens',c:'希腊',p:[23.73,37.98]}
+  ];
+
+  // 完整 30 个种子城市
+  var SEED = ['常州','台州','绍兴','嘉兴','上海','无锡','福州','泉州','厦门','镇江','金华','武汉','襄阳','孝感','宁波','苏州','南京','湖州','温州','广州','深圳','东莞','河内','成都','漳州','莆田','宜春','雅加达','徐州','包头'];
+
+  function cityByName(name) {
+    for (var i = 0; i < CITIES.length; i++) if (CITIES[i].n === name) return CITIES[i];
+    return null;
   }
 
-  function save() {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(places)); } catch (e) {}
+  var places = [], chart = null, lastTheme = '';
+
+  function seedPlaces() {
+    return SEED.map(cityByName).filter(Boolean).map(function (c) {
+      return { n: c.n, e: c.e, c: c.c, p: c.p.slice() };
+    });
+  }
+
+  try {
+    var saved = localStorage.getItem(STORE_KEY);
+    places = saved === null ? seedPlaces() : (JSON.parse(saved) || []);
+    // 补齐种子中缺失的城市（新增城市只改 SEED 即可自动生效）
+    var names = {};
+    places.forEach(function (p) { names[p.n] = 1; });
+    SEED.forEach(function (name) {
+      if (!names[name]) {
+        var c = cityByName(name);
+        if (c) {
+          places.push({ n: c.n, e: c.e, c: c.c, p: c.p.slice() });
+          names[name] = 1;
+        }
+      }
+    });
+    localStorage.setItem(STORE_KEY, JSON.stringify(places));
+  } catch (e) { places = seedPlaces(); }
+
+  function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(places)); } catch (e) {} }
+
+  function palette() {
+    var cs = getComputedStyle(document.documentElement);
+    var v = function (name, fallback) { return cs.getPropertyValue(name).trim() || fallback; };
+    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    return {
+      dark: dark,
+      theme: v('--efu-theme', dark ? '#ffc848' : '#425aef'),
+      font: v('--efu-fontcolor', dark ? '#f7f7fa' : '#363636'),
+      second: v('--efu-secondtext', dark ? '#a1a2b8' : '#7f7f7f'),
+      area: dark ? '#241d15' : '#e9e4d8',
+      areaHover: dark ? '#3d311f' : '#d9d0bd',
+      border: dark ? '#5a4a2e' : '#c4b9a4'
+    };
+  }
+
+  // 中国城市 → 省份（用于统计，未列出的按城市名推测，可按需补充）
+  var PROVINCE = {
+    '常州':'江苏','无锡':'江苏','南京':'江苏','苏州':'江苏','镇江':'江苏','徐州':'江苏','扬州':'江苏','南通':'江苏',
+    '台州':'浙江','绍兴':'浙江','嘉兴':'浙江','金华':'浙江','宁波':'浙江','湖州':'浙江','温州':'浙江','杭州':'浙江',
+    '上海':'上海','福州':'福建','泉州':'福建','厦门':'福建','漳州':'福建','莆田':'福建',
+    '武汉':'湖北','襄阳':'湖北','孝感':'湖北','成都':'四川','宜春':'江西','广州':'广东','深圳':'广东','东莞':'广东',
+    '包头':'内蒙古','北京':'北京','天津':'天津','重庆':'重庆','香港':'香港','澳门':'澳门'
+  };
+
+  function renderStats() {
+    var countries = {}, provinces = {};
+    places.forEach(function (p) {
+      countries[p.c] = 1;
+      if (p.c === '中国') {
+        var prov = PROVINCE[p.n];
+        if (prov) provinces[prov] = 1;
+      }
+    });
+    var c = Object.keys(countries).length;
+    var pr = Object.keys(provinces).length;
+    var ci = places.length;
+    document.getElementById('fp-stats').innerHTML =
+      '<span><b>' + c + '</b>个国家</span><span><b>' + pr + '</b>个省</span><span><b>' + ci + '</b>座城</span>';
   }
 
   function renderList() {
     var list = document.getElementById('fp-list');
     var empty = document.getElementById('fp-empty');
-    document.getElementById('fp-count').textContent = places.length;
+    renderStats();
     list.innerHTML = '';
     if (!places.length) { empty.hidden = false; return; }
     empty.hidden = true;
-    places.forEach(function (p, i) {
+    var frag = document.createDocumentFragment();
+    places.forEach(function (p) {
       var li = document.createElement('li');
-      var info = document.createElement('div');
-      var name = document.createElement('span'); name.className = 'fp-place'; name.textContent = p.name;
-      var region = document.createElement('span'); region.className = 'fp-region'; region.textContent = p.region || '';
-      info.appendChild(name); info.appendChild(region);
-      var del = document.createElement('button'); del.className = 'fp-del'; del.type = 'button'; del.textContent = '×';
-      del.title = '移除';
-      del.addEventListener('click', function () { places.splice(i, 1); save(); renderAll(); });
-      li.appendChild(info); li.appendChild(del);
-      list.appendChild(li);
+      li.className = 'fp-chip';
+      li.textContent = p.c + (COUNTRY_EN[p.c] || '') + '·' + p.n + p.e;
+      li.title = p.n + ' · ' + p.c;
+      frag.appendChild(li);
     });
+    list.appendChild(frag);
   }
 
-  function renderMarkers() {
-    if (!map || !window.TMap) return;
-    if (markers) { markers.setMap(null); markers = null; }
-    if (!places.length) return;
-    var geoms = places.map(function (p, i) {
-      return { id: 'fp-' + i, styleId: 'gold', position: new TMap.LatLng(p.lat, p.lng) };
-    });
-    markers = new TMap.MultiMarker({
-      map: map,
-      styles: { gold: new TMap.MarkerStyle({ width: 28, height: 28, src: markerSVG(), anchor: { x: 14, y: 14 } }) },
-      geometries: geoms,
-    });
-  }
-
-  function renderAll() { renderList(); renderMarkers(); }
-
-  function initMap() {
-    if (!window.TMap) { document.getElementById('fp-map-tip').textContent = '地图脚本加载失败，请稍后刷新。'; return; }
-    document.getElementById('fp-map-tip').hidden = true;
-    var center = places.length
-      ? new TMap.LatLng(places[0].lat, places[0].lng)
-      : new TMap.LatLng(35.86166, 104.195397); // 中国中心
-    map = new TMap.Map('fp-map', { center: center, zoom: places.length ? 11 : 4 });
-    if (window.TMap.service && TMap.service.Search) {
-      searchSvc = new TMap.service.Search({ pageSize: 8 });
-    }
-    renderMarkers();
-  }
-
-  function addPlace(poi) {
-    var loc = poi.location || {};
-    if (typeof loc.lat !== 'number' || typeof loc.lng !== 'number') return;
-    var name = poi.title || poi.name || '未命名地点';
-    var region = [poi.province, poi.city, poi.district].filter(Boolean).join(' ');
-    // 精确到区：若 POI 未给 district，保留地址兜底
-    if (!region && poi.address) region = poi.address;
-    var dup = places.some(function (p) { return p.name === name && p.lat === loc.lat && p.lng === loc.lng; });
-    if (dup) return;
-    places.push({ name: name, region: region, lat: loc.lat, lng: loc.lng });
-    save();
-    if (map) { map.easeTo({ center: new TMap.LatLng(loc.lat, loc.lng), zoom: 13, duration: 600 }); }
-    renderAll();
-  }
-
-  function doSearch() {
-    var kw = document.getElementById('fp-input').value.trim();
-    var box = document.getElementById('fp-results');
-    if (!kw) { box.hidden = true; return; }
-    if (!searchSvc) { box.hidden = false; box.innerHTML = '<div class="fp-result-item">搜索服务未加载，请稍后重试。</div>'; return; }
-    searchSvc.searchRegion({ keyword: kw, region: '中国', autoExtend: true })
-      .then(function (res) {
-        var data = (res && (res.data || (res.result && res.result.data))) || [];
-        if (!Array.isArray(data)) data = data.pois || [];
-        box.hidden = false;
-        box.innerHTML = '';
-        if (!data.length) { box.innerHTML = '<div class="fp-result-item">未找到相关地点，换个关键词试试。</div>'; return; }
-        data.slice(0, 8).forEach(function (poi) {
-          var btn = document.createElement('button');
-          btn.type = 'button'; btn.className = 'fp-result-item';
-          var region = [poi.province, poi.city, poi.district].filter(Boolean).join(' ');
-          btn.innerHTML = '<b></b><span></span>';
-          btn.querySelector('b').textContent = poi.title || poi.name || '地点';
-          btn.querySelector('span').textContent = region || poi.address || '';
-          btn.addEventListener('click', function () {
-            addPlace(poi);
-            box.hidden = true;
-          });
-          box.appendChild(btn);
-        });
-      })
-      .catch(function () {
-        box.hidden = false;
-        box.innerHTML = '<div class="fp-result-item">搜索服务需要地图 key。部署时请在腾讯位置服务开放平台申请 key 并配置 WebServiceAPI 后即可使用；本地预览可让我为你开启代理。</div>';
+  function buildSeries(pulse, pal) {
+    var series = [
+      {
+        name: '常州辐射线', type: 'lines', coordinateSystem: 'geo', polyline: false, zlevel: 2,
+        lineStyle: { color: pal.theme, width: .8, opacity: pal.dark ? .38 : .3, type: 'dashed', curveness: .08 },
+        effect: {
+          show: true, period: 4, trailLength: .5, symbol: 'circle', symbolSize: 3,
+          color: pal.dark ? '#fff1bd' : pal.theme, loop: true
+        },
+        silent: true,
+        data: places.map(function (p) { return { coords: [HOME.p, p.p] }; })
+      },
+      {
+        name: '足迹', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 3,
+        rippleEffect: { brushType: 'stroke', scale: 2.6, period: 3.2 },
+        symbolSize: 4,
+        itemStyle: { color: pal.theme, shadowBlur: 7, shadowColor: pal.theme },
+        label: {
+          show: true, formatter: '{b}', position: 'right', distance: 7,
+          color: pal.dark ? '#ffe9b8' : '#4a3a12', fontSize: 11,
+          textShadowBlur: 4, textShadowColor: pal.dark ? '#000' : '#fff'
+        },
+        emphasis: { scale: 1.5, label: { show: true, fontWeight: 'bold', color: pal.font } },
+        data: places.map(function (p) { return { name: p.n, value: [p.p[0], p.p[1]], city: p }; })
+      }
+    ];
+    if (pulse) {
+      series.push({
+        name: '点亮冲击波', type: 'effectScatter', coordinateSystem: 'geo', zlevel: 4,
+        rippleEffect: { brushType: 'stroke', scale: 5, period: 1.6 },
+        symbolSize: 7, silent: true,
+        itemStyle: { color: pal.dark ? '#ffffff' : pal.theme, shadowBlur: 14, shadowColor: pal.theme },
+        label: { show: false }, data: [{ name: '', value: pulse }]
       });
+    }
+    return series;
   }
+
+  function renderMap(pulse) {
+    if (!chart) return;
+    var pal = palette();
+    lastTheme = pal.dark ? 'dark' : 'light';
+    chart.setOption({
+      backgroundColor: 'transparent',
+      tooltip: {
+        trigger: 'item',
+        backgroundColor: pal.dark ? 'rgba(20,16,12,.94)' : 'rgba(255,255,255,.96)',
+        borderColor: pal.theme,
+        textStyle: { color: pal.font, fontSize: 12 },
+        formatter: function (param) {
+          var d = param.data && param.data.city;
+          if (!d) return '';
+          return '<span style="color:' + pal.theme + ';font-weight:700;">' + d.n + '</span><br>'
+            + '<span style="color:' + pal.font + ';">' + d.c + ' · ' + d.e + '</span><br>'
+            + '<span style="color:' + pal.second + ';font-size:11px;">' + d.p[1].toFixed(2) + '°, ' + d.p[0].toFixed(2) + '°</span>';
+        }
+      },
+      geo: {
+        map: 'world', roam: true, zoom: 16, center: [121.2, 30.5], scaleLimit: { min: 1, max: 40 },
+        itemStyle: { areaColor: pal.area, borderColor: pal.border, borderWidth: .7 },
+        emphasis: { itemStyle: { areaColor: pal.areaHover }, label: { show: false } },
+        label: { show: false }, silent: false
+      },
+      series: buildSeries(pulse, pal)
+    }, { notMerge: true });
+  }
+
+  function renderAll() { renderList(); renderMap(null); }
 
   function boot() {
-    renderList();
-    if (window.TMap) { initMap(); }
-    else { window.addEventListener('load', initMap); }
-    document.getElementById('fp-search').addEventListener('click', doSearch);
-    document.getElementById('fp-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') doSearch(); });
-    document.getElementById('fp-clear').addEventListener('click', function () {
-      if (!places.length) return;
-      if (confirm('确定清空全部足迹吗？此操作只影响你本地浏览器。')) {
-        places = []; save(); renderAll();
-        if (map) map.easeTo({ center: new TMap.LatLng(35.86166, 104.195397), zoom: 4, duration: 600 });
-      }
+    if (!window.echarts || !window.WORLD_GEOJSON) {
+      document.getElementById('fp-map-tip').textContent = '地图资源未加载，请刷新重试。';
+      return;
+    }
+    echarts.registerMap('world', window.WORLD_GEOJSON);
+    chart = echarts.init(document.getElementById('fp-map'), null, { renderer: 'canvas' });
+    document.getElementById('fp-map-tip').hidden = true;
+    renderAll();
+
+    var resizeTimer = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () { if (chart) chart.resize(); }, 120);
     });
+
+    var themeTimer = null;
+    function onThemeChange() {
+      clearTimeout(themeTimer);
+      themeTimer = setTimeout(function () {
+        var now = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        if (now !== lastTheme) { lastTheme = now; renderMap(null); }
+      }, 40);
+    }
+    document.addEventListener('solitude:themeChange', onThemeChange);
+    if (window.MutationObserver) {
+      new MutationObserver(onThemeChange).observe(document.documentElement, {
+        attributes: true, attributeFilter: ['data-theme']
+      });
+    }
+
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
 </script>

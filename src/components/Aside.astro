@@ -71,6 +71,7 @@ for (const heading of headings) {
         {names.map((name) =>
           name.trim() === 'about' ? (
             <div class="card-widget card-info tw:relative tw:[#aside-content_&]:overflow-hidden">
+              <span class="card-glow-light" aria-hidden="true"></span>
               <div class="card-content tw:[#aside-content_.card-widget_&]:relative tw:[#aside-content_.card-widget_&]:flex tw:[#aside-content_.card-widget_&]:flex-col tw:[.author-content-item_&]:absolute tw:[.author-content-item_&]:flex tw:[.author-content-item_&]:flex-col">
                 <div class="card-info-avatar is-center">
                   <div class="top-group">
@@ -256,17 +257,60 @@ for (const heading of headings) {
 )}
 
 <script is:inline>
-/* 侧边个人信息卡片：仅鼠标悬停光晕跟随（不加浮动/倾斜，不改背景） */
+/* 侧边个人信息卡片：GlowCard 式光晕——鼠标中心散射 + 平滑跟随 + 淡入淡出 */
 (function () {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-  document.addEventListener('pointermove', function (e) {
-    var card = e.target && e.target.closest && e.target.closest('#aside-content .card-info');
-    if (!card) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var INTENSITY = 0.15, SMOOTHING = 0.3;
+  var cards = new WeakMap();
+  function stateOf(card) {
+    var s = cards.get(card);
+    if (!s) { s = { x: 0, y: 0, presence: 0, px: 0, py: 0, inside: false, raf: 0, last: 0 }; cards.set(card, s); }
+    return s;
+  }
+  function paint(card, s) {
+    card.style.setProperty('--card-glow-x', s.x.toFixed(1) + 'px');
+    card.style.setProperty('--card-glow-y', s.y.toFixed(1) + 'px');
+    card.style.setProperty('--card-glow-opacity', (s.presence * INTENSITY).toFixed(3));
+  }
+  function tick(card, s, now) {
+    s.raf = 0;
+    var dt = Math.min(0.05, Math.max(0.001, (now - s.last) / 1000));
+    s.last = now;
     var rect = card.getBoundingClientRect();
-    var x = (e.clientX - rect.left) / rect.width;
-    var y = (e.clientY - rect.top) / rect.height;
-    card.style.setProperty('--card-glow-x', (x * 100).toFixed(2) + '%');
-    card.style.setProperty('--card-glow-y', (y * 100).toFixed(2) + '%');
+    var tx = s.px - rect.left, ty = s.py - rect.top;
+    var target = s.inside ? 1 : 0;
+    if (s.presence < 0.02) { s.x = tx; s.y = ty; }
+    var follow = reduce ? 1 : 1 - Math.exp(-dt / (0.015 + SMOOTHING * 0.22));
+    s.x += (tx - s.x) * follow;
+    s.y += (ty - s.y) * follow;
+    var fade = reduce ? 1 : 1 - Math.exp(-dt / (target > s.presence ? 0.1 : 0.32));
+    s.presence += (target - s.presence) * fade;
+    if (Math.abs(target - s.presence) < 0.002) s.presence = target;
+    paint(card, s);
+    var moving = Math.abs(tx - s.x) > 0.1 || Math.abs(ty - s.y) > 0.1;
+    if (moving || s.presence !== target) s.raf = requestAnimationFrame(function (t) { tick(card, s, t); });
+  }
+  function wake(card, s) {
+    if (s.raf) return;
+    s.last = performance.now();
+    s.raf = requestAnimationFrame(function (t) { tick(card, s, t); });
+  }
+  document.addEventListener('pointermove', function (e) {
+    var card = e.target && e.target.closest && e.target.closest('#aside-content .card-info, #aside-content .card-allinfo');
+    if (!card) return;
+    var s = stateOf(card);
+    s.px = e.clientX; s.py = e.clientY; s.inside = true;
+    wake(card, s);
+  }, true);
+  document.addEventListener('pointerout', function (e) {
+    var card = e.target && e.target.closest && e.target.closest('#aside-content .card-info, #aside-content .card-allinfo');
+    if (!card) return;
+    var to = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('#aside-content .card-info');
+    if (to === card) return;
+    var s = stateOf(card);
+    s.inside = false;
+    wake(card, s);
   }, true);
 })();
 </script>

@@ -2,7 +2,7 @@ import { defineSolitudeConfig } from './lib/config';
 
 export default defineSolitudeConfig({
   site: 'https://example.org',
-  title: 'STEP 跬步',
+  title: "STEP 跬步·Nick's Blog",
   description: '立志于远方的一抹斜杠\n无论是工作 还是生活\n热情都来自于汲取新的养分\n最终又归于一些小小的创作',
   locale: 'zh-CN',
   timeZone: 'Asia/Shanghai',
@@ -37,6 +37,7 @@ export default defineSolitudeConfig({
   theme: {
     site: {
       name: { class: 'text', custom: 'STEP 跬步' },
+      icon: '/img/logo-favicon.png',
     },
     lightbox: 'fancybox',
     nav: {

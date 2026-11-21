@@ -96,28 +96,66 @@ img[src*="logo.svg"] {
   mask-image: url('/img/icons/menu-news.svg');
 }
 
-/* 侧边个人信息卡片：仅鼠标悬停光晕（不改背景、不加浮动）
-   注意：::before 由主题用于渐变背景（--current-banner-theme），绝不能覆盖；
-       光晕改用 ::after，并 mask 成只留边缘，避免遮挡渐变背景与内容。 */
+/* 侧边个人信息卡片：鼠标中心向外散射的填充式光晕（照搬 GlowCard 效果）
+   注意：::before 是主题的渐变背景（--current-banner-theme），绝不覆盖；
+       光晕用独立 span 放在背景之上、内容之下，不遮挡文字。 */
 #aside-content .card-info {
   --card-glow-x: 50%;
   --card-glow-y: 50%;
   --card-glow-opacity: 0;
 }
+#aside-content .card-info > .card-content { z-index: 1; }
+/* 描边光晕：沿卡片边缘的白色光环，跟随鼠标（与填充光晕共存） */
 #aside-content .card-info::after {
-  position: absolute; inset: 0; z-index: 5; content: '';
+  position: absolute; inset: 0; z-index: 2; content: '';
   border-radius: inherit; pointer-events: none;
   padding: 2px;
   opacity: var(--card-glow-opacity);
-  background: radial-gradient(circle at var(--card-glow-x) var(--card-glow-y),
-    #fff, rgba(255,255,255,.7) 20%, rgba(255,255,255,.1) 46%, rgba(255,255,255,0) 62%);
+  background: radial-gradient(circle 160px at var(--card-glow-x) var(--card-glow-y),
+    rgba(255,255,255,1) 0%, rgba(255,255,255,.7) 35%, rgba(255,255,255,.2) 65%, rgba(255,255,255,0) 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  transition: opacity .18s ease-out;
 }
-#aside-content .card-info:hover { --card-glow-opacity: 1; }
+#aside-content .card-info > .card-glow-light {
+  position: absolute; inset: 0; z-index: 0;
+  border-radius: inherit; pointer-events: none;
+  opacity: var(--card-glow-opacity);
+  background: radial-gradient(circle 240px at var(--card-glow-x) var(--card-glow-y),
+    rgba(255,255,255,1) 0%,
+    rgba(255,255,255,1) 16.5%,
+    rgba(255,255,255,.93) 24%,
+    rgba(255,255,255,.84) 32%,
+    rgba(255,255,255,.73) 40%,
+    rgba(255,255,255,.60) 48%,
+    rgba(255,255,255,.46) 56%,
+    rgba(255,255,255,.32) 64%,
+    rgba(255,255,255,.18) 72%,
+    rgba(255,255,255,.07) 80%,
+    rgba(255,255,255,0) 88%);
+  transition: opacity .12s linear;
+}
+
+/* 统计卡片（文章/运行时间/总字数）：同款描边光效 */
+#aside-content .card-allinfo {
+  position: relative;
+  --card-glow-x: 50%;
+  --card-glow-y: 50%;
+  --card-glow-opacity: 0;
+}
+#aside-content .card-allinfo::after {
+  position: absolute; inset: 0; z-index: 2; content: '';
+  border-radius: inherit; pointer-events: none;
+  padding: 2px;
+  opacity: var(--card-glow-opacity);
+  background: radial-gradient(circle 160px at var(--card-glow-x) var(--card-glow-y),
+    rgba(255,255,255,1) 0%, rgba(255,255,255,.7) 35%, rgba(255,255,255,.2) 65%, rgba(255,255,255,0) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
 
 /* 文章头部 meta 自定义图标：位置(常州) 与 奖章(本文仅限博客)，与 FA 图标协调 */
 .post-meta-custom { display: inline-flex; align-items: center; gap: 5px; }

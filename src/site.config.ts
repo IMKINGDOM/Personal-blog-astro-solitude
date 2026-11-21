@@ -98,6 +98,12 @@ export default defineSolitudeConfig({
         ],
         right: [{ name: 'RSS', url: '/index.xml', icon: 'fas fa-rss' }],
       },
+      links: [
+        { name: '订阅', url: '#' },
+        { name: '留言', url: '#' },
+        { name: '反馈', url: '#' },
+        { name: '声明', url: '/statement/' },
+      ],
       group: {
         探索: [
           { name: '文章', url: '/archives/' },
@@ -107,6 +113,11 @@ export default defineSolitudeConfig({
           { name: 'STEP 跬步', url: '/about/' },
           { name: '友链', url: '/links/' },
         ],
+        协议: [
+          { name: '隐私协议', url: '/privacy/' },
+          { name: '版权协议', url: '/copyright/' },
+        ],
+        星驰: [{ name: '博客社群', url: '#' }],
       },
     },
     capsule: { enable: true, id: '7298728834454061071', type: 'playlist', server: 'qishui' },

@@ -61,14 +61,6 @@ const count = wordCount(post.body ?? '');
           </time>
         </span>
       )}
-      {cfg.post.meta.updated && (
-        <span class="post-meta-date">
-          <i class="post-meta-icon solitude fas fa-arrows-rotate" />
-          <time datetime={isoDate(p.lastmod ?? p.date)} data-absolute>
-            {dateLabel(p.lastmod ?? p.date)}
-          </time>
-        </span>
-      )}
       <span class="post-meta-custom post-meta-location">
         <i class="post-meta-icon solitude meta-icon-location" />
         <span>常州</span>
@@ -95,6 +87,14 @@ const count = wordCount(post.body ?? '');
           </span>
         </span>
       )}
+      <span class="post-meta-custom post-meta-views">
+        <i class="post-meta-icon solitude meta-icon-eye" />
+        <span class="post-views-count" data-post-stat="views">0</span>
+      </span>
+      <span class="post-meta-custom post-meta-comments">
+        <i class="post-meta-icon solitude meta-icon-message" />
+        <span class="post-comments-count" data-post-stat="comments">0</span>
+      </span>
       {cfg.post.meta.locate && (
         <span class="post-meta-position">
           <i class="solitude fas fa-location-dot" />
@@ -131,3 +131,34 @@ const count = wordCount(post.body ?? '');
   </div>
 </div>
 <div class="post-radius-bottom" />
+
+<script is:inline>
+/**
+ * 文章统计（预留）：阅读数 / 评论数
+ * ------------------------------------------------------------------
+ * 当前：显示两位随机占位数字（和访问统计一致）。
+ * 上线后接真实数据：改 fetchPostStats()，按文章路径返回 { views, comments }。
+ * 三种接法：
+ *  1) Umami：GET /api/umami/stats?path=... → views
+ *  2) LeanCloud/Valine：class _ViewCounter + Comment 查询 → views/comments
+ *  3) 构建期生成：脚本读统计写入 frontmatter，服务端直接渲染
+ * 页面已给数字加 data-post-stat="views|comments"，按 key 回填即可。
+ */
+(function () {
+  function rand() { return String(Math.floor(Math.random() * 90) + 10); }
+  async function fetchPostStats(path) {
+    // 上线后在此接入真实接口，例如：
+    // const res = await fetch('/api/post-stats?path=' + encodeURIComponent(path));
+    // if (res.ok) return await res.json();  // { views: number, comments: number }
+    return null;
+  }
+  function apply(data) {
+    document.querySelectorAll('[data-post-stat]').forEach(function (el) {
+      var key = el.getAttribute('data-post-stat');
+      if (data && typeof data[key] !== 'undefined') el.textContent = data[key];
+      else el.textContent = rand();
+    });
+  }
+  fetchPostStats(location.pathname).then(apply).catch(function () { apply(null); });
+})();
+</script>

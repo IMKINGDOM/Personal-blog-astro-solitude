@@ -107,22 +107,27 @@ const start = new Date(cfg.aside.siteinfo.runtime).getFullYear();
               <span class="beian-name">{l.name}</span>
             </a>
           ))}
-          <a
-            class="footer-bar-link tw:[#footer-bar_.footer-bar-left_.beian-group_&]:flex tw:[#footer-bar_.footer-bar-left_.beian-group_&]:items-center tw:[#footer-bar_&]:whitespace-nowrap tw:[#footer-bar_&]:flex tw:[#footer-bar_&]:items-center"
-            href="https://astro.build/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t('frameworkBy')} Astro
-          </a>
-          <a
-            class="footer-bar-link tw:[#footer-bar_.footer-bar-left_.beian-group_&]:flex tw:[#footer-bar_.footer-bar-left_.beian-group_&]:items-center tw:[#footer-bar_&]:whitespace-nowrap tw:[#footer-bar_&]:flex tw:[#footer-bar_&]:items-center"
-            href="https://github.com/everfu/astro-solitude"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t('themeBy')} Solitude
-          </a>
+          <span class="footer-powered tw:[#footer-bar_&]:whitespace-nowrap">Powered by&nbsp;
+            <a
+              class="footer-bar-link tw:[#footer-bar_&]:inline-flex tw:[#footer-bar_&]:items-center"
+              href="https://astro.build/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img class="footer-powered-logo" src={url('/img/icons/astro-color.svg')} alt="Astro" />
+              Astro
+            </a>
+            &nbsp;&amp;&nbsp;
+            <a
+              class="footer-bar-link tw:[#footer-bar_&]:inline-flex tw:[#footer-bar_&]:items-center"
+              href="https://github.com/IMKINGDOM/Personal-blog-astro-solitude"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="footer-powered-logo github-logo" aria-hidden="true" />
+              Solitude
+            </a>
+          </span>
         </div>
       </div>
       <div class="footer-bar-right tw:[#footer-bar_&]:flex tw:[#footer-bar_&]:flex-row tw:[#footer-bar_&]:flex-wrap tw:[#footer-bar_&]:items-center">

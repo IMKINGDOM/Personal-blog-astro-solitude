@@ -157,10 +157,31 @@ img[src*="logo.svg"] {
   mask-composite: exclude;
 }
 
+/* 侧边卡片头像可点击跳转「吾之吾」：覆盖层定位到头像位置 */
+.card-info .avatar-link {
+  position: absolute; top: 90px; left: 50%; transform: translateX(-50%);
+  width: 118px; height: 118px; z-index: 3; border-radius: 50%;
+}
+
+/* 页脚 Powered by 行：字体放大 1.2 倍，文字与 logo 水平对齐 */
+.footer-powered {
+  font-size: 14.4px; color: var(--efu-secondtext);
+  display: inline-flex; align-items: center; gap: 2px; line-height: 1;
+}
+.footer-powered .footer-bar-link { gap: 4px; display: inline-flex; align-items: center; }
+.footer-powered-logo { height: 16.8px; width: 16.8px; display: inline-block; vertical-align: middle; }
+/* GitHub 官方 logo 无彩色版：用 mask + currentColor 自适应浅/深主题 */
+.footer-powered-logo.github-logo {
+  background-color: currentColor;
+  -webkit-mask: url('/img/icons/github-white.svg') center/contain no-repeat;
+  mask: url('/img/icons/github-white.svg') center/contain no-repeat;
+  color: var(--efu-secondtext);
+}
+
 /* 文章头部 meta 自定义图标：位置(常州) 与 奖章(本文仅限博客)，与 FA 图标协调 */
 .post-meta-custom { display: inline-flex; align-items: center; gap: 5px; }
 .post-meta-custom .post-meta-icon {
-  display: inline-block; width: 14px; height: 14px; flex: 0 0 14px;
+  display: inline-block; width: 20px; height: 16px; flex: 0 0 20px;
   background-color: currentColor;
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
   -webkit-mask-position: center; mask-position: center;
@@ -173,6 +194,14 @@ img[src*="logo.svg"] {
 .post-meta-custom .meta-icon-award {
   -webkit-mask-image: url('/img/icons/meta-award.svg');
   mask-image: url('/img/icons/meta-award.svg');
+}
+.post-meta-custom .meta-icon-eye {
+  -webkit-mask-image: url('/img/icons/meta-eye.svg');
+  mask-image: url('/img/icons/meta-eye.svg');
+}
+.post-meta-custom .meta-icon-message {
+  -webkit-mask-image: url('/img/icons/meta-message.svg');
+  mask-image: url('/img/icons/meta-message.svg');
 }
 
 /* 侧边卡片与文章版权卡片诗句按行显示（文案含 \n 换行符） */

@@ -177,4 +177,41 @@ const items = data.items.slice(0, c.strip);
 
 <script>
   import '../../scripts/brevity';
+  import brevityData from '../../data/brevity.json';
+
+  // 封面随机（C 方案）：收集所有动态图片，随机选一张，预加载完成后再淡入替换，避免闪图
+  const cover = document.querySelector<HTMLImageElement>('.brevity-header-cover');
+  const pool: string[] = (brevityData.items || [])
+    .flatMap((it: any) => (Array.isArray(it.image) ? it.image : it.image ? [it.image] : []));
+  if (cover && pool.length) {
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    const pre = new Image();
+    pre.onload = () => {
+      cover.src = pick;
+      cover.style.opacity = '0';
+      cover.style.transition = 'opacity .35s ease';
+      requestAnimationFrame(() => { cover.style.opacity = '1'; });
+    };
+    pre.src = pick;
+  }
+
+  // 封面板块鼠标光晕（独立于 about 页，避免依赖其初始化时机）
+  const header = document.querySelector<HTMLElement>('.brevity-header');
+  if (header && !header.dataset.glowInit &&
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    header.dataset.glowInit = '1';
+    const glow = document.createElement('div');
+    glow.className = 'about-pointer-glow';
+    glow.setAttribute('aria-hidden', 'true');
+    header.appendChild(glow);
+    const pos = (e: PointerEvent) => {
+      const r = header.getBoundingClientRect();
+      header.style.setProperty('--about-glow-x', `${((e.clientX - r.left) / r.width) * 100}%`);
+      header.style.setProperty('--about-glow-y', `${((e.clientY - r.top) / r.height) * 100}%`);
+    };
+    header.addEventListener('pointerenter', (e) => { pos(e); header.classList.add('is-about-glow-active'); });
+    header.addEventListener('pointermove', pos);
+    header.addEventListener('pointerleave', () => header.classList.remove('is-about-glow-active'));
+  }
 </script>

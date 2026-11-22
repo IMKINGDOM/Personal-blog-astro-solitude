@@ -21,6 +21,10 @@ img[src*="logo.svg"] {
   gap: 0.75rem;
 }
 
+/* 足迹页：hidden 状态必须盖过 flex 布局，否则"地图加载中/暂无足迹"文字常驻 */
+#fp-map-tip[hidden],
+#fp-empty[hidden] { display: none !important; }
+
 /* 照片卡/地图卡光晕层级：默认光晕(z1)被铺满的图片(z2)盖住，提到图片之上才可见 */
 #about-page .myphoto > .about-pointer-glow,
 #about-page .residence-map > .about-pointer-glow { z-index: 4 !important; }

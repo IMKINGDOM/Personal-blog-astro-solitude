@@ -177,13 +177,16 @@ const items = data.items.slice(0, c.strip);
 
 <script>
   import '../../scripts/brevity';
-  import brevityData from '../../data/brevity.json';
 
-  // 封面随机（C 方案）：收集所有动态图片，随机选一张，预加载完成后再淡入替换，避免闪图
+  // 封面轮换：固定 4 张，每次刷新随机选一张，预加载后淡入替换，避免闪图
   const cover = document.querySelector<HTMLImageElement>('.brevity-header-cover');
-  const pool: string[] = (brevityData.items || [])
-    .flatMap((it: any) => (Array.isArray(it.image) ? it.image : it.image ? [it.image] : []));
-  if (cover && pool.length) {
+  const pool = [
+    '/img/brevity/cover-impression.webp',
+    '/img/brevity/cover-desk.webp',
+    '/img/brevity/cover-blackhole.webp',
+    '/img/brevity/cover-racing.webp',
+  ];
+  if (cover) {
     const pick = pool[Math.floor(Math.random() * pool.length)];
     const pre = new Image();
     pre.onload = () => {

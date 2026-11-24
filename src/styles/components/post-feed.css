@@ -25,36 +25,27 @@
   color: var(--efu-theme);
 }
 
-/* 文章卡片：鼠标移入时一道斜向光栅（主题色细条纹）扫过一次 */
+/* 文章卡片：完全照搬参考站 hcSheen —— 快速平行四边形光柱划过一次 */
 .recent-post-item {
   position: relative;
   overflow: hidden;
 }
 .recent-post-item::after {
   content: '';
-  position: absolute; inset: 0; z-index: 3;
-  pointer-events: none; border-radius: inherit;
-  opacity: 0;
-  background:
-    repeating-linear-gradient(112deg,
-      transparent 0 5px,
-      color-mix(in srgb, var(--efu-theme) 14%, transparent) 5px 6px,
-      transparent 6px 11px);
-  -webkit-mask-image: linear-gradient(112deg,
-    transparent 30%, #000 45%, #000 55%, transparent 70%);
-  mask-image: linear-gradient(112deg,
-    transparent 30%, #000 45%, #000 55%, transparent 70%);
-  background-size: 220% 100%;
-  background-position: 120% 0;
+  position: absolute; top: 0; left: 0; z-index: 5;
+  width: 42%; height: 100%;
+  pointer-events: none; opacity: 0;
+  transform: translateX(-140%) skewX(-18deg);
+  background: linear-gradient(105deg,
+    transparent 0, rgba(255,255,255,.32) 50%, transparent 100%);
 }
 .recent-post-item:hover::after {
-  animation: post-raster-sweep .95s cubic-bezier(.25, .6, .3, 1);
+  opacity: 1;
+  animation: hcSheen 1.05s cubic-bezier(.22, 1, .36, 1) 1;
 }
-@keyframes post-raster-sweep {
-  0%   { background-position: 120% 0; opacity: 0; }
-  12%  { opacity: .9; }
-  82%  { opacity: .9; }
-  100% { background-position: -120% 0; opacity: 0; }
+@keyframes hcSheen {
+  0%   { transform: translateX(-140%) skewX(-18deg); }
+  100% { transform: translateX(340%) skewX(-18deg); }
 }
 @media (prefers-reduced-motion: reduce) {
   .recent-post-item:hover::after { animation: none; }

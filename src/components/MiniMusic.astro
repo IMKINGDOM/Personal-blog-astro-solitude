@@ -24,21 +24,20 @@ const tracks = [
 const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
 ---
 
-<div id="mini-music" class="mm-root" transition:persist="mini-music">
+<div id="mini-music" class="mm-root capsule-sheen" transition:persist="mini-music">
   <div id="mm-bar" class="mm-bar" role="group" aria-label="音乐播放器">
-    <div class="mm-progress" aria-hidden="true"><span id="mm-progress-fill"></span></div>
-    <span class="mm-disc" aria-hidden="true"><span class="mm-disc-hole"></span></span>
-    <span class="mm-marquee">
-      <span class="mm-scroll" id="mm-scroll">
-        <span class="mm-line" id="mm-line-a">加载中…</span>
-        <span class="mm-line" id="mm-line-b" aria-hidden="true">加载中…</span>
-      </span>
+    <span class="mm-disc" id="mm-disc" aria-hidden="true"><span class="mm-disc-hole"></span></span>
+    <span class="mm-info">
+      <span class="mm-music"><span id="mm-title" class="mm-title">加载中…</span></span>
+      <span id="mm-lyric" class="mm-lyric">♪</span>
     </span>
-    <span class="mm-ctrl">
-      <button id="mm-prev" class="mm-icon" type="button" aria-label="上一首"><i class="solitude fas fa-backward-step"></i></button>
-      <button id="mm-play" class="mm-icon" type="button" aria-label="播放/暂停"><i class="solitude fas fa-pause"></i></button>
-      <button id="mm-next" class="mm-icon" type="button" aria-label="下一首"><i class="solitude fas fa-forward-step"></i></button>
+    <span class="mm-ctrl" id="mm-ctrl">
+      <button id="mm-prev" class="mm-control-btn" type="button" aria-label="上一首"><i class="solitude fas fa-backward-step"></i></button>
+      <button id="mm-pause" class="mm-control-btn" type="button" aria-label="暂停"><i class="solitude fas fa-pause"></i></button>
+      <button id="mm-play" class="mm-control-btn" type="button" aria-label="播放"><i class="solitude fas fa-play"></i></button>
+      <button id="mm-next" class="mm-control-btn" type="button" aria-label="下一首"><i class="solitude fas fa-forward-step"></i></button>
     </span>
+    <span class="mm-bar-track" aria-hidden="true"><span id="mm-progress-fill" class="mm-played"></span></span>
   </div>
 </div>
 
@@ -49,33 +48,29 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
   root.dataset.mmInit = '1';
 
   var bar = document.getElementById('mm-bar');
-  var lineA = document.getElementById('mm-line-a');
-  var lineB = document.getElementById('mm-line-b');
+  var titleEl = document.getElementById('mm-title');
+  var lyricEl = document.getElementById('mm-lyric');
   var progress = document.getElementById('mm-progress-fill');
+  var pauseBtn = document.getElementById('mm-pause');
   var playBtn = document.getElementById('mm-play');
   var audio = new Audio();
   audio.preload = 'metadata';
-  audio.volume = 0.7;
+  audio.volume = 0.8;
 
   var order = tracks.map(function (_, i) { return i; });
   for (var j = order.length - 1; j > 0; j--) {
     var k = Math.floor(Math.random() * (j + 1));
     var tmp = order[j]; order[j] = order[k]; order[k] = tmp;
   }
-  var pos = 0;
-  var lastLine = -1;
+  var pos = 0, lastLine = -1;
 
-  function currentLyrics() { return tracks[order[pos]].lrc; }
   function showLyric(time, force) {
-    var lrc = currentLyrics();
+    var lrc = tracks[order[pos]].lrc;
     var cur = 0;
     for (var i = 0; i < lrc.length; i++) { if (lrc[i][0] <= time) cur = i; else break; }
     if (cur === lastLine && !force) return;
     lastLine = cur;
-    var track = tracks[order[pos]];
-    var text = track.name + ' · ' + track.artist + '　' + (lrc[cur] ? lrc[cur][1] : '♪');
-    lineA.textContent = text;
-    lineB.textContent = text;
+    lyricEl.textContent = lrc[cur] ? lrc[cur][1] : '♪';
   }
 
   var pendingStart = null;
@@ -92,10 +87,17 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
       document.addEventListener('keydown', pendingStart);
     });
   }
+  function syncBtn() {
+    var playing = !audio.paused;
+    pauseBtn.style.display = playing ? '' : 'none';
+    playBtn.style.display = playing ? 'none' : '';
+    root.classList.toggle('is-playing', playing);
+  }
   function load(n, autoplay) {
     pos = (n + order.length) % order.length;
     var track = tracks[order[pos]];
     audio.src = BASE + track.file;
+    titleEl.textContent = track.name + ' - ' + track.artist;
     progress.style.width = '0%';
     showLyric(0, true);
     if (autoplay !== false) tryPlay();
@@ -108,48 +110,13 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
   audio.addEventListener('ended', function () {
     if (audio.duration && audio.currentTime >= audio.duration - 1.5) load(pos + 1);
   });
-  audio.addEventListener('play', function () {
-    playBtn.innerHTML = '<i class="solitude fas fa-pause"></i>';
-    root.classList.add('is-playing');
-  });
-  audio.addEventListener('pause', function () {
-    setTimeout(function () {
-      if (audio.paused) {
-        playBtn.innerHTML = '<i class="solitude fas fa-play"></i>';
-        root.classList.remove('is-playing');
-      }
-    }, 120);
-  });
+  audio.addEventListener('play', syncBtn);
+  audio.addEventListener('pause', function () { setTimeout(syncBtn, 120); });
 
-  playBtn.addEventListener('click', function (e) {
-    e.stopPropagation();
-    if (audio.paused) tryPlay();
-    else if (!pendingStart) audio.pause();
-  });
+  pauseBtn.addEventListener('click', function (e) { e.stopPropagation(); if (!pendingStart) audio.pause(); });
+  playBtn.addEventListener('click', function (e) { e.stopPropagation(); tryPlay(); });
   document.getElementById('mm-next').addEventListener('click', function (e) { e.stopPropagation(); load(pos + 1); });
   document.getElementById('mm-prev').addEventListener('click', function (e) { e.stopPropagation(); load(pos - 1); });
-
-  // 拖拽移动（避开控制按钮）
-  var down = false, sx = 0, sy = 0, ox = 0, oy = 0;
-  bar.addEventListener('pointerdown', function (e) {
-    if (e.target.closest('.mm-icon')) return;
-    down = true;
-    sx = e.clientX; sy = e.clientY;
-    var r = root.getBoundingClientRect();
-    ox = r.left; oy = r.top;
-    root.style.left = ox + 'px'; root.style.top = oy + 'px';
-    root.style.bottom = 'auto';
-    bar.setPointerCapture(e.pointerId);
-  });
-  bar.addEventListener('pointermove', function (e) {
-    if (!down) return;
-    root.style.left = Math.max(0, Math.min(window.innerWidth - root.offsetWidth, ox + e.clientX - sx)) + 'px';
-    root.style.top = Math.max(0, Math.min(window.innerHeight - root.offsetHeight, oy + e.clientY - sy)) + 'px';
-  });
-  bar.addEventListener('pointerup', function (e) {
-    down = false;
-    bar.releasePointerCapture(e.pointerId);
-  });
 
   load(0);
 })();
@@ -157,105 +124,91 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
 
 <style>
   .mm-root {
-    position: fixed; left: 18px; bottom: 18px; z-index: 9000;
+    position: fixed; left: 20px; bottom: 20px; z-index: 20;
     font-family: inherit;
-    --mm-bg: linear-gradient(180deg, rgba(40, 34, 29, .94), rgba(21, 18, 16, .96));
-    --mm-border: rgba(232, 201, 138, .38);
-    --mm-fg: #e8c98a;
-    --mm-fg-strong: #fff2d0;
-    color: var(--mm-fg);
-  }
-  :global(html[data-theme="light"]) .mm-root {
-    --mm-bg: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(238, 240, 246, .94));
-    --mm-border: color-mix(in srgb, var(--efu-theme) 48%, transparent);
-    --mm-fg: var(--efu-theme);
-    --mm-fg-strong: color-mix(in srgb, var(--efu-theme) 80%, #000);
+    --efu-music: var(--efu-theme);
   }
   .mm-bar {
     display: flex; align-items: center;
     position: relative;
-    width: 480px; max-width: calc(100vw - 36px);
-    height: 46px; padding: 0 9px 0 4px;
-    border-radius: 999px;
-    border: 1px solid var(--mm-border);
-    background: var(--mm-bg);
-    -webkit-backdrop-filter: var(--glass-blur, blur(16px) saturate(1.3));
-    backdrop-filter: var(--glass-blur, blur(16px) saturate(1.3));
-    box-shadow: 0 4px 20px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.06);
-    overflow: hidden; cursor: grab; touch-action: none;
-    transition: box-shadow .25s ease, border-color .25s ease;
+    height: 46px; min-height: 46px; max-height: 46px;
+    padding: 8px 16px 8px 8px;
+    border-radius: 60px;
+    background: var(--efu-card-bg);
+    border: var(--style-border-always);
+    box-shadow: var(--efu-shadow-border);
+    overflow: hidden; cursor: pointer;
+    transition: width .4s cubic-bezier(.34, 1.56, .64, 1), box-shadow .3s;
+    width: 122px;
   }
-  .mm-bar:hover {
-    border-color: var(--mm-fg);
-    box-shadow: 0 4px 22px rgba(0,0,0,.3),
-                0 0 20px color-mix(in srgb, var(--mm-fg) 22%, transparent);
-  }
-  .mm-bar:active { cursor: grabbing; }
-  .mm-progress {
-    position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: rgba(128,128,128,.22); border-radius: 999px 999px 0 0;
-    overflow: hidden; z-index: 2;
-  }
-  .mm-progress span {
-    display: block; height: 100%; width: 0;
-    background: linear-gradient(90deg, #f7b955, #ff5f4d);
-    transition: width .25s linear;
-  }
+  .mm-root:hover .mm-bar { width: 430px; max-width: calc(100vw - 40px); }
   .mm-disc {
-    flex: 0 0 38px; width: 38px; height: 38px; margin-right: 10px;
-    border-radius: 50%; position: relative; display: block;
-    background: radial-gradient(circle at 34% 28%, #6b5844, #241d19 62%, #100d0c);
-    border: 1px solid rgba(232, 201, 138, .34);
-    box-shadow: inset 0 0 9px rgba(0,0,0,.72);
+    position: relative; z-index: 1;
+    flex: 0 0 30px; width: 30px; height: 30px; margin-right: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #6b5844, #1c1714 65%, #0d0b0a);
+    border: var(--style-border-always);
+    border-color: var(--efu-card-bg);
+    box-shadow: 0 0 14px var(--efu-card-bg);
+    animation: capsuleCoverSpin 24s linear infinite;
   }
-  .mm-disc::before {
-    content: ''; position: absolute; inset: 3px; border-radius: 50%;
-    background: repeating-radial-gradient(circle,
-      transparent 0 2px, rgba(255, 220, 170, .085) 2px 3px);
-  }
+  .mm-root:not(.is-playing) .mm-disc { animation-play-state: paused; }
+  @keyframes capsuleCoverSpin { to { transform: rotate(360deg); } }
   .mm-disc-hole {
     position: absolute; left: 50%; top: 50%;
-    width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
-    border-radius: 50%; background: var(--mm-fg);
-    box-shadow: 0 0 5px rgba(0,0,0,.55);
+    width: 8px; height: 8px; margin: -4px 0 0 -4px;
+    border-radius: 50%; background: var(--efu-theme);
   }
-  .mm-root.is-playing .mm-disc { animation: mm-spin 5s linear infinite; }
-  @keyframes mm-spin { to { transform: rotate(360deg); } }
-  .mm-marquee {
-    flex: 1 1 auto; min-width: 0; overflow: hidden;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  .mm-info {
+    display: flex; flex-direction: column; justify-content: center;
+    flex: 1 1 auto; min-width: 0; height: 30px;
+    position: relative; z-index: 1;
   }
-  .mm-scroll {
-    display: flex; width: max-content;
-    animation: mm-marquee 20s linear infinite;
+  .mm-music {
+    display: block; height: 16px; min-height: 16px;
+    overflow: hidden; line-height: 16px;
   }
-  .mm-root:not(.is-playing) .mm-scroll { animation-play-state: paused; }
-  .mm-line {
-    padding-right: 44px; white-space: nowrap;
-    font-size: 13px; font-weight: 500; color: var(--mm-fg);
-    text-shadow: 0 1px 2px color-mix(in srgb, var(--mm-fg) 12%, transparent);
+  .mm-title {
+    display: block; max-width: 120px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+    color: var(--efu-fontcolor); font-size: 13px; font-weight: 700;
   }
-  @keyframes mm-marquee { to { transform: translateX(-50%); } }
+  .mm-lyric {
+    display: block; max-width: 0; height: 14px; min-height: 14px;
+    margin: 0; padding: 0; opacity: 0; overflow: hidden;
+    color: var(--efu-fontcolor); font-size: 11px; line-height: 14px;
+    white-space: nowrap; text-overflow: ellipsis;
+    transition: max-width .28s, margin .28s, opacity .28s;
+  }
+  .mm-root:hover .mm-lyric { max-width: 200px; margin-top: 1px; opacity: .55; }
   .mm-ctrl {
-    display: flex; align-items: center; gap: 1px;
-    flex: 0 0 auto; margin-left: 6px;
+    display: flex; align-items: center; gap: 2px;
+    flex: 0 0 auto; margin-left: 0; position: relative; z-index: 4;
+    opacity: 0; max-width: 0; overflow: hidden;
+    transition: opacity .28s, max-width .28s, margin .28s;
   }
-  .mm-icon {
-    width: 27px; height: 27px; flex: 0 0 27px;
-    border: none; border-radius: 7px; cursor: pointer;
-    background: transparent; color: var(--mm-fg); font-size: 13px;
-    transition: background .2s ease, color .2s ease;
+  .mm-root:hover .mm-ctrl { opacity: 1; max-width: 120px; margin-left: 10px; }
+  .mm-control-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 24px; height: 30px; padding: 0;
+    color: var(--efu-fontcolor); background: none; border: 0;
+    font-size: 14px; line-height: 30px; opacity: .8; cursor: pointer;
+    transition: opacity .2s, transform .2s;
   }
-  .mm-icon:hover {
-    background: color-mix(in srgb, var(--mm-fg) 16%, transparent);
-    color: var(--mm-fg-strong);
+  .mm-control-btn:hover { opacity: 1; }
+  .mm-control-btn:active { transform: scale(.85); }
+  .mm-bar-track {
+    position: absolute; left: 16px; right: 16px; bottom: 6px;
+    height: 3px; border-radius: 12px;
+    background: var(--efu-gray, rgba(128,128,128,.35));
+    overflow: hidden; z-index: 2;
+  }
+  .mm-played {
+    display: block; height: 100%; width: 0; border-radius: 12px;
+    background: var(--efu-theme); opacity: .9;
   }
   @media (max-width: 600px) {
     .mm-root { left: 12px; bottom: 12px; }
-    .mm-bar { width: calc(100vw - 24px); height: 42px; }
-    .mm-disc { flex-basis: 34px; width: 34px; height: 34px; }
-    .mm-line { font-size: 12px; }
-    .mm-icon { width: 24px; height: 24px; flex-basis: 24px; }
+    .mm-root:hover .mm-bar { width: calc(100vw - 24px); }
   }
 </style>

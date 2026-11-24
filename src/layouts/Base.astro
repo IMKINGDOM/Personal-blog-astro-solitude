@@ -67,6 +67,14 @@ const inlineVars = Object.entries(vars)
 <html lang={config.locale} data-theme="light" style={inlineVars}>
   <head>
     <style is:inline set:html={layerOrder}></style>
+    <script is:inline>
+      /* 首屏同步玻璃状态，避免闪烁（照搬参考站 head 内联脚本） */
+      try {
+        if (localStorage.getItem('liquid-glass') === 'off') {
+          document.documentElement.classList.add('no-glass');
+        }
+      } catch (e) {}
+    </script>
     {type === 'about' && <link rel="stylesheet" href={aboutStyle} />}
     {type === 'brevity' && <link rel="stylesheet" href={brevityStyle} />}
     <meta charset="utf-8" />
@@ -171,7 +179,7 @@ const inlineVars = Object.entries(vars)
     data-aside-position={cfg.aside.position}
     data-index-layout={cfg.index_post_list.direction}
   >
-    <canvas id="cosmos-bg" aria-hidden="true"></canvas>
+    <div id="galaxy-bg" aria-hidden="true"><canvas id="galaxy-canvas"></canvas></div>
     {cfg.loading.fullpage && (
       <div id="loading-box" aria-hidden="true">
         <img src={url(cfg.site.icon)} alt="" />
@@ -215,8 +223,9 @@ const inlineVars = Object.entries(vars)
     <Capsule />
     <MiniMusic />
     <MiniWeather />
-    <script is:inline src="/js/cosmos-bg.js"></script>
+    <script is:inline src="/js/galaxy.js"></script>
     <script is:inline src="/js/liquid-glass.js"></script>
+    <script is:inline src="/js/glass-control.js"></script>
     <script>
       import '../scripts/entry';
     </script>

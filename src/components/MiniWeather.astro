@@ -3,10 +3,9 @@
 ---
 
 <div id="mini-weather" class="mw-root" transition:persist="mini-weather" data-weather="night">
-  <div class="mw-capsule" id="mw-capsule" title="你所在位置的实时天气 · 数据来自 Open-Meteo">
-    <i class="solitude fas fa-moon mw-icon" id="mw-icon" aria-hidden="true"></i>
-    <span class="mw-temp" id="mw-temp">--°</span>
-    <span class="mw-desc" id="mw-desc">定位中</span>
+  <div class="weather-capsule" id="mw-capsule" title="你所在位置的实时天气 · 数据来自 Open-Meteo">
+    <i class="weather-icon fas fa-moon mw-icon" id="mw-icon" aria-hidden="true"></i>
+    <span class="weather-summary" id="mw-summary">定位中…</span>
   </div>
 </div>
 
@@ -17,8 +16,7 @@
   root.dataset.mwInit = '1';
 
   var iconEl = document.getElementById('mw-icon');
-  var tempEl = document.getElementById('mw-temp');
-  var descEl = document.getElementById('mw-desc');
+  var summaryEl = document.getElementById('mw-summary');
   var KEY = 'step-mini-weather-v1';
   var TTL = 30 * 60 * 1000;
   var FALLBACK = { lat: 31.81, lon: 119.97, label: '常州' }; // 用户所在地，定位失败时兜底
@@ -47,9 +45,8 @@
     return { icon: 'fa-cloud', text: '多云', tone: 'cloud' };
   }
   function apply(data) {
-    iconEl.className = 'solitude fas ' + data.icon + ' mw-icon';
-    tempEl.textContent = Math.round(data.temp) + '°C';
-    descEl.textContent = data.text;
+    iconEl.className = 'weather-icon fas ' + data.icon;
+    summaryEl.textContent = Math.round(data.temp) + '°C ' + data.text;
     root.dataset.weather = data.tone;
     root.title = data.city + ' · 数据来自 Open-Meteo';
   }
@@ -82,8 +79,7 @@
       .catch(function () {
         if (city !== FALLBACK.label) request(FALLBACK.lat, FALLBACK.lon, FALLBACK.label);
         else {
-          tempEl.textContent = '--°';
-          descEl.textContent = '天气暂不可用';
+          summaryEl.textContent = '天气暂不可用';
         }
       });
   }
@@ -103,53 +99,61 @@
 </script>
 
 <style>
+  /* 完全照搬参考站 #nav-weather / .weather-capsule */
   .mw-root {
-    position: fixed; left: 18px; bottom: 72px; z-index: 8999;
-    font-family: inherit;
-    --mw-fg: #e8c98a;
-    --mw-bg: linear-gradient(180deg, rgba(40, 34, 29, .94), rgba(21, 18, 16, .96));
-    --mw-border: rgba(232, 201, 138, .38);
-    color: var(--mw-fg);
+    --weather-tone-a: #6aa9ff;
+    --weather-tone-b: #2f5d9e;
+    display: flex; align-items: center;
+    position: fixed; left: 20px; bottom: 76px; z-index: 20;
+    width: fit-content; max-width: calc(100vw - 40px);
+    overflow: hidden; isolation: isolate; cursor: pointer;
+    border-radius: 40px; transform-origin: left bottom;
+    transition: box-shadow .3s, opacity .3s, transform .4s cubic-bezier(.34, 1.56, .64, 1);
+    box-shadow: var(--efu-shadow-border);
   }
-  :global(html[data-theme="light"]) .mw-root {
-    --mw-fg: var(--efu-theme);
-    --mw-bg: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(238, 240, 246, .94));
-    --mw-border: color-mix(in srgb, var(--efu-theme) 48%, transparent);
+  .mw-root[data-weather="sun"]   { --weather-tone-a: #ffc13b; --weather-tone-b: #ef8a1b; }
+  .mw-root[data-weather="cloud"] { --weather-tone-a: #9aa7bd; --weather-tone-b: #56657e; }
+  .mw-root[data-weather="rain"]  { --weather-tone-a: #6aa9ff; --weather-tone-b: #2f5d9e; }
+  .mw-root[data-weather="snow"]  { --weather-tone-a: #b6d2ec; --weather-tone-b: #6f8fb5; }
+  .mw-root[data-weather="fog"]   { --weather-tone-a: #a9aebc; --weather-tone-b: #6d7280; }
+  .mw-root[data-weather="night"] { --weather-tone-a: #5a6cae; --weather-tone-b: #22305a; }
+  .weather-capsule {
+    display: flex; align-items: center; justify-content: flex-start;
+    position: relative; width: 46px; min-width: 46px; max-width: none;
+    height: 46px; padding: 0 11px; overflow: hidden;
+    color: var(--efu-fontcolor);
+    background: linear-gradient(to bottom, var(--efu-maskbg), var(--efu-maskbgdeep));
+    border: var(--style-border); border-radius: 40px;
+    box-shadow: var(--efu-shadow-glass-inset);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    transform: translateZ(0);
+    transition: width .44s cubic-bezier(.22, 1, .36, 1), box-shadow .3s, color .28s, border-color .28s;
   }
-  .mw-capsule {
-    display: flex; align-items: center; gap: 7px;
-    height: 34px; padding: 0 12px;
-    border-radius: 999px;
-    border: 1px solid var(--mw-border);
-    background: var(--mw-bg);
-    -webkit-backdrop-filter: var(--glass-blur, blur(14px) saturate(1.3));
-    backdrop-filter: var(--glass-blur, blur(14px) saturate(1.3));
-    box-shadow: 0 3px 12px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.05);
-    white-space: nowrap; cursor: default;
-    transition: box-shadow .25s ease, border-color .25s ease;
+  .weather-capsule::after {
+    content: ''; position: absolute; inset: 0; z-index: 0;
+    border-radius: inherit; opacity: 0; pointer-events: none;
+    background: linear-gradient(135deg, var(--weather-tone-a), var(--weather-tone-b));
+    transition: opacity .32s ease;
   }
-  .mw-capsule:hover {
-    border-color: var(--mw-fg);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--mw-fg) 22%, transparent),
-                0 4px 18px rgba(0,0,0,.3),
-                0 0 20px color-mix(in srgb, var(--mw-fg) 22%, transparent);
+  .weather-capsule :global(.weather-icon) {
+    position: relative; z-index: 1; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; font-size: 18px;
+    color: var(--weather-tone-a); transition: color .28s;
   }
-  .mw-icon {
-    font-size: 15px; line-height: 1; width: 16px; text-align: center;
-    color: var(--mw-fg);
+  .weather-capsule :global(.weather-summary) {
+    position: relative; z-index: 1; flex-shrink: 0; display: inline-block;
+    width: auto; max-width: 0; margin-left: 0; opacity: 0;
+    color: var(--efu-white); font-size: 14px; font-weight: 500;
+    white-space: nowrap; overflow: hidden;
+    transition: max-width .44s cubic-bezier(.22, 1, .36, 1), margin .44s cubic-bezier(.22, 1, .36, 1), opacity .3s ease 80ms;
   }
-  .mw-temp { font-size: 13px; font-weight: 700; color: var(--mw-fg); }
-  .mw-desc { font-size: 12px; color: color-mix(in srgb, var(--mw-fg) 82%, transparent); }
-  /* 各天气色调：图标与胶囊底色微染，和参考站一致 */
-  .mw-root[data-weather="sun"] .mw-capsule   { border-color: #f0b24a80; }
-  .mw-root[data-weather="sun"] .mw-icon      { color: #f0b24a; }
-  .mw-root[data-weather="cloud"] .mw-icon    { color: #a8b4c6; }
-  .mw-root[data-weather="rain"] .mw-icon     { color: #6aa9ff; }
-  .mw-root[data-weather="snow"] .mw-icon     { color: #b6d2ec; }
-  .mw-root[data-weather="fog"] .mw-icon      { color: #a9aebc; }
-  .mw-root[data-weather="night"] .mw-icon    { color: var(--mw-fg); }
+  .weather-capsule:hover { width: max-content; color: var(--efu-white); border-color: var(--efu-card-border); }
+  .weather-capsule:hover::after { opacity: 1; }
+  .weather-capsule:hover :global(.weather-icon) { color: var(--efu-white); }
+  .weather-capsule:hover :global(.weather-summary) { max-width: 300px; margin-left: 10px; opacity: 1; }
   @media (max-width: 600px) {
-    .mw-root { left: 12px; bottom: 62px; }
-    .mw-capsule { height: 30px; padding: 0 10px; }
+    .mw-root { left: 12px; bottom: 66px; }
   }
 </style>

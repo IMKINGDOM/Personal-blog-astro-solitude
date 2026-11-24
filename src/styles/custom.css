@@ -227,3 +227,19 @@ img[src*="logo.svg"] {
 #about-page .interest-right-text {
   align-self: flex-end;
 }
+
+/* 星空背景画布：深色模式绘制黑洞/行星，浅色模式保持干净（照搬参考站） */
+#cosmos-bg {
+  display: block; position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  margin: 0; padding: 0; border: 0;
+  pointer-events: none; z-index: -1;
+}
+
+/* 液态玻璃：JS 注入 SVG 位移滤镜后升级为边缘折射玻璃，未注入时回退普通毛玻璃 */
+:root { --glass-blur: blur(14px) saturate(1.35); }
+#aside-content .card-widget,
+#aside-content .sticky_layout {
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}

@@ -58,9 +58,9 @@ export default defineSolitudeConfig({
       },
     },
     aside: {
-      home: { noSticky: 'about,date', Sticky: 'allInfo' },
-      post: { noSticky: 'about,date', Sticky: 'newestPost,allInfo' },
-      page: { noSticky: 'about,date', Sticky: 'newestPost,allInfo' },
+      home: { noSticky: 'about,date', Sticky: 'allInfo,heatmap' },
+      post: { noSticky: 'about,date', Sticky: 'newestPost,allInfo,heatmap' },
+      page: { noSticky: 'about,date', Sticky: 'newestPost,allInfo,heatmap' },
       my_card: {
         description: '一抹斜杠 直指星辰',
         content: '立志于远方的一抹斜杠\n无论是工作 还是生活\n热情都来自于汲取新的养分\n最终又归于一些小小的创作\n立于此方小天地\n执笔万里饮长风\n若问有何可取处\n尽在文字山海中',

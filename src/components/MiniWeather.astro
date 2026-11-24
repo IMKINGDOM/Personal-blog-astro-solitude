@@ -105,32 +105,41 @@
 <style>
   .mw-root {
     position: fixed; left: 18px; bottom: 72px; z-index: 8999;
-    font-family: inherit; color: #e8c98a;
+    font-family: inherit;
+    --mw-fg: #e8c98a;
+    --mw-bg: linear-gradient(180deg, rgba(40, 34, 29, .94), rgba(21, 18, 16, .96));
+    --mw-border: rgba(232, 201, 138, .38);
+    color: var(--mw-fg);
+  }
+  :global(html[data-theme="light"]) .mw-root {
+    --mw-fg: var(--efu-theme);
+    --mw-bg: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(238, 240, 246, .94));
+    --mw-border: color-mix(in srgb, var(--efu-theme) 48%, transparent);
   }
   .mw-capsule {
     display: flex; align-items: center; gap: 7px;
     height: 34px; padding: 0 12px;
     border-radius: 999px;
-    border: 1px solid rgba(232, 201, 138, .38);
-    background: linear-gradient(180deg, rgba(40, 34, 29, .94), rgba(21, 18, 16, .96));
-    -webkit-backdrop-filter: blur(14px) saturate(1.3);
-    backdrop-filter: blur(14px) saturate(1.3);
+    border: 1px solid var(--mw-border);
+    background: var(--mw-bg);
+    -webkit-backdrop-filter: var(--glass-blur, blur(14px) saturate(1.3));
+    backdrop-filter: var(--glass-blur, blur(14px) saturate(1.3));
     box-shadow: 0 3px 12px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.05);
     white-space: nowrap; cursor: default;
     transition: box-shadow .25s ease, border-color .25s ease;
   }
   .mw-capsule:hover {
-    border-color: rgba(232, 201, 138, .7);
-    box-shadow: 0 0 0 1px rgba(232, 201, 138, .2),
-                0 4px 18px rgba(0,0,0,.36),
-                0 0 20px rgba(232, 201, 138, .2);
+    border-color: var(--mw-fg);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--mw-fg) 22%, transparent),
+                0 4px 18px rgba(0,0,0,.3),
+                0 0 20px color-mix(in srgb, var(--mw-fg) 22%, transparent);
   }
   .mw-icon {
     font-size: 15px; line-height: 1; width: 16px; text-align: center;
-    color: #e8c98a;
+    color: var(--mw-fg);
   }
-  .mw-temp { font-size: 13px; font-weight: 700; color: #e8c98a; }
-  .mw-desc { font-size: 12px; color: rgba(232, 201, 138, .82); }
+  .mw-temp { font-size: 13px; font-weight: 700; color: var(--mw-fg); }
+  .mw-desc { font-size: 12px; color: color-mix(in srgb, var(--mw-fg) 82%, transparent); }
   /* 各天气色调：图标与胶囊底色微染，和参考站一致 */
   .mw-root[data-weather="sun"] .mw-capsule   { border-color: #f0b24a80; }
   .mw-root[data-weather="sun"] .mw-icon      { color: #f0b24a; }
@@ -138,10 +147,9 @@
   .mw-root[data-weather="rain"] .mw-icon     { color: #6aa9ff; }
   .mw-root[data-weather="snow"] .mw-icon     { color: #b6d2ec; }
   .mw-root[data-weather="fog"] .mw-icon      { color: #a9aebc; }
-  .mw-root[data-weather="night"] .mw-icon    { color: #e8c07a; }
+  .mw-root[data-weather="night"] .mw-icon    { color: var(--mw-fg); }
   @media (max-width: 600px) {
     .mw-root { left: 12px; bottom: 62px; }
-    .mw-icon { color: #e8c98a; }
     .mw-capsule { height: 30px; padding: 0 10px; }
   }
 </style>

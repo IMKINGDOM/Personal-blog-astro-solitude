@@ -171,6 +171,7 @@ const inlineVars = Object.entries(vars)
     data-aside-position={cfg.aside.position}
     data-index-layout={cfg.index_post_list.direction}
   >
+    <canvas id="cosmos-bg" aria-hidden="true"></canvas>
     {cfg.loading.fullpage && (
       <div id="loading-box" aria-hidden="true">
         <img src={url(cfg.site.icon)} alt="" />
@@ -214,6 +215,8 @@ const inlineVars = Object.entries(vars)
     <Capsule />
     <MiniMusic />
     <MiniWeather />
+    <script is:inline src="/js/cosmos-bg.js"></script>
+    <script is:inline src="/js/liquid-glass.js"></script>
     <script>
       import '../scripts/entry';
     </script>

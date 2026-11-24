@@ -3,6 +3,7 @@ import { cfg, config, t, url, dateLabel, isoDate } from '../lib/site';
 import TocItems, { type Heading } from './TocItems.astro';
 import AsideGroup from './AsideGroup.astro';
 import DateCard from './DateCard.astro';
+import PublishHeatmap from './PublishHeatmap.astro';
 import {
   homePosts,
   contentPath,
@@ -217,6 +218,8 @@ for (const heading of headings) {
                 )}
               </div>
             </div>
+          ) : name.trim() === 'heatmap' ? (
+            <PublishHeatmap posts={posts} />
           ) : name.trim() === 'newest_comment' &&
             cfg.comment.use &&
             cfg.comment.sidebar ? (

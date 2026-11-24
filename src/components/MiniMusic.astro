@@ -158,7 +158,18 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
 <style>
   .mm-root {
     position: fixed; left: 18px; bottom: 18px; z-index: 9000;
-    font-family: inherit; color: #e8c98a;
+    font-family: inherit;
+    --mm-bg: linear-gradient(180deg, rgba(40, 34, 29, .94), rgba(21, 18, 16, .96));
+    --mm-border: rgba(232, 201, 138, .38);
+    --mm-fg: #e8c98a;
+    --mm-fg-strong: #fff2d0;
+    color: var(--mm-fg);
+  }
+  :global(html[data-theme="light"]) .mm-root {
+    --mm-bg: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(238, 240, 246, .94));
+    --mm-border: color-mix(in srgb, var(--efu-theme) 48%, transparent);
+    --mm-fg: var(--efu-theme);
+    --mm-fg-strong: color-mix(in srgb, var(--efu-theme) 80%, #000);
   }
   .mm-bar {
     display: flex; align-items: center;
@@ -166,22 +177,23 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
     width: 480px; max-width: calc(100vw - 36px);
     height: 46px; padding: 0 9px 0 4px;
     border-radius: 999px;
-    border: 1px solid rgba(232, 201, 138, .38);
-    background: linear-gradient(180deg, rgba(40, 34, 29, .94), rgba(21, 18, 16, .96));
-    -webkit-backdrop-filter: blur(16px) saturate(1.3);
-    backdrop-filter: blur(16px) saturate(1.3);
+    border: 1px solid var(--mm-border);
+    background: var(--mm-bg);
+    -webkit-backdrop-filter: var(--glass-blur, blur(16px) saturate(1.3));
+    backdrop-filter: var(--glass-blur, blur(16px) saturate(1.3));
     box-shadow: 0 4px 20px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.06);
     overflow: hidden; cursor: grab; touch-action: none;
     transition: box-shadow .25s ease, border-color .25s ease;
   }
   .mm-bar:hover {
-    border-color: rgba(232, 201, 138, .7);
-    box-shadow: 0 4px 22px rgba(0,0,0,.42), 0 0 20px rgba(232,201,138,.18);
+    border-color: var(--mm-fg);
+    box-shadow: 0 4px 22px rgba(0,0,0,.3),
+                0 0 20px color-mix(in srgb, var(--mm-fg) 22%, transparent);
   }
   .mm-bar:active { cursor: grabbing; }
   .mm-progress {
-    position: absolute; top: 0; left: 16px; right: 16px; height: 2px;
-    background: rgba(255,255,255,.14); border-radius: 2px;
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: rgba(128,128,128,.22); border-radius: 999px 999px 0 0;
     overflow: hidden; z-index: 2;
   }
   .mm-progress span {
@@ -204,8 +216,8 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
   .mm-disc-hole {
     position: absolute; left: 50%; top: 50%;
     width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
-    border-radius: 50%; background: #e8c98a;
-    box-shadow: 0 0 5px rgba(0,0,0,.7);
+    border-radius: 50%; background: var(--mm-fg);
+    box-shadow: 0 0 5px rgba(0,0,0,.55);
   }
   .mm-root.is-playing .mm-disc { animation: mm-spin 5s linear infinite; }
   @keyframes mm-spin { to { transform: rotate(360deg); } }
@@ -221,8 +233,8 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
   .mm-root:not(.is-playing) .mm-scroll { animation-play-state: paused; }
   .mm-line {
     padding-right: 44px; white-space: nowrap;
-    font-size: 13px; font-weight: 500; color: #e8c98a;
-    text-shadow: 0 1px 2px rgba(0,0,0,.5);
+    font-size: 13px; font-weight: 500; color: var(--mm-fg);
+    text-shadow: 0 1px 2px color-mix(in srgb, var(--mm-fg) 12%, transparent);
   }
   @keyframes mm-marquee { to { transform: translateX(-50%); } }
   .mm-ctrl {
@@ -232,12 +244,12 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
   .mm-icon {
     width: 27px; height: 27px; flex: 0 0 27px;
     border: none; border-radius: 7px; cursor: pointer;
-    background: transparent; color: #e8c98a; font-size: 13px;
+    background: transparent; color: var(--mm-fg); font-size: 13px;
     transition: background .2s ease, color .2s ease;
   }
   .mm-icon:hover {
-    background: rgba(232, 201, 138, .15);
-    color: #fff2d0;
+    background: color-mix(in srgb, var(--mm-fg) 16%, transparent);
+    color: var(--mm-fg-strong);
   }
   @media (max-width: 600px) {
     .mm-root { left: 12px; bottom: 12px; }

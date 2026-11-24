@@ -2,6 +2,7 @@
 import { cfg, config, t, url, dateLabel, isoDate } from '../lib/site';
 import TocItems, { type Heading } from './TocItems.astro';
 import AsideGroup from './AsideGroup.astro';
+import DateCard from './DateCard.astro';
 import {
   homePosts,
   contentPath,
@@ -130,6 +131,8 @@ for (const heading of headings) {
                 </div>
               </div>
             </div>
+          ) : name.trim() === 'date' ? (
+            <DateCard />
           ) : name.trim() === 'newestPost' ? (
             <div class="card-widget card-recent-post tw:[#aside-content_&]:overflow-hidden">
               <div class="item-headline tw:[#aside-content_.card-widget_&]:flex tw:[#aside-content_.card-widget_&]:items-center">
@@ -297,16 +300,16 @@ for (const heading of headings) {
     s.raf = requestAnimationFrame(function (t) { tick(card, s, t); });
   }
   document.addEventListener('pointermove', function (e) {
-    var card = e.target && e.target.closest && e.target.closest('#aside-content .card-info, #aside-content .card-allinfo');
+    var card = e.target && e.target.closest && e.target.closest('#aside-content .card-info, #aside-content .card-allinfo, #aside-content .card-date');
     if (!card) return;
     var s = stateOf(card);
     s.px = e.clientX; s.py = e.clientY; s.inside = true;
     wake(card, s);
   }, true);
   document.addEventListener('pointerout', function (e) {
-    var card = e.target && e.target.closest && e.target.closest('#aside-content .card-info, #aside-content .card-allinfo');
+    var card = e.target && e.target.closest && e.target.closest('#aside-content .card-info, #aside-content .card-allinfo, #aside-content .card-date');
     if (!card) return;
-    var to = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('#aside-content .card-info');
+    var to = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('#aside-content .card-info, #aside-content .card-allinfo, #aside-content .card-date');
     if (to === card) return;
     var s = stateOf(card);
     s.inside = false;

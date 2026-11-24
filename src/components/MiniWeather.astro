@@ -1,0 +1,147 @@
+---
+// 左下角天气胶囊：浏览器定位 + 公开天气 API，本地缓存，失败降级到常州
+---
+
+<div id="mini-weather" class="mw-root" transition:persist="mini-weather" data-weather="night">
+  <div class="mw-capsule" id="mw-capsule" title="你所在位置的实时天气 · 数据来自 Open-Meteo">
+    <i class="solitude fas fa-moon mw-icon" id="mw-icon" aria-hidden="true"></i>
+    <span class="mw-temp" id="mw-temp">--°</span>
+    <span class="mw-desc" id="mw-desc">定位中</span>
+  </div>
+</div>
+
+<script is:inline>
+(function () {
+  var root = document.getElementById('mini-weather');
+  if (!root || root.dataset.mwInit) return;
+  root.dataset.mwInit = '1';
+
+  var iconEl = document.getElementById('mw-icon');
+  var tempEl = document.getElementById('mw-temp');
+  var descEl = document.getElementById('mw-desc');
+  var KEY = 'step-mini-weather-v1';
+  var TTL = 30 * 60 * 1000;
+  var FALLBACK = { lat: 31.81, lon: 119.97, label: '常州' }; // 用户所在地，定位失败时兜底
+
+  var TABLE = [
+    { code: [0], icon: 'fa-sun', night: 'fa-moon', text: '晴', tone: 'sun' },
+    { code: [1, 2], icon: 'fa-cloud-sun', night: 'fa-cloud-moon', text: '多云', tone: 'cloud' },
+    { code: [3], icon: 'fa-cloud', night: 'fa-cloud', text: '阴', tone: 'cloud' },
+    { code: [45, 48], icon: 'fa-smog', night: 'fa-smog', text: '雾', tone: 'fog' },
+    { code: [51, 53, 55, 56, 57], icon: 'fa-cloud-rain', night: 'fa-cloud-rain', text: '小雨', tone: 'rain' },
+    { code: [61, 63, 66, 67], icon: 'fa-cloud-rain', night: 'fa-cloud-rain', text: '雨', tone: 'rain' },
+    { code: [65, 80, 81, 82], icon: 'fa-cloud-showers-heavy', night: 'fa-cloud-showers-heavy', text: '阵雨', tone: 'rain' },
+    { code: [71, 73, 75, 77, 85, 86], icon: 'fa-snowflake', night: 'fa-snowflake', text: '雪', tone: 'snow' },
+    { code: [95, 96, 99], icon: 'fa-bolt', night: 'fa-bolt', text: '雷雨', tone: 'rain' }
+  ];
+  function match(code, isDay) {
+    for (var i = 0; i < TABLE.length; i++) {
+      if (TABLE[i].code.indexOf(code) !== -1) {
+        return {
+          icon: isDay ? TABLE[i].icon : TABLE[i].night,
+          text: TABLE[i].text,
+          tone: TABLE[i].tone
+        };
+      }
+    }
+    return { icon: 'fa-cloud', text: '多云', tone: 'cloud' };
+  }
+  function apply(data) {
+    iconEl.className = 'solitude fas ' + data.icon + ' mw-icon';
+    tempEl.textContent = Math.round(data.temp) + '°C';
+    descEl.textContent = data.text;
+    root.dataset.weather = data.tone;
+    root.title = data.city + ' · 数据来自 Open-Meteo';
+  }
+  function save(data) {
+    try { localStorage.setItem(KEY, JSON.stringify({ t: Date.now(), data: data })); } catch (e) {}
+  }
+
+  // 先用缓存立刻出图，再视情况刷新
+  var cached = null;
+  try { cached = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (cached && cached.data && Date.now() - cached.t < TTL) {
+    apply(cached.data);
+    return;
+  }
+
+  function request(lat, lon, city) {
+    var api = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat +
+      '&longitude=' + lon +
+      '&current=temperature_2m,weather_code,is_day&timezone=auto';
+    fetch(api, { mode: 'cors' })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+      .then(function (json) {
+        var cur = json.current || {};
+        if (typeof cur.temperature_2m !== 'number') return Promise.reject();
+        var w = match(cur.weather_code, cur.is_day !== 0);
+        var data = { icon: w.icon, text: w.text, tone: w.tone, temp: cur.temperature_2m, city: city };
+        apply(data);
+        save(data);
+      })
+      .catch(function () {
+        if (city !== FALLBACK.label) request(FALLBACK.lat, FALLBACK.lon, FALLBACK.label);
+        else {
+          tempEl.textContent = '--°';
+          descEl.textContent = '天气暂不可用';
+        }
+      });
+  }
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function (pos) {
+        request(pos.coords.latitude.toFixed(3), pos.coords.longitude.toFixed(3), '你的位置');
+      },
+      function () { request(FALLBACK.lat, FALLBACK.lon, FALLBACK.label); },
+      { timeout: 6000, maximumAge: 30 * 60 * 1000, enableHighAccuracy: false }
+    );
+  } else {
+    request(FALLBACK.lat, FALLBACK.lon, FALLBACK.label);
+  }
+})();
+</script>
+
+<style>
+  .mw-root {
+    position: fixed; left: 18px; bottom: 72px; z-index: 8999;
+    font-family: inherit; color: #e8c98a;
+  }
+  .mw-capsule {
+    display: flex; align-items: center; gap: 7px;
+    height: 34px; padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(232, 201, 138, .38);
+    background: linear-gradient(180deg, rgba(40, 34, 29, .94), rgba(21, 18, 16, .96));
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    backdrop-filter: blur(14px) saturate(1.3);
+    box-shadow: 0 3px 12px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.05);
+    white-space: nowrap; cursor: default;
+    transition: box-shadow .25s ease, border-color .25s ease;
+  }
+  .mw-capsule:hover {
+    border-color: rgba(232, 201, 138, .7);
+    box-shadow: 0 0 0 1px rgba(232, 201, 138, .2),
+                0 4px 18px rgba(0,0,0,.36),
+                0 0 20px rgba(232, 201, 138, .2);
+  }
+  .mw-icon {
+    font-size: 15px; line-height: 1; width: 16px; text-align: center;
+    color: #e8c98a;
+  }
+  .mw-temp { font-size: 13px; font-weight: 700; color: #e8c98a; }
+  .mw-desc { font-size: 12px; color: rgba(232, 201, 138, .82); }
+  /* 各天气色调：图标与胶囊底色微染，和参考站一致 */
+  .mw-root[data-weather="sun"] .mw-capsule   { border-color: #f0b24a80; }
+  .mw-root[data-weather="sun"] .mw-icon      { color: #f0b24a; }
+  .mw-root[data-weather="cloud"] .mw-icon    { color: #a8b4c6; }
+  .mw-root[data-weather="rain"] .mw-icon     { color: #6aa9ff; }
+  .mw-root[data-weather="snow"] .mw-icon     { color: #b6d2ec; }
+  .mw-root[data-weather="fog"] .mw-icon      { color: #a9aebc; }
+  .mw-root[data-weather="night"] .mw-icon    { color: #e8c07a; }
+  @media (max-width: 600px) {
+    .mw-root { left: 12px; bottom: 62px; }
+    .mw-icon { color: #e8c98a; }
+    .mw-capsule { height: 30px; padding: 0 10px; }
+  }
+</style>

@@ -16,6 +16,7 @@
 @import "./components/keyboard.css" layer(solitude.components);
 @import "./components/post-feed.css" layer(solitude.components);
 @import "./components/glass-control.css" layer(solitude.components);
+@import "./components/nav-glass.css" layer(solitude.components);
 @import "./components/comments-share.css" layer(solitude.components);
 
 @import "./pages/home.css" layer(solitude.pages);

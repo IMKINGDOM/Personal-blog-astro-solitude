@@ -228,6 +228,24 @@ img[src*="logo.svg"] {
   align-self: flex-end;
 }
 
+/* 日间全屏背景：照搬参考站 #global_bg（半透明底图 + 边缘径向遮罩），深色模式隐藏以保留自有星空 */
+#global_bg {
+  position: fixed; z-index: -2; width: 100%; height: 100%;
+  pointer-events: none; background-image: none;
+}
+#global_bg::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: url('/img/quicer-light.webp');
+  background-size: cover; background-position: center; background-repeat: no-repeat;
+  opacity: .6; pointer-events: none;
+}
+#global_bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 44%, transparent 0, var(--efu-background) 74%);
+  pointer-events: none;
+}
+html[data-theme="dark"] #global_bg { display: none; }
+
 /* Galaxy 星空背景：WebGL2 全屏，深色模式显现，浅色模式隐藏 */
 #galaxy-bg {
   position: fixed; inset: 0; z-index: -1;
@@ -239,15 +257,18 @@ img[src*="logo.svg"] {
 html[data-theme="light"] #galaxy-bg { opacity: 0; }
 html[data-theme="dark"] #galaxy-bg { opacity: 1; }
 
-/* 暗夜模式：卡片略透明让星空透出；info 卡金色渐变改为深色主题色，避免透出后偏黄 */
+/* 暗夜模式：卡片透明度对齐参考站玻璃变量（--glass-bg 约 12% 白叠加），
+   让星空明显透出；info 卡金色渐变改为深色主题色，避免透出后偏黄 */
 html[data-theme="dark"] #aside-content .card-widget {
-  background-color: color-mix(in srgb, var(--efu-card-bg) 84%, transparent);
+  background-color: color-mix(in srgb, var(--efu-card-bg) 52%, transparent);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 html[data-theme="dark"] #aside-content .card-info::before {
   background: linear-gradient(-25deg,
-    color-mix(in srgb, var(--efu-theme) 22%, #1a1520),
-    color-mix(in srgb, var(--efu-theme) 12%, #141119)) !important;
-  opacity: .5;
+    color-mix(in srgb, var(--efu-main) 30%, #14161c),
+    color-mix(in srgb, var(--efu-main) 14%, #0f1116)) !important;
+  opacity: .78;
 }
 
 /* 胶囊 hover 流光：照搬参考站 capsuleSheenSweep（平行四边形光带循环划过） */
@@ -263,7 +284,10 @@ html[data-theme="dark"] #aside-content .card-info::before {
   width: 40%; height: 100%; pointer-events: none; opacity: 0;
   background: linear-gradient(105deg, transparent 0, rgba(255,255,255,.5) 50%, transparent 100%);
 }
-.capsule-sheen:hover::before { animation: capsuleSheenSweep 2.2s ease-in-out infinite; }
+.capsule-sheen:hover::before { animation: capsuleSheenSweep 2.75s ease-in-out 1 both; }
+/* 光栅每次页面加载只划过一次：播放完成后由 JS 加 sheen-done 标记，此后不再重播 */
+.capsule-sheen.sheen-done::before,
+.category-bar-item a.sheen-done::after { animation: none !important; opacity: 0 !important; }
 
 /* 液态玻璃：JS 注入 SVG 位移滤镜后升级为边缘折射玻璃，未注入时回退普通毛玻璃 */
 :root { --glass-blur: blur(14px) saturate(1.35); }

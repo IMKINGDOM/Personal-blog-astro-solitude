@@ -59,3 +59,16 @@ document.addEventListener('astro:page-load', () => {
     console.error('Solitude initialization failed', error);
   });
 });
+
+// 光栅划过动画：每次完整页面加载只播放一次，播完标记 sheen-done 防止 hover 重播。
+// 监听挂在 document 上只注册一次；ClientRouter 换页后新元素没有标记，可再播一次。
+document.addEventListener(
+  'animationend',
+  (event) => {
+    if (event.animationName !== 'capsuleSheenSweep') return;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    target.classList.add('sheen-done');
+  },
+  true,
+);

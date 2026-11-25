@@ -366,7 +366,7 @@
   background: linear-gradient(105deg, transparent 0, rgba(255,255,255,.42) 50%, transparent 100%);
 }
 .category-bar-item a:hover::after {
-  animation: capsuleSheenSweep 2.2s ease-in-out infinite;
+  animation: capsuleSheenSweep 2.75s ease-in-out 1 both;
 }
 
 .category-bar-item.select a {

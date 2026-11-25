@@ -24,7 +24,7 @@ const tracks = [
 const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
 ---
 
-<div id="mini-music" class="mm-root capsule-sheen" transition:persist="mini-music">
+<div id="mini-music" class="mm-root" transition:persist="mini-music">
   <div id="mm-bar" class="mm-bar" role="group" aria-label="音乐播放器">
     <span class="mm-disc" id="mm-disc" aria-hidden="true"><span class="mm-disc-hole"></span></span>
     <span class="mm-info">
@@ -89,8 +89,7 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
   }
   function syncBtn() {
     var playing = !audio.paused;
-    pauseBtn.style.display = playing ? '' : 'none';
-    playBtn.style.display = playing ? 'none' : '';
+    // 外观（按钮显隐、高亮）全部交给 CSS 状态类，和参考站一致；JS 只维护播放状态类。
     root.classList.toggle('is-playing', playing);
   }
   function load(n, autoplay) {
@@ -123,33 +122,46 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
 </script>
 
 <style>
+  /* 外观照搬参考站 quicer.top 的 #nav-music 胶囊：三态（静止/悬停未播放/播放中） */
   .mm-root {
+    display: flex; align-items: center;
     position: fixed; left: 20px; bottom: 20px; z-index: 20;
+    width: fit-content; max-width: calc(100vw - 40px);
+    overflow: hidden; isolation: isolate; cursor: pointer;
+    border-radius: 40px; transform-origin: left bottom;
     font-family: inherit;
     --efu-music: var(--efu-theme);
+    box-shadow: var(--efu-shadow-border);
+    transition: box-shadow .3s, opacity .3s, transform .4s cubic-bezier(.34,1.56,.64,1);
   }
   .mm-bar {
     display: flex; align-items: center;
     position: relative;
+    width: fit-content; min-width: 122px; max-width: calc(100vw - 40px);
     height: 46px; min-height: 46px; max-height: 46px;
-    padding: 8px 16px 8px 8px;
-    border-radius: 60px;
-    background: var(--efu-card-bg);
-    border: var(--style-border-always);
-    box-shadow: var(--efu-shadow-border);
-    overflow: hidden; cursor: pointer;
-    transition: width .4s cubic-bezier(.34, 1.56, .64, 1), box-shadow .3s;
-    width: 122px;
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+    overflow: hidden; border-radius: 60px;
+    color: var(--efu-fontcolor);
+    background: linear-gradient(to bottom, var(--efu-maskbg), var(--efu-maskbgdeep));
+    border: var(--style-border);
+    box-shadow: var(--efu-shadow-glass-inset);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    transform: translateZ(0);
+    transition: background .28s, border-color .28s, box-shadow .28s, width .38s cubic-bezier(.34,1.56,.64,1);
   }
-  .mm-root:hover .mm-bar { width: 430px; max-width: calc(100vw - 40px); }
+  .mm-bar, .mm-bar * { box-sizing: border-box; user-select: none; }
+  /* 封面：静止为暗色唱片，播放中主题色描边 + 缓慢旋转 */
   .mm-disc {
     position: relative; z-index: 1;
-    flex: 0 0 30px; width: 30px; height: 30px; margin-right: 8px;
+    flex: 0 0 30px; width: 30px; height: 30px;
+    margin: 0 0 0 8px;
     border-radius: 50%;
     background: radial-gradient(circle at 35% 30%, #6b5844, #1c1714 65%, #0d0b0a);
     border: var(--style-border-always);
-    border-color: var(--efu-card-bg);
-    box-shadow: 0 0 14px var(--efu-card-bg);
+    transform: rotate(0) scale(1);
+    transition: transform .28s, box-shadow .28s, border-color .28s;
     animation: capsuleCoverSpin 24s linear infinite;
   }
   .mm-root:not(.is-playing) .mm-disc { animation-play-state: paused; }
@@ -159,56 +171,118 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
     width: 8px; height: 8px; margin: -4px 0 0 -4px;
     border-radius: 50%; background: var(--efu-theme);
   }
+  /* 歌曲信息 + 歌词：参考站为横向 flex（标题与歌词并排），播放时歌词撑开 */
   .mm-info {
-    display: flex; flex-direction: column; justify-content: center;
-    flex: 1 1 auto; min-width: 0; height: 30px;
-    position: relative; z-index: 1;
+    display: flex; align-items: center; align-self: center;
+    flex: 0 0 auto; width: max-content; max-width: 120px;
+    height: 30px; min-height: 30px;
+    margin: 0 16px 0 10px; padding: 0;
+    position: relative; z-index: 1; overflow: visible;
+    transition: max-width .28s, color .28s;
   }
   .mm-music {
-    display: block; height: 16px; min-height: 16px;
-    overflow: hidden; line-height: 16px;
+    display: flex; align-items: center;
+    position: relative; z-index: 1; flex-shrink: 0;
+    height: 30px; min-height: 30px; margin: 0; padding: 0;
+    line-height: 30px; overflow: hidden;
   }
   .mm-title {
-    display: block; max-width: 120px; white-space: nowrap;
-    overflow: hidden; text-overflow: ellipsis;
-    color: var(--efu-fontcolor); font-size: 13px; font-weight: 700;
+    display: block; max-width: 120px; height: 30px; line-height: 30px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    color: var(--efu-fontcolor); font-size: 14px;
+    cursor: pointer; transition: color .28s;
   }
   .mm-lyric {
-    display: block; max-width: 0; height: 14px; min-height: 14px;
+    display: block; flex-shrink: 0; width: 230px; max-width: 0;
+    height: 18px; min-height: 18px;
     margin: 0; padding: 0; opacity: 0; overflow: hidden;
-    color: var(--efu-fontcolor); font-size: 11px; line-height: 14px;
+    color: var(--efu-white); font-size: 14px; line-height: 18px;
     white-space: nowrap; text-overflow: ellipsis;
     transition: max-width .28s, margin .28s, opacity .28s;
   }
-  .mm-root:hover .mm-lyric { max-width: 200px; margin-top: 1px; opacity: .55; }
+  /* 播放按钮浮层：静止隐藏；悬停未播放居中的播放键；播放中显示 上一首/暂停/下一首 */
   .mm-ctrl {
-    display: flex; align-items: center; gap: 2px;
-    flex: 0 0 auto; margin-left: 0; position: relative; z-index: 4;
-    opacity: 0; max-width: 0; overflow: hidden;
-    transition: opacity .28s, max-width .28s, margin .28s;
-  }
-  .mm-root:hover .mm-ctrl { opacity: 1; max-width: 120px; margin-left: 10px; }
-  .mm-control-btn {
     display: flex; align-items: center; justify-content: center;
-    width: 24px; height: 30px; padding: 0;
-    color: var(--efu-fontcolor); background: none; border: 0;
-    font-size: 14px; line-height: 30px; opacity: .8; cursor: pointer;
+    position: absolute; inset: 0; z-index: 4;
+    width: 100%; height: 100%; gap: 12px;
+    opacity: 0; pointer-events: none;
+    background: color-mix(in srgb, var(--efu-music) 50%, transparent);
+    transition: opacity .3s, background .3s, width .3s, padding .3s;
+  }
+  .mm-root:hover .mm-ctrl { opacity: 1; pointer-events: auto; }
+  .mm-control-btn {
+    display: none; align-items: center; justify-content: center;
+    width: 20px; height: 40px; padding: 0;
+    color: var(--efu-white); background: none; border: 0;
+    font-size: 16px; line-height: 40px; opacity: .8; cursor: pointer;
     transition: opacity .2s, transform .2s;
   }
-  .mm-control-btn:hover { opacity: 1; }
+  .mm-control-btn:hover, .mm-control-btn:focus-visible { opacity: 1; }
+  .mm-control-btn:focus-visible { outline: 2px solid var(--efu-white); outline-offset: -3px; border-radius: 20px; }
   .mm-control-btn:active { transform: scale(.85); }
+
+  /* ---- 状态一：悬停且未播放 —— 整条主题色，中间播放键 + 毛玻璃 ---- */
+  .mm-root:not(.is-playing):hover .mm-bar {
+    color: var(--efu-white);
+    background: color-mix(in srgb, var(--efu-music) 78%, transparent);
+    border-color: var(--efu-music);
+  }
+  .mm-root:not(.is-playing):hover .mm-title,
+  .mm-root:not(.is-playing):hover .mm-info { color: var(--efu-white); }
+  .mm-root:not(.is-playing):hover .mm-ctrl { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  .mm-root:not(.is-playing):hover #mm-play { display: flex; }
+
+  /* ---- 状态二：播放中 —— 主题色胶囊 + 发光 + 封面旋转 + 歌词 + 进度条 ---- */
+  .mm-root.is-playing { animation: capsulePlayingShadow 5s linear infinite; }
+  .mm-root.is-playing .mm-bar {
+    color: var(--efu-white);
+    background: var(--efu-music);
+    border-color: var(--efu-music);
+    box-shadow: var(--efu-shadow-glass-inset), 0 0 26px color-mix(in srgb, var(--efu-music) 42%, transparent);
+  }
+  .mm-root.is-playing .mm-disc {
+    border-color: var(--efu-card-bg);
+    box-shadow: 0 0 14px var(--efu-card-bg);
+  }
+  .mm-root.is-playing .mm-info { max-width: min(332px, calc(100vw - 120px)); color: var(--efu-white); }
+  .mm-root.is-playing .mm-title { color: var(--efu-white) !important; }
+  .mm-root.is-playing .mm-lyric { max-width: 230px; margin-left: 12px; opacity: 1; }
+  .mm-root.is-playing .mm-bar-track { opacity: 1; }
+  .mm-root.is-playing .mm-ctrl {
+    inset: 0 0 0 auto; left: auto; right: 0;
+    width: 180px; padding-right: 20px;
+    justify-content: flex-end;
+    background: linear-gradient(to left, var(--efu-music) 60%, transparent);
+  }
+  .mm-root.is-playing:hover #mm-prev,
+  .mm-root.is-playing:hover #mm-pause,
+  .mm-root.is-playing:hover #mm-next { display: flex; }
+
+  /* 进度条：参考站播放中才显形 */
   .mm-bar-track {
-    position: absolute; left: 16px; right: 16px; bottom: 6px;
-    height: 3px; border-radius: 12px;
-    background: var(--efu-gray, rgba(128,128,128,.35));
-    overflow: hidden; z-index: 2;
+    position: absolute; inset: 0; z-index: 2;
+    width: 100%; height: 100%; opacity: 0;
+    transition: opacity .3s; pointer-events: none;
   }
   .mm-played {
-    display: block; height: 100%; width: 0; border-radius: 12px;
-    background: var(--efu-theme); opacity: .9;
+    position: absolute; top: 0; bottom: 0; left: 0;
+    height: 100%; width: 0;
+    background-color: var(--efu-white) !important; opacity: .15;
+  }
+  /* 光栅扫过（与全站胶囊一致，每次加载只划一次） */
+  .mm-root::before {
+    content: ''; position: absolute; top: 0; left: 0; z-index: 3;
+    width: 42%; height: 100%; pointer-events: none; opacity: 0;
+    background: linear-gradient(100deg, transparent 0, rgba(255,255,255,.06) 26%, rgba(255,255,255,.42) 50%, rgba(255,255,255,.06) 74%, transparent 100%);
+  }
+  .mm-root:hover::before { animation: capsuleSheenSweep 2.75s ease-in-out 1 both; }
+  .mm-root.sheen-done::before { animation: none !important; opacity: 0 !important; }
+  @keyframes capsulePlayingShadow {
+    0%,100% { box-shadow: var(--efu-shadow-border), 0 0 18px color-mix(in srgb, var(--efu-music) 28%, transparent); }
+    50% { box-shadow: var(--efu-shadow-border), 0 0 30px color-mix(in srgb, var(--efu-music) 55%, transparent); }
   }
   @media (max-width: 600px) {
     .mm-root { left: 12px; bottom: 12px; }
-    .mm-root:hover .mm-bar { width: calc(100vw - 24px); }
+    .mm-root.is-playing .mm-info { max-width: min(240px, calc(100vw - 130px)); }
   }
 </style>

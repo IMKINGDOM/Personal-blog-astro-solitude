@@ -1,0 +1,45 @@
+/* 二级菜单胶囊 —— 照搬 quicer 参考站的克制磨砂玻璃（menus_dropdown 同款参数） */
+
+/* 顶部主菜单的二级下拉：改为半透明磨砂胶囊，而非实色卡片 */
+#page-header #nav .menus_items .menus_item .menus_item_child {
+  --nav-glass-bg: rgba(255, 255, 255, 0.22);
+  --nav-glass-border: 1px solid rgba(255, 255, 255, 0.22);
+  --nav-glass-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--nav-glass-bg);
+  border: var(--nav-glass-border);
+  box-shadow: var(--efu-shadow-main), var(--nav-glass-highlight);
+  -webkit-backdrop-filter: blur(12px) saturate(1.5);
+  backdrop-filter: blur(12px) saturate(1.5);
+  isolation: isolate;
+  white-space: nowrap;
+  transition: transform 0.3s, opacity 0.3s, background 0.3s;
+}
+
+/* 深色主题下降低白底强度，避免发白 */
+[data-theme="dark"] #page-header #nav .menus_items .menus_item .menus_item_child {
+  --nav-glass-bg: rgba(255, 255, 255, 0.12);
+  --nav-glass-border: 1px solid rgba(200, 210, 230, 0.22);
+}
+
+/* 悬停态：保持胶囊外观，不再切换成实色/硬边框 */
+#nav .menus_items .menus_item:hover .menus_item_child {
+  background: var(--nav-glass-bg);
+  border: var(--nav-glass-border);
+  box-shadow: var(--efu-shadow-main), var(--nav-glass-highlight);
+  -webkit-backdrop-filter: blur(12px) saturate(1.5);
+  backdrop-filter: blur(12px) saturate(1.5);
+}
+
+/* 关闭液态玻璃时回退到主题原样实色卡片 */
+html.no-glass #page-header #nav .menus_items .menus_item .menus_item_child {
+  background: var(--efu-card-bg);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* 菜单项 hover：参考站的柔和展开 */
+#page-header #nav .menus_items .menus_item .menus_item_child li a {
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s, padding 0.3s;
+}

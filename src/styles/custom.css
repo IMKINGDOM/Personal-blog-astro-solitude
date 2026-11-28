@@ -286,6 +286,22 @@ html[data-theme="dark"] .card-heatmap { background-image: none !important; }
 html[data-theme="light"] #aside-content .card-info {
   --profile-card-text-color: var(--efu-black) !important;
 }
+/* 浅色模式 sayhi 问候语：主题默认是白字，浅灰卡片上不可读 → 强制黑字 */
+html[data-theme="light"] .card-info .sayhi {
+  color: var(--efu-black) !important;
+}
+
+/* 浅色模式顶部导航：SVG 位移折射会在白底产生不规则灰斑，
+   改用普通模糊并去掉白色内阴影高光，消除杂质阴影 */
+html[data-theme="light"]:not(.no-glass) :is(
+  #page-header #nav #blog_name,
+  #page-header #nav #nav-right
+) {
+  background: rgba(255, 255, 255, .55) !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: blur(12px) saturate(1.4) !important;
+  backdrop-filter: blur(12px) saturate(1.4) !important;
+}
 html[data-theme="dark"] #aside-content .card-info {
   --profile-card-text-color: var(--efu-white) !important;
 }

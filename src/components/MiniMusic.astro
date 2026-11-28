@@ -1,32 +1,12 @@
 ---
-const tracks = [
-  {
-    id: 'bishi', name: '避世离俗', artist: '梁博', file: 'bishi-lbo.m4a', dur: 432,
-    lrc: [[0,'避世离俗 - 梁博'],[30.95,'孩子如果有人说你孤独'],[37.40,'你不必踌躇 你走你的路'],[41.10,'做你的主'],[46.21,'天空中向下看是一片星空'],[52.64,'你要雷厉风行 避世离俗'],[61.54,'星光会指引你去丛林深处'],[67.35,'那里不孤独 你的朋友正在跳舞'],[76.95,'拉起手吧适应这里的温度'],[82.54,'即使没有人 为你祝福'],[122.39,'以后如果有人说你孤独'],[128.78,'你不必踌躇 就走你的路'],[132.41,'做你的主'],[137.77,'你所看见的只是一片恍惚'],[144.11,'你要雷厉风行 避世离俗'],[153.05,'寂寞会指引你去内心深处'],[159.26,'也许会孤独 孤独会带你'],[162.86,'回到最初'],[168.41,'放开手吧 适应这里的温度'],[174.51,'即使没有人 为你祝福']]
-  },
-  {
-    id: 'xiaguang', name: '霞光', artist: '曲锦楠', file: 'xiaguang-qujinnan.m4a', dur: 156,
-    lrc: [[0,'霞光 - 曲锦楠'],[28.95,'月光把天空照亮'],[34.10,'洒下一片光芒点缀海洋'],[39.89,'每当流星从天而降'],[45.58,'心中的梦想都随风飘扬'],[51.47,'展开透明翅膀飞出天窗'],[57.21,'找寻一个最美丽的希望'],[63.04,'每当天空泛起彩色霞光'],[68.75,'带着回忆和幻想一起飞翔'],[79.51,'月光把天空照亮'],[84.59,'洒下一片光芒点缀海洋'],[90.35,'每当流星从天而降'],[96.20,'心中的梦想都随风飘扬'],[101.90,'展开透明翅膀飞出天窗'],[107.64,'找寻一个最美丽的希望'],[113.40,'每当天空泛起彩色霞光'],[119.18,'带着回忆和幻想一起飞翔'],[125.53,'啦啦 啦啦啦啦啦啦啦']]
-  },
-  {
-    id: 'sinian', name: '思念无声', artist: '张小九', file: 'sinian-wusheng-zhangjiuer.m4a', dur: 293,
-    lrc: [[0,"思念无声 - 张小九"],[55.95,"北去南往何处入冬"],[61.19,"春来冬去夕阳渐浓"],[66.45,"雨过天晴一道彩虹"],[70.95,"折射的光映着你的面容"],[77.19,"风吹云动浪潮汹涌"],[82.45,"天空的蓝把心撼动"],[87.94,"你来时雾刚好朦胧"],[93.2,"归去时心被你牵动"],[96.7,"我想说幸好思念无声"],[102.7,"否则我怕你震耳欲聋"],[107.95,"因为我心事重重"],[113.2,"再遇见你时会眼眶红红"],[117.94,"我看这春风温柔千里梦"],[123.94,"因为中意的你在其中"],[129.45,"我会比你更加心疼"],[134.45,"你和她们的种种不同"],[162.44,"北去南往何处入冬"],[167.45,"春来冬去夕阳渐浓"],[173.2,"雨过天晴一道彩虹"],[177.2,"折射的光映着你的面容"],[183.2,"风吹云动浪潮汹涌"],[188.45,"天空的蓝把心撼动"],[193.95,"你来时雾刚好朦胧"],[199.2,"归去时心被你牵动"],[203.2,"我想说幸好思念无声"],[209.2,"否则我怕你震耳欲聋"],[214.44,"因为我心事重重"],[219.95,"再遇见你时会眼眶红红"],[224.45,"我看这春风温柔千里梦"],[230.7,"因为中意的你在其中"],[235.95,"我会比你更加心疼"],[241.2,"你和她们的种种不同"],[245.94,"我想说幸好思念无声"],[251.7,"否则我怕你震耳欲聋"],[257.19,"因为我心事重重"],[262.45,"再遇见你时会眼眶红红"],[267.2,"我看这春风温柔千里梦"],[273.19,"因为中意的你在其中"],[278.45,"我会比你更加心疼"],[283.95,"你和她们的种种不同"],[290.44,"幸好思念无声"]]
-  },
-  {
-    id: 'mohe', name: '漠河舞厅', artist: '柳爽', file: 'mohe-wuting-liushuang.mp3', dur: 304,
-    lrc: [[0,"漠河舞厅·2022 - 柳爽"],[28.73,"我从没有见过极光出现的村落"],[35.29,"也没有见过有人 在深夜放烟火"],[42.07,"晚星就像你的眼睛杀人又放火"],[48.43,"你什么都没有说 野风惊扰我"],[55.49,"三千里，偶然见过你"],[62.31,"花园里，有裙翩舞起"],[68.77,"灯光底，抖落了晨曦"],[75.26,"在1980的漠河舞厅"],[82.3,"如果有时间"],[84.18,"你会来看一看我吧"],[87.82,"看大雪如何衰老的"],[91.08,"我的眼睛如何融化"],[94.65,"如果你看见我的话"],[97.71,"请转过身去再惊讶"],[101.99,"我怕我的眼泪我的白发像羞耻的笑话"],[138.06,"我从没有见过极光出现的村落"],[144.21,"也没有见过有人 在深夜放烟火"],[150.99,"晚星就像你的眼睛杀人又放火"],[157.43,"你什么都不必说 野风惊扰我"],[164.46,"可是你 惹怒了神明"],[170.89,"让你去 还那么年轻"],[177.87,"都怪你 远山冷冰冰"],[184.2,"在一个人的漠河舞厅"],[191.36,"如果有时间"],[193.33,"你会来看一看我吧"],[196.98,"看大雪如何衰老的"],[200.16,"我的眼睛如何融化"],[203.58,"如果你看见我的话"],[206.85,"请转过身去再惊讶"],[211.0,"我怕我的眼泪我的白发像羞耻的笑话"],[218.49,"如果有一天"],[220.39,"我的信念忽然倒塌"],[223.72,"城市的花园没有花"],[227.08,"广播里的声音嘶哑"],[230.53,"如果真有这天的话"],[233.8,"你会不会奔向我啊"],[237.98,"尘封入海吧"],[244.68,"尘封入海吧"]]
-  },
-  {
-    id: 'marathon', name: '生命是场马拉松', artist: '旅行团乐队', file: 'shengming-marathon-traveler.m4a', dur: 192,
-    lrc: [[0,'生命是场马拉松 - 旅行团乐队'],[12.97,'推开门之前 生活是个疑点'],[16.54,'痛苦伺机而来 无以排遣'],[20.78,'想要个起点 浓浓的黑夜'],[25.45,'闷头穿过世界'],[29.00,'我有一个故事 它没有名字'],[32.99,'渴望吐露却 欲言又止'],[37.11,'直到有一天'],[39.88,'孤独的跑在路上'],[45.20,'我亲爱的 脚步 我亲爱的 孤独'],[49.34,'我亲爱的 拥有和虚无'],[53.49,'在生命这场 马拉松的旅途'],[61.50,'我亲爱的 欲望 我亲爱的 胆怯'],[66.00,'我亲爱的 冷漠和热烈'],[70.21,'我一个又一个 一个又一个'],[74.27,'在告别和未来中连接'],[78.32,'在生命这场 马拉松上的田野'],[98.82,'推开门之前 生活是个疑点'],[102.23,'痛苦伺机而来 无以排遣'],[106.65,'想要个起点 浓浓的黑夜'],[111.37,'闷头穿过世界'],[114.69,'我有一个故事 它没有名字'],[118.87,'渴望吐露却 欲言又止'],[122.82,'直到有一天'],[125.53,'孤独的跑在路上'],[131.09,'我亲爱的 脚步 我亲爱的 孤独'],[135.56,'我亲爱的 拥有和虚无'],[139.49,'在生命这场 马拉松的旅途'],[147.54,'我亲爱的 欲望 我亲爱的 胆怯'],[151.72,'我亲爱的 冷漠和热烈'],[155.83,'我一个又一个 一个又一个'],[159.81,'在告别和未来中连接'],[163.98,'在生命这场 马拉松上的田野']]
-  },
-];
-const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
+// 音源：网易云歌单 492312774，经 Meting 公共接口读取
+const PLAYLIST_ID = '492312774';
+const API = 'https://api.injahow.cn/meting/';
 ---
 
 <div id="mini-music" class="mm-root" transition:persist="mini-music">
   <div id="mm-bar" class="mm-bar" role="group" aria-label="音乐播放器">
-    <span class="mm-disc" id="mm-disc" aria-hidden="true"><span class="mm-disc-hole"></span></span>
+    <span class="mm-disc" id="mm-disc" aria-hidden="true"><img id="mm-cover" class="mm-cover" alt="" /><span class="mm-disc-hole"></span></span>
     <span class="mm-info">
       <span class="mm-music"><span id="mm-title" class="mm-title">加载中…</span></span>
       <span id="mm-lyric" class="mm-lyric">♪</span>
@@ -41,15 +21,15 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
   </div>
 </div>
 
-<script is:inline define:vars={{ tracks, BASE }}>
+<script is:inline define:vars={{ PLAYLIST_ID, API }}>
 (function () {
   var root = document.getElementById('mini-music');
   if (!root || root.dataset.mmInit) return;
   root.dataset.mmInit = '1';
 
-  var bar = document.getElementById('mm-bar');
   var titleEl = document.getElementById('mm-title');
   var lyricEl = document.getElementById('mm-lyric');
+  var coverEl = document.getElementById('mm-cover');
   var progress = document.getElementById('mm-progress-fill');
   var pauseBtn = document.getElementById('mm-pause');
   var playBtn = document.getElementById('mm-play');
@@ -57,20 +37,52 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
   audio.preload = 'metadata';
   audio.volume = 0.8;
 
-  var order = tracks.map(function (_, i) { return i; });
-  for (var j = order.length - 1; j > 0; j--) {
-    var k = Math.floor(Math.random() * (j + 1));
-    var tmp = order[j]; order[j] = order[k]; order[k] = tmp;
+  var tracks = [];
+  var order = [], pos = 0, lrc = [], lastLine = -1, lrcToken = 0;
+
+  function shuffle() {
+    order = tracks.map(function (_, i) { return i; });
+    for (var j = order.length - 1; j > 0; j--) {
+      var k = Math.floor(Math.random() * (j + 1));
+      var tmp = order[j]; order[j] = order[k]; order[k] = tmp;
+    }
   }
-  var pos = 0, lastLine = -1;
+
+  // 解析 LRC 文本 → [[秒, 文本], ...]
+  function parseLRC(text) {
+    var out = [];
+    var re = /\[(\d{1,3}):(\d{2}(?:\.\d+)?)\](.*)/g;
+    var m;
+    while ((m = re.exec(text)) !== null) {
+      var t = parseInt(m[1], 10) * 60 + parseFloat(m[2]);
+      var s = m[3].trim().replace(/^\[.*?\]/g, '');
+      if (s) out.push([t, s]);
+    }
+    out.sort(function (a, b) { return a[0] - b[0]; });
+    return out;
+  }
 
   function showLyric(time, force) {
-    var lrc = tracks[order[pos]].lrc;
+    if (!lrc.length) { if (lyricEl.textContent !== '♪') lyricEl.textContent = '♪'; return; }
     var cur = 0;
     for (var i = 0; i < lrc.length; i++) { if (lrc[i][0] <= time) cur = i; else break; }
     if (cur === lastLine && !force) return;
     lastLine = cur;
     lyricEl.textContent = lrc[cur] ? lrc[cur][1] : '♪';
+  }
+
+  function loadLRC(track, token) {
+    lrc = []; lastLine = -1;
+    lyricEl.textContent = '♪';
+    if (!track.lrc) return;
+    fetch(track.lrc)
+      .then(function (r) { return r.ok ? r.text() : ''; })
+      .then(function (text) {
+        if (token !== lrcToken) return;
+        lrc = parseLRC(text);
+        showLyric(audio.currentTime, true);
+      })
+      .catch(function () {});
   }
 
   var pendingStart = null;
@@ -88,17 +100,18 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
     });
   }
   function syncBtn() {
-    var playing = !audio.paused;
-    // 外观（按钮显隐、高亮）全部交给 CSS 状态类，和参考站一致；JS 只维护播放状态类。
-    root.classList.toggle('is-playing', playing);
+    root.classList.toggle('is-playing', !audio.paused);
   }
   function load(n, autoplay) {
+    if (!tracks.length) return;
     pos = (n + order.length) % order.length;
     var track = tracks[order[pos]];
-    audio.src = BASE + track.file;
+    audio.src = track.url;
     titleEl.textContent = track.name + ' - ' + track.artist;
+    coverEl.src = track.pic || '';
     progress.style.width = '0%';
-    showLyric(0, true);
+    lrcToken++;
+    loadLRC(track, lrcToken);
     if (autoplay !== false) tryPlay();
   }
 
@@ -111,178 +124,125 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
   });
   audio.addEventListener('play', syncBtn);
   audio.addEventListener('pause', function () { setTimeout(syncBtn, 120); });
+  audio.addEventListener('error', function () {
+    // 单曲失效时自动跳下一首
+    if (tracks.length) load(pos + 1);
+  });
 
   pauseBtn.addEventListener('click', function (e) { e.stopPropagation(); if (!pendingStart) audio.pause(); });
   playBtn.addEventListener('click', function (e) { e.stopPropagation(); tryPlay(); });
   document.getElementById('mm-next').addEventListener('click', function (e) { e.stopPropagation(); load(pos + 1); });
   document.getElementById('mm-prev').addEventListener('click', function (e) { e.stopPropagation(); load(pos - 1); });
 
-  load(0);
+  // 拉取网易云歌单
+  fetch(API + '?server=netease&type=playlist&id=' + PLAYLIST_ID)
+    .then(function (r) {
+      if (!r.ok) throw new Error('playlist http ' + r.status);
+      return r.json();
+    })
+    .then(function (data) {
+      if (!Array.isArray(data) || !data.length) throw new Error('empty playlist');
+      tracks = data.filter(function (t) { return t && t.url && t.name; });
+      if (!tracks.length) throw new Error('no playable tracks');
+      shuffle();
+      load(0);
+    })
+    .catch(function () {
+      titleEl.textContent = '歌单加载失败';
+      lyricEl.textContent = '请稍后重试';
+    });
 })();
 </script>
 
 <style>
   /* 外观照搬参考站 quicer.top 的 #nav-music 胶囊：三态（静止/悬停未播放/播放中） */
   .mm-root {
-    display: flex; align-items: center;
     position: fixed; left: 20px; bottom: 20px; z-index: 20;
-    width: fit-content; max-width: calc(100vw - 40px);
-    overflow: hidden; isolation: isolate; cursor: pointer;
-    border-radius: 40px; transform-origin: left bottom;
     font-family: inherit;
-    --efu-music: var(--efu-theme);
-    box-shadow: var(--efu-shadow-border);
-    transition: box-shadow .3s, opacity .3s, transform .4s cubic-bezier(.34,1.56,.64,1);
   }
   .mm-bar {
     display: flex; align-items: center;
     position: relative;
-    width: fit-content; min-width: 122px; max-width: calc(100vw - 40px);
     height: 46px; min-height: 46px; max-height: 46px;
-    margin: 0; padding: 0;
-    box-sizing: border-box;
-    overflow: hidden; border-radius: 60px;
-    color: var(--efu-fontcolor);
-    background: linear-gradient(to bottom, var(--efu-maskbg), var(--efu-maskbgdeep));
-    border: var(--style-border);
-    box-shadow: var(--efu-shadow-glass-inset);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    backdrop-filter: saturate(180%) blur(20px);
-    transform: translateZ(0);
-    transition: background .28s, border-color .28s, box-shadow .28s, width .38s cubic-bezier(.34,1.56,.64,1);
+    padding: 8px 16px 8px 8px;
+    border-radius: 60px;
+    background: var(--efu-card-bg);
+    border: var(--style-border-always);
+    box-shadow: var(--efu-shadow-border);
+    overflow: hidden; cursor: pointer;
+    transition: width .4s cubic-bezier(.34, 1.56, .64, 1), box-shadow .3s;
+    width: 122px;
   }
-  .mm-bar, .mm-bar * { box-sizing: border-box; user-select: none; }
-  /* 封面：静止为暗色唱片，播放中主题色描边 + 缓慢旋转 */
+  .mm-root:hover .mm-bar { width: 430px; max-width: calc(100vw - 40px); }
   .mm-disc {
     position: relative; z-index: 1;
-    flex: 0 0 30px; width: 30px; height: 30px;
-    margin: 0 0 0 8px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #6b5844, #1c1714 65%, #0d0b0a);
+    flex: 0 0 30px; width: 30px; height: 30px; margin-right: 8px;
+    border-radius: 50%; overflow: hidden;
     border: var(--style-border-always);
-    transform: rotate(0) scale(1);
-    transition: transform .28s, box-shadow .28s, border-color .28s;
+    border-color: var(--efu-card-bg);
+    box-shadow: 0 0 14px var(--efu-card-bg);
     animation: capsuleCoverSpin 24s linear infinite;
+    background: radial-gradient(circle at 35% 30%, #6b5844, #1c1714 65%, #0d0b0a);
   }
   .mm-root:not(.is-playing) .mm-disc { animation-play-state: paused; }
   @keyframes capsuleCoverSpin { to { transform: rotate(360deg); } }
+  .mm-cover {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover;
+  }
   .mm-disc-hole {
     position: absolute; left: 50%; top: 50%;
-    width: 8px; height: 8px; margin: -4px 0 0 -4px;
-    border-radius: 50%; background: var(--efu-theme);
+    width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
+    border-radius: 50%; background: rgba(255,255,255,.85);
+    z-index: 2; box-shadow: 0 0 4px rgba(0,0,0,.6);
   }
-  /* 歌曲信息 + 歌词：参考站为横向 flex（标题与歌词并排），播放时歌词撑开 */
   .mm-info {
-    display: flex; align-items: center; align-self: center;
-    flex: 0 0 auto; width: max-content; max-width: 120px;
-    height: 30px; min-height: 30px;
-    margin: 0 16px 0 10px; padding: 0;
-    position: relative; z-index: 1; overflow: visible;
-    transition: max-width .28s, color .28s;
+    display: flex; flex-direction: column; justify-content: center;
+    flex: 1 1 auto; min-width: 0; height: 30px;
+    position: relative; z-index: 1;
   }
-  .mm-music {
-    display: flex; align-items: center;
-    position: relative; z-index: 1; flex-shrink: 0;
-    height: 30px; min-height: 30px; margin: 0; padding: 0;
-    line-height: 30px; overflow: hidden;
-  }
+  .mm-music { display: block; height: 16px; min-height: 16px; overflow: hidden; line-height: 16px; }
   .mm-title {
-    display: block; max-width: 120px; height: 30px; line-height: 30px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    color: var(--efu-fontcolor); font-size: 14px;
-    cursor: pointer; transition: color .28s;
+    display: block; max-width: 140px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+    color: var(--efu-fontcolor); font-size: 13px; font-weight: 700;
   }
   .mm-lyric {
-    display: block; flex-shrink: 0; width: 230px; max-width: 0;
-    height: 18px; min-height: 18px;
+    display: block; max-width: 0; height: 14px; min-height: 14px;
     margin: 0; padding: 0; opacity: 0; overflow: hidden;
-    color: var(--efu-white); font-size: 14px; line-height: 18px;
+    color: var(--efu-fontcolor); font-size: 11px; line-height: 14px;
     white-space: nowrap; text-overflow: ellipsis;
     transition: max-width .28s, margin .28s, opacity .28s;
   }
-  /* 播放按钮浮层：静止隐藏；悬停未播放居中的播放键；播放中显示 上一首/暂停/下一首 */
+  .mm-root:hover .mm-lyric { max-width: 200px; margin-top: 1px; opacity: .55; }
   .mm-ctrl {
-    display: flex; align-items: center; justify-content: center;
-    position: absolute; inset: 0; z-index: 4;
-    width: 100%; height: 100%; gap: 12px;
-    opacity: 0; pointer-events: none;
-    background: color-mix(in srgb, var(--efu-music) 50%, transparent);
-    transition: opacity .3s, background .3s, width .3s, padding .3s;
+    display: flex; align-items: center; gap: 2px;
+    flex: 0 0 auto; margin-left: 0; position: relative; z-index: 4;
+    opacity: 0; max-width: 0; overflow: hidden;
+    transition: opacity .28s, max-width .28s, margin .28s;
   }
-  .mm-root:hover .mm-ctrl { opacity: 1; pointer-events: auto; }
+  .mm-root:hover .mm-ctrl { opacity: 1; max-width: 120px; margin-left: 10px; }
   .mm-control-btn {
-    display: none; align-items: center; justify-content: center;
-    width: 20px; height: 40px; padding: 0;
-    color: var(--efu-white); background: none; border: 0;
-    font-size: 16px; line-height: 40px; opacity: .8; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    width: 24px; height: 30px; padding: 0;
+    color: var(--efu-fontcolor); background: none; border: 0;
+    font-size: 14px; line-height: 30px; opacity: .8; cursor: pointer;
     transition: opacity .2s, transform .2s;
   }
-  .mm-control-btn:hover, .mm-control-btn:focus-visible { opacity: 1; }
-  .mm-control-btn:focus-visible { outline: 2px solid var(--efu-white); outline-offset: -3px; border-radius: 20px; }
+  .mm-control-btn:hover { opacity: 1; }
   .mm-control-btn:active { transform: scale(.85); }
-
-  /* ---- 状态一：悬停且未播放 —— 整条主题色，中间播放键 + 毛玻璃 ---- */
-  .mm-root:not(.is-playing):hover .mm-bar {
-    color: var(--efu-white);
-    background: color-mix(in srgb, var(--efu-music) 78%, transparent);
-    border-color: var(--efu-music);
-  }
-  .mm-root:not(.is-playing):hover .mm-title,
-  .mm-root:not(.is-playing):hover .mm-info { color: var(--efu-white); }
-  .mm-root:not(.is-playing):hover .mm-ctrl { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-  .mm-root:not(.is-playing):hover #mm-play { display: flex; }
-
-  /* ---- 状态二：播放中 —— 主题色胶囊 + 发光 + 封面旋转 + 歌词 + 进度条 ---- */
-  .mm-root.is-playing { animation: capsulePlayingShadow 5s linear infinite; }
-  .mm-root.is-playing .mm-bar {
-    color: var(--efu-white);
-    background: var(--efu-music);
-    border-color: var(--efu-music);
-    box-shadow: var(--efu-shadow-glass-inset), 0 0 26px color-mix(in srgb, var(--efu-music) 42%, transparent);
-  }
-  .mm-root.is-playing .mm-disc {
-    border-color: var(--efu-card-bg);
-    box-shadow: 0 0 14px var(--efu-card-bg);
-  }
-  .mm-root.is-playing .mm-info { max-width: min(332px, calc(100vw - 120px)); color: var(--efu-white); }
-  .mm-root.is-playing .mm-title { color: var(--efu-white) !important; }
-  .mm-root.is-playing .mm-lyric { max-width: 230px; margin-left: 12px; opacity: 1; }
-  .mm-root.is-playing .mm-bar-track { opacity: 1; }
-  .mm-root.is-playing .mm-ctrl {
-    inset: 0 0 0 auto; left: auto; right: 0;
-    width: 180px; padding-right: 20px;
-    justify-content: flex-end;
-    background: linear-gradient(to left, var(--efu-music) 60%, transparent);
-  }
-  .mm-root.is-playing:hover #mm-prev,
-  .mm-root.is-playing:hover #mm-pause,
-  .mm-root.is-playing:hover #mm-next { display: flex; }
-
-  /* 进度条：参考站播放中才显形 */
   .mm-bar-track {
-    position: absolute; inset: 0; z-index: 2;
-    width: 100%; height: 100%; opacity: 0;
-    transition: opacity .3s; pointer-events: none;
+    position: absolute; left: 16px; right: 16px; bottom: 6px;
+    height: 3px; border-radius: 12px;
+    background: var(--efu-gray, rgba(128,128,128,.35));
+    overflow: hidden; z-index: 2;
   }
   .mm-played {
-    position: absolute; top: 0; bottom: 0; left: 0;
-    height: 100%; width: 0;
-    background-color: var(--efu-white) !important; opacity: .15;
-  }
-  /* 光栅扫过（与全站胶囊一致，每次加载只划一次） */
-  .mm-root::before {
-    content: ''; position: absolute; top: 0; left: 0; z-index: 3;
-    width: 42%; height: 100%; pointer-events: none; opacity: 0;
-    background: linear-gradient(100deg, transparent 0, rgba(255,255,255,.06) 26%, rgba(255,255,255,.42) 50%, rgba(255,255,255,.06) 74%, transparent 100%);
-  }
-  .mm-root:hover::before { animation: capsuleSheenSweep 1.05s cubic-bezier(.22, 1, .36, 1) 1 both; }
-  .mm-root.sheen-done::before { animation: none !important; opacity: 0 !important; }
-  @keyframes capsulePlayingShadow {
-    0%,100% { box-shadow: var(--efu-shadow-border), 0 0 18px color-mix(in srgb, var(--efu-music) 28%, transparent); }
-    50% { box-shadow: var(--efu-shadow-border), 0 0 30px color-mix(in srgb, var(--efu-music) 55%, transparent); }
+    display: block; height: 100%; width: 0; border-radius: 12px;
+    background: var(--efu-theme); opacity: .9;
   }
   @media (max-width: 600px) {
     .mm-root { left: 12px; bottom: 12px; }
-    .mm-root.is-playing .mm-info { max-width: min(240px, calc(100vw - 130px)); }
+    .mm-root:hover .mm-bar { width: calc(100vw - 24px); }
   }
 </style>

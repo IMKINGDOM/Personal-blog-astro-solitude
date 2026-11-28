@@ -3,9 +3,6 @@ import type { Post } from '../lib/content';
 interface Props { posts: Post[] }
 const { posts } = Astro.props;
 
-const DAYS = 60;
-const COLS = 12;
-
 function key(d: Date): string {
   return d.getFullYear() + '-' +
     String(d.getMonth() + 1).padStart(2, '0') + '-' +
@@ -14,36 +11,43 @@ function key(d: Date): string {
 
 const today = new Date();
 today.setHours(0, 0, 0, 0);
-const since = new Date(today);
-since.setDate(since.getDate() - (DAYS - 1));
+const year = today.getFullYear();
+const month = today.getMonth();
+const daysInMonth = new Date(year, month + 1, 0).getDate();
+// 周一起始：getDay() 周日=0 → 偏移 6；周一=1 → 偏移 0
+const leading = (new Date(year, month, 1).getDay() + 6) % 7;
 
 const counts = new Map<string, number>();
 let total = 0;
 for (const post of posts) {
   const d = new Date(post.data.date as unknown as string);
-  if (isNaN(+d) || d < since || d > today) continue;
+  if (isNaN(+d) || d.getFullYear() !== year || d.getMonth() !== month) continue;
   const k = key(d);
   counts.set(k, (counts.get(k) ?? 0) + 1);
   total++;
 }
 
-const cells = Array.from({ length: DAYS }, (_, i) => {
-  const d = new Date(since);
-  d.setDate(since.getDate() + i);
-  const k = key(d);
+type Cell = { key: string; n: number; level: number } | null;
+const cells: Cell[] = [];
+for (let i = 0; i < leading; i++) cells.push(null);
+for (let day = 1; day <= daysInMonth; day++) {
+  const k = key(new Date(year, month, day));
   const n = counts.get(k) ?? 0;
-  return { key: k, n, level: n === 0 ? 0 : Math.min(4, n) };
-});
+  cells.push({ key: k, n, level: n === 0 ? 0 : Math.min(4, n) });
+}
+const monthLabel = `${year}年${month + 1}月`;
 ---
 
 <div class="card-widget card-heatmap capsule-sheen tw:relative tw:[#aside-content_&]:overflow-hidden">
   <div class="hm-head">
     <span class="hm-title">发布记录</span>
-    <span class="hm-sub">近两个月 {total} 篇</span>
+    <span class="hm-sub">{monthLabel} · {total} 篇</span>
   </div>
-  <div class="hm-grid" aria-label="近两个月每日发布篇数">
+  <div class="hm-grid" aria-label={`${monthLabel}每日发布篇数`}>
     {cells.map((c) => (
-      <i class={`hm-cell lv-${c.level}`} title={`${c.key} · ${c.n} 篇`} />
+      c
+        ? <i class={`hm-cell lv-${c.level}`} title={`${c.key} · ${c.n} 篇`} />
+        : <i class="hm-cell hm-empty" aria-hidden="true" />
     ))}
   </div>
   <div class="hm-legend">
@@ -74,13 +78,14 @@ const cells = Array.from({ length: DAYS }, (_, i) => {
     font-size: 12px; color: var(--efu-secondtext); white-space: nowrap;
   }
   .hm-grid {
-    display: grid; grid-template-columns: repeat(12, 1fr);
+    display: grid; grid-template-columns: repeat(7, 1fr);
     gap: 5px;
   }
   .hm-cell {
     display: block; aspect-ratio: 1 / 1; width: 100%;
     border-radius: 3px; background: rgba(128, 128, 128, .18);
   }
+  .hm-cell.hm-empty { background: transparent; }
   .hm-cell.lv-1 { background: #9fb4d8; }
   .hm-cell.lv-2 { background: #7e9bc9; }
   .hm-cell.lv-3 { background: #5477b6; }

@@ -66,40 +66,35 @@ const categories = ['全部', '生活', '旅行', '创作', '影音'];
   .gallery-hero { text-align: center; margin: 10px 0 36px; }
   .gallery-kicker { color: var(--efu-theme); font-size: 13px; letter-spacing: .35em; margin: 0 0 10px; }
   .gallery-title { color: var(--efu-fontcolor); font-size: 42px; margin: 0 0 20px; letter-spacing: .08em; }
-  /* 筛选器胶囊随主题：深色底/深色字（深色主题）↔ 浅色底/深色字（浅色主题） */
-
-  /* 果冻弹性单选：选中项高亮，邻近项被挤压位移（原生复刻 JellyRadio） */
+  /* 筛选器胶囊：与首页分类栏（图3）同一套样式与设计逻辑 */
   .jelly-radio {
-    /* 未选中：卡片底 + 主题字色（日间白底黑字/夜间深底浅字）；选中：主题色高亮 */
-    --jr-chip: var(--efu-card-bg); --jr-active: var(--efu-theme);
-    --jr-text: var(--efu-fontcolor); --jr-active-text: var(--efu-background);
-    --jr-border: var(--efu-fontcolor);
-    --jr-gap: 8px; --jr-radius: 18px; --jr-h: 36px; --jr-font: 13px; --jr-px: 16px;
-    display: inline-flex; align-items: center; gap: var(--jr-gap);
-    padding: 6px 14px; user-select: none; -webkit-user-select: none;
+    display: inline-flex; align-items: center; flex-wrap: wrap; justify-content: center;
+    gap: 8px; padding: 6px 14px; user-select: none; -webkit-user-select: none;
   }
   .jelly-radio__chip {
-    position: relative; margin: 0; padding: 0; border: 0; background: none;
+    margin: 0; padding: 0; border: 0; background: none;
     color: inherit; font: inherit; cursor: pointer; outline: none;
-    transform-origin: 50% 50%; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
-    transition: transform .32s cubic-bezier(.34,1.56,.64,1);
+    -webkit-tap-highlight-color: transparent;
   }
   .jelly-radio__chip[data-on='true'] { cursor: default; }
   .jelly-radio__skin {
     position: relative; display: inline-flex; align-items: center; justify-content: center;
-    height: var(--jr-h); padding: 0 var(--jr-px); border-radius: var(--jr-radius);
-    background: var(--jr-chip); color: var(--jr-text); font-size: var(--jr-font); font-weight: 500;
-    border: 1px solid var(--jr-border);
-    line-height: 1; white-space: nowrap; overflow: hidden;
-    transition: transform .28s cubic-bezier(.34,1.56,.64,1), background-color .2s ease, color .2s ease;
+    min-height: 38px; padding: 8px 18px; border-radius: 999px;
+    background: var(--efu-card-bg); color: var(--efu-fontcolor);
+    font-size: 14px; font-weight: 700; line-height: 1;
+    border: var(--style-border-always); white-space: nowrap; overflow: hidden;
+    transition: .3s;
   }
   .jelly-radio__chip[data-on='true'] .jelly-radio__skin {
-    background: var(--jr-active); color: var(--jr-active-text); border-color: var(--jr-active); transform: scale(1.2);
+    color: var(--efu-card-bg); background: var(--efu-main);
+    border-color: var(--efu-main); box-shadow: var(--efu-shadow-main);
   }
   @media (hover: hover) and (pointer: fine) {
-    .jelly-radio__chip[data-on='false']:hover .jelly-radio__skin { filter: brightness(.9); }
+    .jelly-radio__chip[data-on='false']:hover .jelly-radio__skin {
+      color: var(--efu-white); background: var(--efu-main);
+    }
   }
-  .jelly-radio__chip:active .jelly-radio__skin { transform: scale(.95); }
+  .jelly-radio__chip:active .jelly-radio__skin { transform: scale(.96); }
 
   .gallery-grid {
     display: grid;

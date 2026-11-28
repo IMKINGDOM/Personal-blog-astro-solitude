@@ -72,6 +72,7 @@ export async function getRoutes(): Promise<Route[]> {
     ['/brevity/', 'brevity', '微言琐记'],
     ['/gallery/', 'gallery', '浮光拾瞬'],
     ['/footprints/', 'footprints', '步履鸿迹'],
+    ['/reading/', 'reading', '阅序拾遗'],
     ['/recentcomments/', 'recentcomment', t('recentComments')],
   ];
   for (const [path, type, title] of defaults)

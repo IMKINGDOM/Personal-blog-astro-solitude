@@ -48,6 +48,7 @@ img[src*="logo.svg"] {
 #nav .menus_items .menus_item .menus_item_child li a i.icon-user,
 #nav .menus_items .menus_item .menus_item_child li a i.icon-apps,
 #nav .menus_items .menus_item .menus_item_child li a i.icon-messages,
+#nav .menus_items .menus_item .menus_item_child li a i.icon-book,
 #nav .menus_items .menus_item .menus_item_child li a i.icon-news-custom {
   display: inline-block;
   flex: 0 0 20px;
@@ -98,6 +99,10 @@ img[src*="logo.svg"] {
 #nav .menus_items .menus_item .menus_item_child li a i.icon-messages {
   -webkit-mask-image: url('/img/icons/menu-messages.svg');
   mask-image: url('/img/icons/menu-messages.svg');
+}
+#nav .menus_items .menus_item .menus_item_child li a i.icon-book {
+  -webkit-mask-image: url('/img/icons/menu-book.svg');
+  mask-image: url('/img/icons/menu-book.svg');
 }
 #nav .menus_items .menus_item .menus_item_child li a i.icon-news-custom {
   -webkit-mask-image: url('/img/icons/menu-news.svg');
@@ -228,20 +233,20 @@ img[src*="logo.svg"] {
   align-self: flex-end;
 }
 
-/* 日间全屏背景：照搬参考站 #global_bg（半透明底图 + 边缘径向遮罩），深色模式隐藏以保留自有星空 */
+/* 日间全屏背景：雨天城市朦胧底图 + 边缘径向遮罩，隐约可见；深色模式隐藏以保留自有星空 */
 #global_bg {
   position: fixed; z-index: -2; width: 100%; height: 100%;
   pointer-events: none; background-image: none;
 }
 #global_bg::before {
   content: ''; position: absolute; inset: 0;
-  background-image: url('/img/quicer-light.webp');
+  background-image: url('/img/rainy-city.webp');
   background-size: cover; background-position: center; background-repeat: no-repeat;
-  opacity: .6; pointer-events: none;
+  opacity: .32; pointer-events: none;
 }
 #global_bg::after {
   content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 50% 44%, transparent 0, var(--efu-background) 74%);
+  background: radial-gradient(ellipse 62% 52% at 50% 44%, transparent 0, var(--efu-background) 68%);
   pointer-events: none;
 }
 html[data-theme="dark"] #global_bg { display: none; }
@@ -257,21 +262,70 @@ html[data-theme="dark"] #global_bg { display: none; }
 html[data-theme="light"] #galaxy-bg { opacity: 0; }
 html[data-theme="dark"] #galaxy-bg { opacity: 1; }
 
-/* 暗夜模式：卡片透明度对齐参考站玻璃变量（--glass-bg 约 12% 白叠加），
-   让星空明显透出；info 卡金色渐变改为深色主题色，避免透出后偏黄 */
-html[data-theme="dark"] #aside-content .card-widget {
-  background-color: color-mix(in srgb, var(--efu-card-bg) 52%, transparent);
-  border: 1px solid rgba(255,255,255,0.12);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08);
+/* 夜间模式：卡片统一 50% 透明，让星空背景透出可见。
+   侧栏 .card-widget 不在此列——它交给下方 --glass-bg 变量统一处理，避免实色底与玻璃框混搭出多重背景。 */
+html[data-theme="dark"] :is(
+  .recent-post-item,
+  #card-toc,
+  #about-page .author-content-item,
+  .home-center-content,
+  .home-center-banner-item
+) {
+  background-color: color-mix(in srgb, var(--efu-card-bg) 50%, transparent) !important;
 }
+/* 首页 banner 右侧推荐列表：主题色底同样 50% 透明，让星空透出 */
+html[data-theme="dark"] .home-center-right {
+  background-color: color-mix(in srgb, var(--current-theme, var(--efu-theme)) 50%, transparent) !important;
+}
+/* 发布记录卡自带暖色渐变底，夜间去掉渐变让 50% 透明生效 */
+html[data-theme="dark"] .card-heatmap { background-image: none !important; }
+/* 分类栏选中按钮：去掉主题自带的黑色投影，保留高亮底色 */
+.category-bar-item.select a { box-shadow: none !important; }
+/* 站点信息卡文字：日间黑色、夜间白色，均强制覆盖 home.ts 的 banner 取色（内联 style），
+   避免日间白字看不清 / 夜间取色异常变黑 */
+html[data-theme="light"] #aside-content .card-info {
+  --profile-card-text-color: var(--efu-black) !important;
+}
+html[data-theme="dark"] #aside-content .card-info {
+  --profile-card-text-color: var(--efu-white) !important;
+}
+/* 卡片主题色渐变背景透明度调至 30%（夜间） */
 html[data-theme="dark"] #aside-content .card-info::before {
   background: linear-gradient(-25deg,
     color-mix(in srgb, var(--efu-main) 30%, #14161c),
     color-mix(in srgb, var(--efu-main) 14%, #0f1116)) !important;
-  opacity: .78;
+  opacity: .3;
+}
+/* 卡片主题色渐变背景透明度调至 30%（日间） */
+html[data-theme="light"] #aside-content .card-info::before {
+  background: linear-gradient(-25deg,
+    color-mix(in srgb, var(--current-banner-theme, var(--efu-main)) 30%, transparent),
+    color-mix(in srgb, var(--current-banner-theme-op-deep, var(--efu-main-op-deep)) 30%, transparent)) !important;
 }
 
-/* 胶囊 hover 流光：照搬参考站 capsuleSheenSweep（平行四边形光带循环划过） */
+/* 分类胶囊玻璃态（与参考站一致）；悬停/选中仍用实色高亮，见下方规则 */
+html:not(.no-glass) .category-bar-item a:not(.select):not(:hover) {
+  background: var(--glass-bg-fixed);
+  border: var(--glass-border);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+/* 悬停胶囊：整颗变成与「首页」相同的蓝底，让白色文字清晰显现 */
+html:not(.no-glass) .category-bar-item a:hover {
+  background-color: var(--efu-main) !important;
+  color: var(--efu-white) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+/* 选中胶囊保持主题色实底 + 反白文字，避免白字落在半透明浅底上不可读 */
+html:not(.no-glass) .category-bar-item.select a {
+  background-color: var(--efu-main) !important;
+  color: var(--efu-white) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* 卡片 hover 流光：快速闪过（平行四边形光带，单次）。分类栏已去掉光栅。 */
 @keyframes capsuleSheenSweep {
   0%   { transform: translateX(-160%) skewX(-18deg); opacity: 0; }
   15%  { opacity: .85; }
@@ -284,15 +338,182 @@ html[data-theme="dark"] #aside-content .card-info::before {
   width: 40%; height: 100%; pointer-events: none; opacity: 0;
   background: linear-gradient(105deg, transparent 0, rgba(255,255,255,.5) 50%, transparent 100%);
 }
-.capsule-sheen:hover::before { animation: capsuleSheenSweep 2.75s ease-in-out 1 both; }
-/* 光栅每次页面加载只划过一次：播放完成后由 JS 加 sheen-done 标记，此后不再重播 */
+.capsule-sheen:hover::before { animation: capsuleSheenSweep 1.05s cubic-bezier(.22, 1, .36, 1) 1 both; }
+/* 光栅每次页面加载只划过一次：播放完成后由 JS 加 sheen-done 标记，此后不再重播
+   （含发布记录卡、音乐胶囊、文章卡片，速度恢复为快速闪过 1.05s；分类栏已移除光栅） */
 .capsule-sheen.sheen-done::before,
-.category-bar-item a.sheen-done::after { animation: none !important; opacity: 0 !important; }
+.mm-root.sheen-done::before,
+.recent-post-item.sheen-done::after { animation: none !important; opacity: 0 !important; }
 
-/* 液态玻璃：JS 注入 SVG 位移滤镜后升级为边缘折射玻璃，未注入时回退普通毛玻璃 */
-:root { --glass-blur: blur(14px) saturate(1.35); }
-#aside-content .card-widget,
-#aside-content .sticky_layout {
+/* ============ 液态玻璃：照搬 blog.quicer.top 的完整变量体系 ============
+   --glass-blur 由 liquid-glass.js 升级为 url(#liquid-glass)+blur+saturate（边缘折射）；
+   下列初值为 JS 未加载时的毛玻璃回退。开关=html.no-glass（关态回退实色）。 */
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.22);
+  --glass-bg-fixed: rgba(255, 255, 255, 0.16);
+  --glass-bg-hover: rgba(255, 255, 255, 0.32);
+  --glass-border: 1px solid rgba(200, 210, 230, 0.42);
+  --glass-border-hover: 1px solid rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --glass-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  --glass-blur: blur(20px) saturate(180%);
+}
+html[data-theme="dark"] {
+  --glass-bg: rgba(255, 255, 255, 0.12);
+  --glass-bg-fixed: rgba(255, 255, 255, 0.08);
+  --glass-bg-hover: rgba(255, 255, 255, 0.18);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.22);
+  --glass-border-hover: 1px solid rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.25);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* 玻璃效果应用的元素（照搬参考站同类位置）：侧栏卡片、文章卡、首页banner、分类胶囊、
+   导航胶囊、右上角工具条、右下设置面板、音乐/天气胶囊、控制台按钮。 */
+html:not(.no-glass) :is(
+  #aside-content .card-widget,
+  .recent-post-item,
+  .home-center-content,
+  #rightside .rs_show,
+  #rightside .rs_hide,
+  #rightMenu
+) {
+  background: var(--glass-bg);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-highlight);
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
+}
+html:not(.no-glass) :is(
+  #nav .menus_items .menus_item .menus_item_child,
+  #page-header #nav #blog_name,
+  #page-header #nav #nav-right,
+  .back-home-button .back-menu-list-groups
+) {
+  background: var(--glass-bg-fixed);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-highlight);
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  backdrop-filter: var(--glass-blur) !important;
+}
+
+/* 页脚底栏进入视口时：左下天气/音乐按 hover 显隐；右下齿轮常驻可点，
+   绝不随 mousemove 切换 pointer-events（否则点击手势中途被撤销，click 丢失）。 */
+:is(#mini-weather, #mini-music) { transition: opacity .3s ease; }
+html.footer-bar-in-view :is(#mini-weather, #mini-music) {
+  opacity: 0; pointer-events: none;
+}
+html.footer-bar-in-view.footer-show-left :is(#mini-weather, #mini-music) {
+  opacity: 1; pointer-events: auto;
+}
+/* 齿轮：任何状态下都可见可点；页脚区只把未展开的扩展面板收起，不影响触发按钮 */
+#rightside,
+html.footer-bar-in-view #rightside,
+html.footer-bar-in-view.footer-show-right #rightside,
+html.footer-bar-in-view.footer-show-left #rightside {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+html.footer-bar-in-view #rightside .rs_hide:not(.show) {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+/* 页脚区齿轮变淡但仍可点（视觉提示），移回右侧即恢复 */
+#rightside .rs_show { opacity: 1; transition: opacity .3s ease; }
+html.footer-bar-in-view:not(.footer-show-right) #rightside .rs_show { opacity: .55; }
+/* 页脚区域的齿轮按钮去掉外圈方形容器框，保持裸图标观感 */
+html.footer-bar-in-view #rightside .rs_show {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* 目录卡（浮动 TOC）：强制圆角裁剪，去掉玻璃态下内层圆角卡片从直角外框冒出的尖角 */
+#card-toc {
+  overflow: hidden !important;
+  border-radius: 14px !important;
+}
+
+/* 项目下拉玻璃态文字可读性：给每项加浅色半透明底，让文字在复杂背景上清晰 */
+html[data-theme="light"]:not(.no-glass) .back-home-button .back-menu-list .back-menu-item {
+  background: rgba(255,255,255,.72);
+  border-radius: 10px;
+}
+html[data-theme="light"]:not(.no-glass) .back-home-button .back-menu-list-group .back-menu-list-title {
+  background: rgba(255,255,255,.72);
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+html[data-theme="dark"]:not(.no-glass) .back-home-button .back-menu-list .back-menu-item {
+  background: rgba(0,0,0,.35);
+  border-radius: 10px;
+}
+
+/* 项目下拉玻璃态文字可读性：给每项加浅色半透明底，让文字在复杂背景上清晰 */
+html[data-theme="light"]:not(.no-glass) .back-home-button .back-menu-list .back-menu-item {
+  background: rgba(255,255,255,.72);
+  border-radius: 10px;
+}
+html[data-theme="light"]:not(.no-glass) .back-home-button .back-menu-list-group .back-menu-list-title {
+  background: rgba(255,255,255,.72);
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+html[data-theme="dark"]:not(.no-glass) .back-home-button .back-menu-list .back-menu-item {
+  background: rgba(0,0,0,.35);
+  border-radius: 10px;
+}
+
+/* 右下控件外层 #rightside 是矩形定位容器，去掉玻璃规则误加的边框/背景，只让内部圆角胶囊承载玻璃 */
+#rightside {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* 侧栏卡片特效统一（照搬 blog.quicer.top）：单一玻璃层 + 圆角裁剪 + 平滑过渡，
+   去掉 .sticky_layout 外层框与内层 .card-widget 双重阴影造成的"多重背景"。
+   .sticky_layout 只负责 sticky 布局，不承载任何背景/边框/阴影。 */
+#aside-content .sticky_layout {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+#aside-content .card-widget {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  transition: background-color .4s ease, color .4s ease, border-color .4s ease, box-shadow .4s ease;
+}
+html:not(.no-glass) #aside-content .card-widget:hover {
+  background: var(--glass-bg-hover);
+}
+/* card-info 内层不再自带背景，避免与渐变/光晕叠加成多层 */
+#aside-content .card-widget.card-info .card-content { background: none !important; }
+html:not(.no-glass) #aside-content .card-widget.card-info::before {
+  opacity: .85;
+  -webkit-backdrop-filter: blur(12px) saturate(1.5);
+  backdrop-filter: blur(12px) saturate(1.5);
+}
+@media screen and (max-width: 768px) {
+  #aside-content .card-widget { border-radius: 16px; }
+}
+
+/* 首页右侧推荐列表：去掉每项深浅不一的底色（叠在玻璃卡上形成多重背景），
+   改为默认透明、hover 淡高亮、active 主题色淡底（参考站设计） */
+.home-center-item {
+  background: transparent !important;
+}
+.home-center-item:hover {
+  background: color-mix(in srgb, var(--glass-bg-hover) 60%, transparent) !important;
+}
+.home-center-item.active {
+  background: var(--efu-theme-op-light, rgba(66, 90, 239, .08)) !important;
 }

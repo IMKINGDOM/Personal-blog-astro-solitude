@@ -74,6 +74,12 @@ const inlineVars = Object.entries(vars)
           document.documentElement.classList.add('no-glass');
         }
       } catch (e) {}
+      /* LIVE2D 默认关，首屏同步防止闪烁 */
+      try {
+        if (localStorage.getItem('live2d') !== 'on') {
+          document.documentElement.classList.add('no-live2d');
+        }
+      } catch (e) {}
     </script>
     {type === 'about' && <link rel="stylesheet" href={aboutStyle} />}
     {type === 'brevity' && <link rel="stylesheet" href={brevityStyle} />}
@@ -180,7 +186,7 @@ const inlineVars = Object.entries(vars)
     data-index-layout={cfg.index_post_list.direction}
   >
     <div id="global_bg" aria-hidden="true"></div>
-    <div id="galaxy-bg" aria-hidden="true"><canvas id="galaxy-canvas"></canvas></div>
+    <div id="galaxy-bg" transition:persist="galaxy-bg" aria-hidden="true"><canvas id="galaxy-canvas"></canvas></div>
     {cfg.loading.fullpage && (
       <div id="loading-box" aria-hidden="true">
         <img src={url(cfg.site.icon)} alt="" />
@@ -227,6 +233,7 @@ const inlineVars = Object.entries(vars)
     <script is:inline src="/js/galaxy.js"></script>
     <script is:inline src="/js/liquid-glass.js"></script>
     <script is:inline src="/js/glass-control.js"></script>
+    <script is:inline src="/js/live2d-control.js"></script>
     <script>
       import '../scripts/entry';
     </script>

@@ -1,12 +1,15 @@
 /* Galaxy — 纯 JS / WebGL2 星空背景（由用户提供的 React 组件改写，GLSL 与参数完全保留） */
 (function () {
   'use strict';
-  if (window.__stepGalaxyInit) return;
-  window.__stepGalaxyInit = true;
-
+  // ClientRouter 换页后 canvas 可能是全新节点：用实例标记代替全局布尔守卫，
+  // 并在 astro:page-load 时重新挂载。WebGL 失败不设标记，保留重试机会。
+  var disposeCurrent = null;
+  function mount() {
   var container = document.getElementById('galaxy-bg');
   var canvas = document.getElementById('galaxy-canvas');
   if (!container || !canvas) return;
+  if (canvas.dataset.galaxyReady === '1') return;
+  if (typeof disposeCurrent === 'function') { disposeCurrent(); disposeCurrent = null; }
   var gl = canvas.getContext('webgl2', {
     alpha: true, premultipliedAlpha: true,
     antialias: false, depth: false, stencil: false
@@ -429,4 +432,23 @@ void main() {
   if (repelling) entry(tinted, true, false);
   if (repelling && initial.clickWarp) entry(tinted, true, true);
   wake();
+
+  // 标记该 canvas 已就绪，避免同一节点重复挂载；换页后新节点无标记会重新初始化。
+  canvas.dataset.galaxyReady = '1';
+  // 保存清理函数：换页前 older canvas 若有残留实例，先停止动画并断开观察器。
+  disposeCurrent = function () {
+    if (raf) cancelAnimationFrame(raf);
+    if (ro) ro.disconnect();
+    if (io) io.disconnect();
+    window.removeEventListener('pointermove', onPointerMove);
+    window.removeEventListener('pointerdown', onPointerDown);
+    window.removeEventListener('pointerup', onPointerUp);
+    window.removeEventListener('pointercancel', onPointerUp);
+    document.documentElement.removeEventListener('pointerleave', onPointerLeave);
+  };
+  }
+
+  // 首次执行 + 每次换页后执行；换页兜底确保 persist 未覆盖时也能重新绑定。
+  mount();
+  document.addEventListener('astro:page-load', mount);
 })();

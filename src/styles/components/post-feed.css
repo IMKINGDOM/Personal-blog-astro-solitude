@@ -25,7 +25,7 @@
   color: var(--efu-theme);
 }
 
-/* 文章卡片：完全照搬参考站 hcSheen —— 快速平行四边形光柱划过一次 */
+/* 文章卡片光栅：恢复快速闪过（1.05s、单次），与发布记录/音乐胶囊一致；分类栏已去掉光栅 */
 .recent-post-item {
   position: relative;
   overflow: hidden;
@@ -35,17 +35,13 @@
   position: absolute; top: 0; left: 0; z-index: 5;
   width: 42%; height: 100%;
   pointer-events: none; opacity: 0;
-  transform: translateX(-140%) skewX(-18deg);
+  transform: translateX(-160%) skewX(-18deg);
   background: linear-gradient(105deg,
     transparent 0, rgba(255,255,255,.32) 50%, transparent 100%);
 }
 .recent-post-item:hover::after {
   opacity: 1;
-  animation: hcSheen 1.05s cubic-bezier(.22, 1, .36, 1) 1;
-}
-@keyframes hcSheen {
-  0%   { transform: translateX(-140%) skewX(-18deg); }
-  100% { transform: translateX(340%) skewX(-18deg); }
+  animation: capsuleSheenSweep 1.05s cubic-bezier(.22, 1, .36, 1) 1 both;
 }
 @media (prefers-reduced-motion: reduce) {
   .recent-post-item:hover::after { animation: none; }

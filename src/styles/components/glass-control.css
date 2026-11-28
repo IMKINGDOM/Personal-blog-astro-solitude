@@ -12,15 +12,15 @@
 }
 #rightsideGlass.glass:hover { opacity: 1; }
 
-/* 关闭玻璃：所有 --glass-* 变量回退到实色毛玻璃，兜掉 SVG 折射滤镜 */
+/* 关闭玻璃：重映射 --glass-* 变量到实色毛玻璃（照搬参考站），
+   不再给卡片叠加额外 background-color，避免多层背景 */
 html.no-glass {
   --glass-blur: blur(12px) saturate(1.25) !important;
-}
-html.no-glass #aside-content .card-widget,
-html.no-glass #aside-content .sticky_layout {
-  background-color: color-mix(in srgb, var(--efu-card-bg) 92%, var(--efu-background));
-  -webkit-backdrop-filter: blur(12px) saturate(1.25) !important;
-  backdrop-filter: blur(12px) saturate(1.25) !important;
+  --glass-bg: color-mix(in srgb, var(--efu-card-bg) 92%, var(--efu-background));
+  --glass-bg-hover: var(--efu-card-bg);
+  --glass-border: 1px solid var(--efu-card-border);
+  --glass-shadow: 0 6px 22px rgba(0, 0, 0, .14);
+  --glass-highlight: 0 0 0 0 transparent;
 }
 
 /* 提示气泡 */
@@ -68,3 +68,13 @@ html.no-glass #aside-content .sticky_layout {
 .gc-modal .gc-btn-primary {
   background: var(--efu-theme); border-color: var(--efu-theme); color: var(--efu-white);
 }
+
+/* 右下设置面板 LIVE2D 开关：与液态玻璃按钮同一观感 */
+#rightsideLive2d.live2d {
+  color: var(--efu-fontcolor);
+  opacity: .75;
+  transition: color .2s ease, opacity .2s ease;
+}
+#rightsideLive2d.live2d.on { color: var(--efu-theme); opacity: 1; }
+#rightsideLive2d.live2d:hover { opacity: 1; }
+#rightsideLive2d .live2d-icon { width: 18px; height: 18px; display: block; }

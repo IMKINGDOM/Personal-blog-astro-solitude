@@ -275,7 +275,7 @@ const BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
     width: 42%; height: 100%; pointer-events: none; opacity: 0;
     background: linear-gradient(100deg, transparent 0, rgba(255,255,255,.06) 26%, rgba(255,255,255,.42) 50%, rgba(255,255,255,.06) 74%, transparent 100%);
   }
-  .mm-root:hover::before { animation: capsuleSheenSweep 2.75s ease-in-out 1 both; }
+  .mm-root:hover::before { animation: capsuleSheenSweep 1.05s cubic-bezier(.22, 1, .36, 1) 1 both; }
   .mm-root.sheen-done::before { animation: none !important; opacity: 0 !important; }
   @keyframes capsulePlayingShadow {
     0%,100% { box-shadow: var(--efu-shadow-border), 0 0 18px color-mix(in srgb, var(--efu-music) 28%, transparent); }

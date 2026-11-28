@@ -57,8 +57,8 @@
 | `theme.post.default.copyright.enable` | `true` | PostCard, PostMeta, Copyright |
 | `theme.post.default.copyright.author` | `"/img/logo.png"` | PostCard, PostMeta, Copyright |
 | `theme.post.default.copyright.author_background` | `""` | PostCard, PostMeta, Copyright |
-| `theme.post.default.copyright.license` | `"CC BY-NC-SA 4.0"` | PostCard, PostMeta, Copyright |
-| `theme.post.default.copyright.licenurl` | `"https://creativecommons.org/licenses/by-nc-sa/4.0/"` | PostCard, PostMeta, Copyright |
+| `theme.post.default.copyright.license` | `"CC BY-NC-ND 4.0"` | PostCard, PostMeta, Copyright |
+| `theme.post.default.copyright.licenurl` | `"https://creativecommons.org/licenses/by-nc-nd/4.0/"` | PostCard, PostMeta, Copyright |
 | `theme.post.meta.date` | `true` | PostCard, PostMeta, Copyright |
 | `theme.post.meta.updated` | `true` | PostCard, PostMeta, Copyright |
 | `theme.post.meta.locate` | `true` | PostCard, PostMeta, Copyright |

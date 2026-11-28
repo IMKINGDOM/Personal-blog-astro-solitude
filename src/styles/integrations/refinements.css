@@ -82,7 +82,8 @@ button:disabled { cursor: default; opacity: .45; }
   #card-toc .toc-content .toc-child { display: block; }
   #card-toc .toc-content .toc-link { min-height: 44px; font-size: 15px; border-radius: var(--efu-radius-sm); overflow-wrap: anywhere; }
   #card-toc .toc-content .toc-link.active { background: var(--efu-theme-op-light); }
-  html.toc-open #nav-music, html.toc-open #rightside { opacity: 0; pointer-events: none; }
+  html.toc-open #nav-music { opacity: 0; pointer-events: none; }
+  /* 齿轮常驻可点，不随 TOC 状态禁用 */
 }
 @media (max-width: 768px) {
   .post #page-header.post-bg { height: auto; min-height: clamp(300px, 45svh, 400px); display: flex; align-items: flex-end; }
@@ -99,8 +100,9 @@ button:disabled { cursor: default; opacity: .45; }
   #local-search .search-dialog, #local-search .search-result-title, #card-toc, .recent-post-item, .recent-post-item .post_cover img.post_bg { animation: none !important; transition: none !important; }
   .recent-post-item:hover .post_cover img.post_bg { transform: none; }
 }
-/* Hidden controls stay inside the viewport and out of the tab order. */
-#rightside { right: 12px; visibility: hidden; pointer-events: none; transform: translateY(8px); }
+/* 右下控件常驻可见可点：原先依赖 .is-visible，滚动/PJAX 时该状态会丢失导致齿轮点不动。
+   页脚区域的自动隐藏交给 footer-hover 单独处理。 */
+#rightside { right: 12px; visibility: visible; pointer-events: auto; transform: none; }
 #rightside.is-visible { visibility: visible; pointer-events: auto; opacity: 1; transform: none; }
 #rightside .rs_hide { visibility: hidden; transform: translateY(8px); }
 #rightside .rs_hide.show { visibility: visible; transform: none; }

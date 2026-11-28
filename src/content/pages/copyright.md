@@ -2,7 +2,7 @@
 title: 版权协议
 slug: copyright
 type: page
-description: STEP 跬步（Nick's Blog）版权与许可协议：原创内容采用 CC BY-NC-SA 4.0，网站代码遵循 Apache License 2.0。
+description: STEP 跬步（Nick's Blog）版权与许可协议：原创内容采用 CC BY-NC-ND 4.0，网站代码遵循 Apache License 2.0。
 banner: true
 comment: false
 ---
@@ -23,11 +23,11 @@ comment: false
 
 ## 二、许可协议
 
-- **本站原创内容**：采用 **CC BY-NC-SA 4.0**（署名—非商业性使用—相同方式共享 4.0 国际）协议许可。即：允许在非商业前提下，注明作者并标明协议、以相同方式共享的前提下使用本站内容；商业使用需另行取得授权。
+- **本站原创内容**：采用 **CC BY-NC-ND 4.0**（署名—非商业性使用—禁止演绎 4.0 国际）协议许可。即：允许在非商业前提下，注明作者并标明协议、转载时不得对内容进行任何修改或演绎；商业使用需另行取得授权。
 - **网站代码**：基于 Astro Solitude 主题，遵循 **Apache License 2.0** 开源协议。该协议允许使用、修改与分发，但须保留原版权声明与许可文本。
 - **第三方资源**：图标、字体、媒体内容等依其各自许可协议执行，不受上述本站协议约束。
 
-完整许可文本可查阅：[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) · [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+完整许可文本可查阅：[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/) · [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
 ## 三、网站源码
 

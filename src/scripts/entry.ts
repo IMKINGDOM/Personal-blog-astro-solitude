@@ -1,6 +1,7 @@
 import { prepareAssets } from './assets';
 import './comments';
 import { Solitude } from './core/api';
+import './footer-hover';
 import { lifecycle } from './core/lifecycle';
 import './utils';
 // Astro 7.3.2 does not observe ViewTransition.ready. A superseding navigation

@@ -97,8 +97,8 @@
         "enable": true,
         "author": "/img/logo.svg",
         "author_background": "",
-        "license": "CC BY-NC-SA 4.0",
-        "licenurl": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+        "license": "CC BY-NC-ND 4.0",
+        "licenurl": "https://creativecommons.org/licenses/by-nc-nd/4.0/"
       }
     },
     "meta": {

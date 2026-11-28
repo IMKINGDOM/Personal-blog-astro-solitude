@@ -359,15 +359,7 @@
   background: var(--efu-main);
 }
 
-/* 分类胶囊 hover 光栅：同参考站 capsuleSheenSweep 平行四边形光带 */
-.category-bar-item a::after {
-  content: ''; position: absolute; top: 0; left: 0; z-index: 3;
-  width: 40%; height: 100%; pointer-events: none; opacity: 0;
-  background: linear-gradient(105deg, transparent 0, rgba(255,255,255,.42) 50%, transparent 100%);
-}
-.category-bar-item a:hover::after {
-  animation: capsuleSheenSweep 2.75s ease-in-out 1 both;
-}
+/* 分类胶囊：按用户要求移除 hover 光栅，仅保留高亮/配色切换 */
 
 .category-bar-item.select a {
   color: var(--efu-card-bg);

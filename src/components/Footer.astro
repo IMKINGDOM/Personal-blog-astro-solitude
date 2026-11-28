@@ -1,5 +1,16 @@
 ---
 import { cfg, config, t, url } from '../lib/site';
+// CC 官方矢量图标（用户提供的 EPS 转换而来），内联以继承 currentColor 主题色
+import ccIcon from '../../public/img/cc/cc.svg?raw';
+import byIcon from '../../public/img/cc/by.svg?raw';
+import ncIcon from '../../public/img/cc/nc.svg?raw';
+import ndIcon from '../../public/img/cc/nd.svg?raw';
+const ccIcons = [
+  { svg: ccIcon, label: '知识共享 CC' },
+  { svg: byIcon, label: '署名 BY' },
+  { svg: ncIcon, label: '非商业性使用 NC' },
+  { svg: ndIcon, label: '禁止演绎 ND' },
+];
 const f = cfg.footer;
 const year = new Date().getFullYear();
 const start = new Date(cfg.aside.siteinfo.runtime).getFullYear();
@@ -130,24 +141,38 @@ const start = new Date(cfg.aside.siteinfo.runtime).getFullYear();
           </span>
         </div>
       </div>
-      <div class="footer-bar-right tw:[#footer-bar_&]:flex tw:[#footer-bar_&]:flex-row tw:[#footer-bar_&]:flex-wrap tw:[#footer-bar_&]:items-center">
-        {f.links.map((l) => (
-          <a
-            class="footer-bar-link tw:[#footer-bar_.footer-bar-left_.beian-group_&]:flex tw:[#footer-bar_.footer-bar-left_.beian-group_&]:items-center tw:[#footer-bar_&]:whitespace-nowrap tw:[#footer-bar_&]:flex tw:[#footer-bar_&]:items-center"
-            href={url(l.url)}
-            title={l.name}
-          >
-            {l.icon ? (
-              (Array.isArray(l.icon) ? l.icon : [l.icon]).map(
-                (icon: string) => <i class={`solitude ${icon}`} />,
-              )
-            ) : l.img ? (
-              <img src={url(l.img)} alt={l.name} />
-            ) : (
-              l.name
-            )}
-          </a>
-        ))}
+      <div class="footer-bar-right tw:[#footer-bar_&]:flex tw:[#footer-bar_&]:flex-col tw:[#footer-bar_&]:items-end tw:[#footer-bar_&]:gap-2">
+        <div class="footer-bar-right-links tw:[#footer-bar_&]:flex tw:[#footer-bar_&]:flex-row tw:[#footer-bar_&]:flex-wrap tw:[#footer-bar_&]:items-center tw:[#footer-bar_&]:justify-end">
+          {f.links.map((l) => (
+            <a
+              class="footer-bar-link tw:[#footer-bar_.footer-bar-left_.beian-group_&]:flex tw:[#footer-bar_.footer-bar-left_.beian-group_&]:items-center tw:[#footer-bar_&]:whitespace-nowrap tw:[#footer-bar_&]:flex tw:[#footer-bar_&]:items-center"
+              href={url(l.url)}
+              title={l.name}
+            >
+              {l.icon ? (
+                (Array.isArray(l.icon) ? l.icon : [l.icon]).map(
+                  (icon: string) => <i class={`solitude ${icon}`} />,
+                )
+              ) : l.img ? (
+                <img src={url(l.img)} alt={l.name} />
+              ) : (
+                l.name
+              )}
+            </a>
+          ))}
+        </div>
+        <!-- 协议标识：CC 官方矢量图标（用户提供的 EPS 转换），四个图标 + 文字作为一个整体链接 -->
+        <a
+          class="footer-bar-cc"
+          href={url('/copyright/')}
+          title="本站内容采用 CC BY-NC-ND 4.0 协议"
+          aria-label="本站内容采用 CC BY-NC-ND 4.0 协议"
+        >
+          {ccIcons.map((icon) => (
+            <span class="footer-bar-cc-icon" role="img" aria-label={icon.label} set:html={icon.svg} />
+          ))}
+          <span class="footer-bar-cc-text">CC BY-NC-ND 4.0</span>
+        </a>
       </div>
     </div>
   </div>

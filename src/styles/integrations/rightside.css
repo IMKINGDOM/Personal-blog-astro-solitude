@@ -9,7 +9,7 @@
   right: -2.5rem;
   bottom: 20px;
   z-index: 1000;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.3s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

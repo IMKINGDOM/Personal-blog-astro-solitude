@@ -1,0 +1,152 @@
+---
+// 阅序拾遗 —— 读书记录。书单数据在此维护；封面用 CSS 渐变书脊，无需图片资源。
+const books = [
+  { title: '剑来', author: '烽火戏诸侯', status: '正在阅读', progress: '卷一·二十五章', note: '道理全在书上，做人却在书外。', color: '#3b5b8c' },
+  { title: '红楼梦', author: '曹雪芹', status: '历史已读', progress: '全本', note: '假作真时真亦假，无为有处有还无。', color: '#8c3b5b' },
+  { title: '人类简史', author: '尤瓦尔·赫拉利', status: '历史已读', progress: '全本', note: '虚构故事让陌生人得以大规模协作。', color: '#5b8c3b' },
+  { title: '置身事内', author: '兰小欢', status: '正在阅读', progress: '第三章', note: '理解地方政府的运作逻辑。', color: '#8c6b3b' },
+  { title: '万历十五年', author: '黄仁宇', status: '计划要读', progress: '—', note: '从一个平淡年份看制度之困。', color: '#4a4a8c' },
+  { title: '置身时代', author: '吴晓波', status: '计划要读', progress: '—', note: '在时代洪流中理解商业与个人。', color: '#3b8c8c' },
+];
+const filters = ['全部', '历史已读', '正在阅读', '计划要读'];
+---
+
+<div class="reading-page">
+  <header class="reading-hero">
+    <h1 class="reading-title">阅序拾遗</h1>
+    <p class="reading-sub">书页翻过，留下些许痕迹。—— 读书记录</p>
+    <div class="jelly-radio" role="radiogroup" aria-label="阅读状态筛选">
+      {filters.map((c, i) => (
+        <button
+          type="button"
+          role="radio"
+          aria-checked={i === 0 ? 'true' : 'false'}
+          class="jelly-radio__chip"
+          data-on={i === 0 ? 'true' : 'false'}
+          data-filter={c}
+        >
+          <span class="jelly-radio__skin">{c}</span>
+        </button>
+      ))}
+    </div>
+  </header>
+
+  <div class="reading-grid">
+    {books.map((book, i) => (
+      <article class="reading-item" style={`--delay:${i * 50}ms;--book-color:${book.color}`} data-category={book.status}>
+        <div class="book-cover">
+          <span class="book-spine"></span>
+          <span class="book-title">{book.title}</span>
+          <span class="book-author">{book.author}</span>
+        </div>
+        <div class="book-info">
+          <div class="book-status">{book.status}</div>
+          <div class="book-progress">{book.progress}</div>
+          <p class="book-note">{book.note}</p>
+        </div>
+      </article>
+    ))}
+  </div>
+</div>
+
+<style>
+  .reading-page { max-width: 1100px; margin: 0 auto; padding: 10px 16px 40px; color: var(--efu-fontcolor); }
+  .reading-hero { text-align: center; margin: 10px 0 36px; }
+  .reading-title { color: var(--efu-fontcolor); font-size: 42px; margin: 0 0 8px; letter-spacing: .08em; }
+  .reading-sub { color: var(--efu-secondtext); font-size: 14px; margin: 0 0 22px; }
+
+  /* 筛选器胶囊：与首页分类栏（图3）同一套样式与设计逻辑 */
+  .jelly-radio {
+    display: inline-flex; align-items: center; flex-wrap: wrap; justify-content: center;
+    gap: 8px; padding: 6px 14px; user-select: none; -webkit-user-select: none;
+  }
+  .jelly-radio__chip {
+    margin: 0; padding: 0; border: 0; background: none;
+    color: inherit; font: inherit; cursor: pointer; outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .jelly-radio__chip[data-on='true'] { cursor: default; }
+  .jelly-radio__skin {
+    position: relative; display: inline-flex; align-items: center; justify-content: center;
+    min-height: 38px; padding: 8px 18px; border-radius: 999px;
+    background: var(--efu-card-bg); color: var(--efu-fontcolor);
+    font-size: 14px; font-weight: 700; line-height: 1;
+    border: var(--style-border-always); white-space: nowrap; overflow: hidden;
+    transition: .3s;
+  }
+  .jelly-radio__chip[data-on='true'] .jelly-radio__skin {
+    color: var(--efu-card-bg); background: var(--efu-main);
+    border-color: var(--efu-main); box-shadow: var(--efu-shadow-main);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .jelly-radio__chip[data-on='false']:hover .jelly-radio__skin {
+      color: var(--efu-white); background: var(--efu-main);
+    }
+  }
+  .jelly-radio__chip:active .jelly-radio__skin { transform: scale(.96); }
+
+  .reading-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+  .reading-item {
+    display: flex; gap: 16px; padding: 16px; border-radius: 12px;
+    background: color-mix(in srgb, var(--efu-card-bg) 85%, transparent);
+    border: 1px solid var(--efu-theme);
+    animation: reading-in .5s ease backwards; animation-delay: var(--delay);
+    transition: transform .35s ease, box-shadow .35s ease;
+  }
+  .reading-item[hidden] { display: none; }
+  .reading-item:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,.35); }
+  .book-cover {
+    position: relative; flex: none; width: 84px; min-height: 116px; border-radius: 6px 10px 10px 6px;
+    background: linear-gradient(150deg, color-mix(in srgb, var(--book-color) 88%, white), var(--book-color));
+    box-shadow: inset 4px 0 8px rgba(0,0,0,.25), 2px 4px 12px rgba(0,0,0,.3);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 10px 6px; color: #fff; text-align: center; overflow: hidden;
+  }
+  .book-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 7px; background: rgba(0,0,0,.22); }
+  .book-title { font-size: 15px; font-weight: 700; line-height: 1.3; word-break: break-all; }
+  .book-author { font-size: 10px; opacity: .85; margin-top: 8px; }
+  .book-info { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .book-status {
+    align-self: flex-start; font-size: 11px; padding: 2px 10px; border-radius: 999px;
+    color: #fff; background: var(--efu-theme); font-weight: 600;
+  }
+  .book-progress { font-size: 12px; color: var(--efu-secondtext); }
+  .book-note { font-size: 13px; line-height: 1.6; margin: 4px 0 0; color: var(--efu-fontcolor); }
+  @keyframes reading-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 600px) {
+    .reading-title { font-size: 32px; }
+    .reading-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script is:inline>
+/* 阅读状态筛选：事件委托 + ClientRouter(PJAX) 兼容，与浮光拾瞬同款 */
+(function () {
+  function applyFilter(chip) {
+    var filter = chip.getAttribute('data-filter');
+    document.querySelectorAll('.jelly-radio__chip').forEach(function (c) {
+      var on = c === chip;
+      c.setAttribute('data-on', on ? 'true' : 'false');
+      c.setAttribute('aria-checked', on ? 'true' : 'false');
+    });
+    document.querySelectorAll('.reading-item').forEach(function (item) {
+      var show = filter === '全部' || item.getAttribute('data-category') === filter;
+      item.hidden = !show;
+      if (show) { item.style.animation = 'none'; void item.offsetWidth; item.style.animation = ''; }
+    });
+  }
+  if (!window.__readingFilterBound) {
+    window.__readingFilterBound = true;
+    document.addEventListener('click', function (e) {
+      var chip = e.target.closest && e.target.closest('.jelly-radio__chip');
+      if (chip && document.querySelector('.reading-page')) applyFilter(chip);
+    });
+    document.addEventListener('astro:page-load', function () {
+      var all = document.querySelector('.reading-page .jelly-radio__chip[data-filter="全部"]');
+      if (all) applyFilter(all);
+    });
+  }
+  var firstAll = document.querySelector('.reading-page .jelly-radio__chip[data-filter="全部"]');
+  if (firstAll) applyFilter(firstAll);
+})();
+</script>

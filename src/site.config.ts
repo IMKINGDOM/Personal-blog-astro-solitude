@@ -22,6 +22,7 @@ export default defineSolitudeConfig({
       children: [
         { name: '浮光拾瞬', url: '/gallery/', icon: 'icon-filters' },
         { name: '步履鸿迹', url: '/footprints/', icon: 'icon-map-pin' },
+        { name: '阅序拾遗', url: '/reading/', icon: 'icon-book' },
       ],
     },
     {
@@ -47,6 +48,16 @@ export default defineSolitudeConfig({
             name: '跬步博客',
             url: 'https://github.com/IMKINGDOM/Personal-blog-astro-solitude',
             icon: '/img/logo.svg',
+          },
+          {
+            name: '主站Galaxy',
+            url: '/galaxy/',
+            icon: '/img/logo-favicon.png',
+          },
+          {
+            name: 'Blog更新日志',
+            url: '/changelog/',
+            icon: '/img/icons/menu-file-description.svg',
           },
         ],
       },
@@ -99,7 +110,7 @@ export default defineSolitudeConfig({
         right: [{ name: 'RSS', url: '/index.xml', icon: 'fas fa-rss' }],
       },
       links: [
-        { name: '订阅', url: '#' },
+        { name: '订阅', url: '/rss/' },
         { name: '留言', url: '#' },
         { name: '反馈', url: '#' },
         { name: '声明', url: '/statement/' },

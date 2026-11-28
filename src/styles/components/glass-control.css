@@ -7,9 +7,13 @@
   transition: color .2s ease, opacity .2s ease;
 }
 #rightsideGlass.glass.on {
-  color: var(--efu-theme);
+  color: var(--efu-white);
   opacity: 1;
+  background: #f5b301;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(245, 179, 1, .5);
 }
+#rightsideGlass.glass.on i { color: var(--efu-white); }
 #rightsideGlass.glass:hover { opacity: 1; }
 
 /* 关闭玻璃：重映射 --glass-* 变量到实色毛玻璃（照搬参考站），

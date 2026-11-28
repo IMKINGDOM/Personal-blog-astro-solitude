@@ -124,10 +124,24 @@ const API = 'https://api.injahow.cn/meting/';
   });
   audio.addEventListener('play', syncBtn);
   audio.addEventListener('pause', function () { setTimeout(syncBtn, 120); });
+  var errorCount = 0;
   audio.addEventListener('error', function () {
-    // 单曲失效时自动跳下一首
-    if (tracks.length) load(pos + 1);
+    // 单曲失效时跳下一首；连续失败过多则停止，避免无限循环
+    if (tracks.length && ++errorCount < 12) load(pos + 1);
+    else { titleEl.textContent = '音频暂不可用'; lyricEl.textContent = '请稍后重试'; }
   });
+  audio.addEventListener('loadedmetadata', function () { errorCount = 0; });
+
+  // 修复偶发"胶囊卡在展开横条"：PJAX 切页/窗口失焦时，浏览器 :hover 可能残留，
+  // 强制移除焦点并让指针状态复位。
+  function resetHover() {
+    if (document.activeElement && root.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
+    root.classList.remove('hover-lock');
+  }
+  document.addEventListener('astro:page-load', resetHover);
+  window.addEventListener('blur', resetHover);
 
   pauseBtn.addEventListener('click', function (e) { e.stopPropagation(); if (!pendingStart) audio.pause(); });
   playBtn.addEventListener('click', function (e) { e.stopPropagation(); tryPlay(); });
@@ -142,8 +156,28 @@ const API = 'https://api.injahow.cn/meting/';
     })
     .then(function (data) {
       if (!Array.isArray(data) || !data.length) throw new Error('empty playlist');
-      tracks = data.filter(function (t) { return t && t.url && t.name; });
-      if (!tracks.length) throw new Error('no playable tracks');
+      var valid = data.filter(function (t) { return t && t.url && t.name; });
+      // 过滤试听片段：网易云对部分歌曲只返回 ~480KB（约30秒）片段，
+      // 表现为"播几秒就结束"。用 HEAD 读 Content-Length，<1MB 视为片段丢弃。
+      // 分批并发检测，避免 419 首同时请求。
+      var MIN_BYTES = 1024 * 1024;
+      var batches = [];
+      for (var i = 0; i < valid.length; i += 30) batches.push(valid.slice(i, i + 30));
+      var full = [];
+      return batches.reduce(function (chain, batch) {
+        return chain.then(function () {
+          return Promise.all(batch.map(function (t) {
+            return fetch(t.url, { method: 'HEAD' })
+              .then(function (r) { return +(r.headers.get('content-length') || 0); })
+              .catch(function () { return 0; })
+              .then(function (len) { if (len >= MIN_BYTES) full.push(t); });
+          }));
+        });
+      }, Promise.resolve()).then(function () { return full; });
+    })
+    .then(function (full) {
+      tracks = full.length ? full : [];
+      if (!tracks.length) throw new Error('no full tracks');
       shuffle();
       load(0);
     })
@@ -166,9 +200,11 @@ const API = 'https://api.injahow.cn/meting/';
     height: 46px; min-height: 46px; max-height: 46px;
     padding: 8px 16px 8px 8px;
     border-radius: 60px;
-    background: var(--efu-card-bg);
+    background: color-mix(in srgb, var(--efu-card-bg) 78%, transparent);
     border: var(--style-border-always);
     box-shadow: var(--efu-shadow-border);
+    -webkit-backdrop-filter: var(--glass-blur, blur(14px) saturate(1.4));
+    backdrop-filter: var(--glass-blur, blur(14px) saturate(1.4));
     overflow: hidden; cursor: pointer;
     transition: width .4s cubic-bezier(.34, 1.56, .64, 1), box-shadow .3s;
     width: 122px;

@@ -15,7 +15,8 @@
 @import "./components/aside-console.css" layer(solitude.components);
 @import "./components/keyboard.css" layer(solitude.components);
 @import "./components/post-feed.css" layer(solitude.components);
-@import "./components/glass-control.css" layer(solitude.components);
+/* 玻璃开关需覆盖 rightside 的非 layer 样式，故不加 layer */
+@import "./components/glass-control.css";
 @import "./components/nav-glass.css" layer(solitude.components);
 @import "./components/comments-share.css" layer(solitude.components);
 

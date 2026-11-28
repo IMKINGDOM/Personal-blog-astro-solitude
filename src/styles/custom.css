@@ -533,3 +533,21 @@ html:not(.no-glass) #aside-content .card-widget.card-info::before {
 .home-center-item.active {
   background: var(--efu-theme-op-light, rgba(66, 90, 239, .08)) !important;
 }
+
+/* 玻璃开启时弱化内部矩形痕迹：
+   --glass-highlight 的 inset 白线 + 卡片 ::before 渐变会在半透明层上勾出矩形边界，
+   使其在星空背景上显出"内部方框"。关玻璃时保留原样。 */
+html:not(.no-glass) :is(
+  #aside-content .card-widget,
+  .recent-post-item,
+  .home-center-content,
+  #rightside .rs_show,
+  #rightside .rs_hide,
+  #rightMenu
+) {
+  box-shadow: var(--glass-shadow) !important;
+}
+html:not(.no-glass) #aside-content .card-info::before,
+html:not(.no-glass) #aside-content .card-heatmap {
+  background-image: none !important;
+}

@@ -125,8 +125,8 @@
     background: linear-gradient(to bottom, var(--efu-maskbg), var(--efu-maskbgdeep));
     border: var(--style-border); border-radius: 40px;
     box-shadow: var(--efu-shadow-glass-inset);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: var(--glass-blur, saturate(180%) blur(20px));
+    -webkit-backdrop-filter: var(--glass-blur, saturate(180%) blur(20px));
     transform: translateZ(0);
     transition: width .44s cubic-bezier(.22, 1, .36, 1), box-shadow .3s, color .28s, border-color .28s;
   }

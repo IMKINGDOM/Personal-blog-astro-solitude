@@ -199,7 +199,10 @@
   gap: 8px;
   color: var(--efu-secondtext);
   transition: color 0.3s;
-  zoom: .6; /* 整体缩放到 60%，zoom 会让布局占位同步收缩，不留下空白 */
+  /* 整体缩放到 60%；用 transform 而非 zoom，避免对齐基准偏移 */
+  transform: scale(.6);
+  transform-origin: right center;
+  margin-right: -40%;
 }
 #footer-bar .footer-bar-cc:hover {
   color: var(--efu-theme);

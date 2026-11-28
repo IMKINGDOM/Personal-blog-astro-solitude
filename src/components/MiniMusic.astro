@@ -2,6 +2,15 @@
 // 音源：网易云歌单 492312774，经 Meting 公共接口读取
 const PLAYLIST_ID = '492312774';
 const API = 'https://api.injahow.cn/meting/';
+// 兜底音源：接口限流时仍可播放（自有 GitHub 仓库，不受第三方配额影响）
+const FALLBACK_BASE = 'https://cdn.jsdelivr.net/gh/IMKINGDOM/Music-Storage@main/';
+const FALLBACK_TRACKS = [
+  { name: '避世离俗', artist: '梁博', file: 'bishi-lbo.m4a' },
+  { name: '霞光', artist: '曲锦楠', file: 'xiaguang-qujinnan.m4a' },
+  { name: '思念无声', artist: '张小九', file: 'sinian-wusheng-zhangjiuer.m4a' },
+  { name: '漠河舞厅', artist: '柳爽', file: 'mohe-wuting-liushuang.mp3' },
+  { name: '生命是场马拉松', artist: '旅行团乐队', file: 'shengming-marathon-traveler.m4a' },
+];
 ---
 
 <div id="mini-music" class="mm-root" transition:persist="mini-music">
@@ -21,7 +30,7 @@ const API = 'https://api.injahow.cn/meting/';
   </div>
 </div>
 
-<script is:inline define:vars={{ PLAYLIST_ID, API }}>
+<script is:inline define:vars={{ PLAYLIST_ID, API, FALLBACK_BASE, FALLBACK_TRACKS }}>
 (function () {
   var root = document.getElementById('mini-music');
   if (!root || root.dataset.mmInit) return;
@@ -130,7 +139,14 @@ const API = 'https://api.injahow.cn/meting/';
     if (tracks.length && ++errorCount < 12) load(pos + 1);
     else { titleEl.textContent = '音频暂不可用'; lyricEl.textContent = '请稍后重试'; }
   });
-  audio.addEventListener('loadedmetadata', function () { errorCount = 0; });
+  audio.addEventListener('loadedmetadata', function () {
+    errorCount = 0;
+    // 网易云对部分歌曲只给 ~30 秒试听片段；用 duration 判断，短片段直接跳下一首。
+    // 不额外请求接口，避免耗尽公共 API 每日配额。
+    if (audio.duration && audio.duration < 60) {
+      load(pos + 1);
+    }
+  });
 
   // 修复偶发"胶囊卡在展开横条"：PJAX 切页/窗口失焦时，浏览器 :hover 可能残留，
   // 强制移除焦点并让指针状态复位。
@@ -148,43 +164,49 @@ const API = 'https://api.injahow.cn/meting/';
   document.getElementById('mm-next').addEventListener('click', function (e) { e.stopPropagation(); load(pos + 1); });
   document.getElementById('mm-prev').addEventListener('click', function (e) { e.stopPropagation(); load(pos - 1); });
 
-  // 拉取网易云歌单
-  fetch(API + '?server=netease&type=playlist&id=' + PLAYLIST_ID)
-    .then(function (r) {
-      if (!r.ok) throw new Error('playlist http ' + r.status);
-      return r.json();
-    })
-    .then(function (data) {
-      if (!Array.isArray(data) || !data.length) throw new Error('empty playlist');
-      var valid = data.filter(function (t) { return t && t.url && t.name; });
-      // 过滤试听片段：网易云对部分歌曲只返回 ~480KB（约30秒）片段，
-      // 表现为"播几秒就结束"。用 HEAD 读 Content-Length，<1MB 视为片段丢弃。
-      // 分批并发检测，避免 419 首同时请求。
-      var MIN_BYTES = 1024 * 1024;
-      var batches = [];
-      for (var i = 0; i < valid.length; i += 30) batches.push(valid.slice(i, i + 30));
-      var full = [];
-      return batches.reduce(function (chain, batch) {
-        return chain.then(function () {
-          return Promise.all(batch.map(function (t) {
-            return fetch(t.url, { method: 'HEAD' })
-              .then(function (r) { return +(r.headers.get('content-length') || 0); })
-              .catch(function () { return 0; })
-              .then(function (len) { if (len >= MIN_BYTES) full.push(t); });
-          }));
-        });
-      }, Promise.resolve()).then(function () { return full; });
-    })
-    .then(function (full) {
-      tracks = full.length ? full : [];
-      if (!tracks.length) throw new Error('no full tracks');
-      shuffle();
-      load(0);
-    })
-    .catch(function () {
-      titleEl.textContent = '歌单加载失败';
-      lyricEl.textContent = '请稍后重试';
-    });
+  // 拉取网易云歌单（带本地缓存）
+  // 注意：公共 Meting 接口有每日请求上限，严禁对每首歌做 HEAD 预检。
+  // 试听片段改由 loadedmetadata 的 duration 判断跳过，零额外请求。
+  var CACHE_KEY = 'step-netease-playlist-' + PLAYLIST_ID;
+  var CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7 天
+
+  function start(data) {
+    if (!Array.isArray(data) || !data.length) throw new Error('empty playlist');
+    tracks = data.filter(function (t) { return t && t.url && t.name; });
+    if (!tracks.length) throw new Error('no playable tracks');
+    shuffle();
+    load(0);
+  }
+
+  var cached = null;
+  try { cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch (e) {}
+  if (cached && cached.t && Date.now() - cached.t < CACHE_TTL && Array.isArray(cached.data)) {
+    start(cached.data);
+  } else {
+    fetch(API + '?server=netease&type=playlist&id=' + PLAYLIST_ID)
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+      .then(function (data) {
+        if (!Array.isArray(data)) throw new Error('bad response');
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data: data })); } catch (e) {}
+        start(data);
+      })
+      .catch(function () {
+        // 接口限流时，即便过期缓存也比"加载失败"好
+        if (cached && Array.isArray(cached.data)) start(cached.data);
+        else {
+          // 接口限流时切回自有 5 首，保证音乐始终可用
+          tracks = FALLBACK_TRACKS.map(function (t) {
+            return {
+              name: t.name, artist: t.artist,
+              url: FALLBACK_BASE + t.file,
+              pic: '', lrc: ''
+            };
+          });
+          shuffle();
+          load(0);
+        }
+      });
+  }
 })();
 </script>
 

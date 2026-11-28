@@ -80,6 +80,8 @@ const monthLabel = `${year}年${month + 1}月`;
   .hm-grid {
     display: grid; grid-template-columns: repeat(7, 1fr);
     gap: 5px;
+    /* 方格缩小到原先 60%：收紧整块宽度并左对齐 */
+    width: 60%;
   }
   .hm-cell {
     display: block; aspect-ratio: 1 / 1; width: 100%;
